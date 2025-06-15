@@ -59,8 +59,8 @@ INSTALLED_APPS = [
     # YOUR APPS
     'src.web.website',
     'src.web.agency',
-    'src.web.branches',
-    'src.web.buyer',
+    'src.web.traveler',
+    'src.web.local_guide',
     'src.accounts.apps.AccountsConfig',
     'src.administration.admins.apps.AdministrationAdminConfig'
 ]

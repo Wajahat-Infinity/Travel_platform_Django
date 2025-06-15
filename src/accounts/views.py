@@ -5,8 +5,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.contrib.auth import logout
 
-from core.decorators import identity_check_decorator, vendor_incomplete_decorator, branch_incomplete_decorator
-from src.accounts.forms import UserProfileForm, IncompleteAgencyForm, IncompleteBranchForm
+from core.decorators import identity_check_decorator, vendor_incomplete_decorator, local_guide_incomplete_decorator, traveler_incomplete_decorator
+from src.accounts.forms import UserProfileForm, IncompleteAgencyForm, IncompleteLocalGuideForm, IncompleteTravelerForm
 from src.accounts.models import User
 
 
@@ -30,19 +30,22 @@ class CrossAuthView(View):
                 if request.user.is_agency:
                     return redirect("agency:dashboard")
 
-                elif request.user.is_buyer:
-                    return redirect("buyer:dashboard")
+                elif request.user.is_local_guide:
+                    return redirect("local_guide:dashboard")
 
-                elif request.user.is_branch:
-                    return redirect("branches:dashboard")
+                elif request.user.is_traveler:
+                    return redirect("traveler:dashboard")
 
             else:
 
                 if request.user.is_agency:
                     return redirect('accounts:vendor-complete')
 
-                elif request.user.is_branch:
-                    return redirect('accounts:branch-complete')
+                elif request.user.is_local_guide:
+                    return redirect('accounts:local-guide-complete')
+                    
+                elif request.user.is_traveler:
+                    return redirect('accounts:traveler-complete')
 
                 else:
                     return redirect('accounts:identity-check')
@@ -71,24 +74,17 @@ class IdentificationCheck(View):
                 return redirect('accounts:vendor-complete')
 
             elif user_type == '2':
-                user.is_buyer = True
-                user.is_completed = True
+                user.is_local_guide = True
                 user.save()
                 messages.success(request, 'Your Buyer Account has Been Created Successfully')
 
-                # notify_buyer_account_completed(user)
-
-                return redirect('buyer:dashboard')
+                return redirect('local_guide:dashboard')
 
             elif user_type == '3':
-                user.is_branch = True
-                user.is_independent = True
+                user.is_traveler = True
                 user.save()
                 messages.success(request, 'Your Branch Account has Been Created Successfully')
-
-                # notify_branch_account_completed(user)
-
-                return redirect('accounts:branch-complete')
+                return redirect('traveler:dashboard')
 
         messages.error(request, 'Some issues inside user selection make sure you are selecting the right one.')
         return redirect('accounts:identification_check')
@@ -121,19 +117,20 @@ class ProfileCompleteView(View):
         return render(request, template_name='accounts/complete_profile_company.html', context={'form': form})
 
 
-@method_decorator(branch_incomplete_decorator, name="dispatch")
-class ProfileCompleteBranchView(View):
+@method_decorator(local_guide_incomplete_decorator, name="dispatch")
+class LocalGuideCompleteView(View):
 
     def get(self, request):
-        form = IncompleteBranchForm(instance=request.user)
+        form = IncompleteLocalGuideForm(instance=request.user)
         context = {'form': form}
-        return render(request, template_name='accounts/complete_profile_branch.html', context=context)
+        return render(request, template_name='accounts/complete_profile_company.html', context=context)
 
     def post(self, request):
-        form = IncompleteBranchForm(data=request.POST, files=request.FILES)
+        form = IncompleteLocalGuideForm(data=request.POST, files=request.FILES)
         if form.is_valid():
-            form.instance.branch_manager = request.user
+            form.instance.owner = request.user
             form.save()
+
             user = User.objects.get(id=self.request.user.id)
             user.is_completed = True
             user.save()
@@ -144,7 +141,34 @@ class ProfileCompleteBranchView(View):
 
             return redirect('accounts:cross-auth')
 
-        return render(request, template_name='accounts/complete_profile_branch.html', context={'form': form})
+        return render(request, template_name='accounts/complete_profile_company.html', context={'form': form})
+
+
+@method_decorator(traveler_incomplete_decorator, name="dispatch")
+class TravelerCompleteView(View):
+
+    def get(self, request):
+        form = IncompleteTravelerForm(instance=request.user)
+        context = {'form': form}
+        return render(request, template_name='accounts/complete_profile_company.html', context=context)
+
+    def post(self, request):
+        form = IncompleteTravelerForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.instance.owner = request.user
+            form.save()
+
+            user = User.objects.get(id=self.request.user.id)
+            user.is_completed = True
+            user.save()
+
+            messages.success(self.request, 'Verification Has Been Completed Successfully')
+            # notify_vendor_account_completed(user)
+            # error, account = stripe_connect_account_create(user)
+
+            return redirect('accounts:cross-auth')
+
+        return render(request, template_name='accounts/complete_profile_company.html', context={'form': form})
 
 
 @method_decorator(login_required, name='dispatch')

@@ -9,7 +9,7 @@ def identity_check_decorator(function=None, redirect_field_name=REDIRECT_FIELD_N
     redirects to the log-in page if necessary.
     '''
     actual_decorator = user_passes_test(
-        lambda u: u.is_active and not u.is_staff and not u.is_agency and not u.is_buyer and not u.is_completed,
+        lambda u: u.is_active and not u.is_staff and not u.is_agency and not u.is_local_guide and not u.is_traveler and not u.is_completed,
         login_url=login_url,
         redirect_field_name=redirect_field_name
     )
@@ -55,7 +55,7 @@ def customer_required_decorator(function=None, redirect_field_name=REDIRECT_FIEL
     '''
     actual_decorator = user_passes_test(
         lambda
-            u: u.is_active and u.is_completed and not u.is_branch and not u.is_agency and not u.is_staff and not u.is_superuser,
+            u: u.is_active and u.is_completed and not u.is_local_guide and not u.is_traveler and not u.is_agency and not u.is_staff and not u.is_superuser,
         login_url=login_url,
         redirect_field_name=redirect_field_name
     )
@@ -79,14 +79,30 @@ def vendor_incomplete_decorator(function=None, redirect_field_name=REDIRECT_FIEL
     return actual_decorator
 
 
-def branch_incomplete_decorator(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=LOGIN_REDIRECT_URL):
+def local_guide_incomplete_decorator(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=LOGIN_REDIRECT_URL):
     '''
     Decorator for views that checks that the logged-in user is a student,
     redirects to the log-in page if necessary.
     '''
     actual_decorator = user_passes_test(
         lambda
-            u: u.is_active and u.is_branch and not u.is_staff and not u.is_superuser and not u.is_completed,
+            u: u.is_active and u.is_local_guide and not u.is_staff and not u.is_superuser and not u.is_completed,
+        login_url=login_url,
+        redirect_field_name=redirect_field_name
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+
+
+def traveler_incomplete_decorator(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=LOGIN_REDIRECT_URL):
+    '''
+    Decorator for views that checks that the logged-in user is a student,
+    redirects to the log-in page if necessary.
+    '''
+    actual_decorator = user_passes_test(
+        lambda
+            u: u.is_active and u.is_traveler and not u.is_staff and not u.is_superuser and not u.is_completed,
         login_url=login_url,
         redirect_field_name=redirect_field_name
     )

@@ -1,122 +1,138 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 
-from src.accounts.models import User
-
-
-class AgencyBranchData(models.Model):
-    class Meta:
-        abstract = True
-
+class Agency(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='agency_profile'
+    )
     name = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
-    contact_email = models.EmailField()
-    contact_phone = models.CharField(max_length=15)
-
-
-class Agency(AgencyBranchData):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    logo = models.ImageField(upload_to='agency_logos/', null=True, blank=True)
-    cover_image = models.ImageField(upload_to='agency_covers/', null=True, blank=True)
-    company_name = models.CharField(max_length=255)
-    tagline = models.CharField(max_length=255)
+    email = models.EmailField(max_length=255, unique=True)
+    phone_number = models.CharField(max_length=15, unique=True)
+    address = models.TextField()
+    city = models.CharField(max_length=255)
+    state = models.CharField(max_length=255)
+    zip_code = models.CharField(max_length=10)
+    country = models.CharField(max_length=255)
+    license_number = models.CharField(max_length=100, unique=True)
     description = models.TextField()
-    company_registration_number = models.CharField(max_length=255)
-    vat_number = models.CharField(max_length=255)
-    company_postal_code = models.CharField(max_length=10)
-    company_city = models.CharField(max_length=255)
-    company_state = models.CharField(max_length=255)
+    establish_year = models.DateField()
+    cover_image = models.ImageField(upload_to='agency/cover_images/', null=True, blank=True)
     website = models.URLField(max_length=255, null=True, blank=True)
-    instagram = models.URLField(max_length=255, null=True, blank=True)
-    facebook = models.URLField(max_length=255, null=True, blank=True)
-    twitter = models.URLField(max_length=255, null=True, blank=True)
+    team_size = models.PositiveIntegerField(default=0)
+    rating = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
+    logo = models.ImageField(upload_to='agency/logos/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name_plural = 'Agencies'
+
+    def __str__(self):
+        return self.name
+
+class Hotel(models.Model):
+    agency = models.ForeignKey(
+        Agency,
+        on_delete=models.CASCADE,
+        related_name='hotels'
+    )
+    name = models.CharField(max_length=255)
+    address = models.TextField()
+    contact_phone = models.CharField(max_length=15)
+    star_rating = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return f"{self.name} ({self.agency.name})"
+
+class HotelImage(models.Model):
+    hotel = models.ForeignKey(
+        Hotel,
+        on_delete=models.CASCADE,
+        related_name='images'
+    )
+    image = models.ImageField(upload_to='hotel/images/')
+    is_featured = models.BooleanField(default=False)
+
+class Vehicle(models.Model):
+    agency = models.ForeignKey(
+        Agency,
+        on_delete=models.CASCADE,
+        related_name='vehicles'
+    )
+    model = models.CharField(max_length=100)
+    capacity = models.PositiveIntegerField()
+    registration_number = models.CharField(max_length=20, unique=True)
+    image = models.ImageField(upload_to='vehicle/images/', null=True, blank=True)
+
+    class Meta:
+        ordering = ['model']
+
+    def __str__(self):
+        return f"{self.model} ({self.registration_number})"
+
+class Place(models.Model):
+    agency = models.ForeignKey(
+        Agency,
+        on_delete=models.CASCADE,
+        related_name='places'
+    )
+    name = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
+    description = models.TextField()
+
+    class Meta:
         ordering = ['name']
 
     def __str__(self):
         return self.name
 
+class PlaceImage(models.Model):
+    place = models.ForeignKey(
+        Place,
+        on_delete=models.CASCADE,
+        related_name='images'
+    )
+    image = models.ImageField(upload_to='place/images/')
+    is_featured = models.BooleanField(default=False)
 
-class Branch(AgencyBranchData):
-    agency = models.ForeignKey(Agency, on_delete=models.CASCADE, null=True, blank=True)
-    branch_manager = models.ForeignKey(User, on_delete=models.CASCADE)
-    cover_image = models.ImageField(upload_to='branch_covers/', null=True, blank=True)
-    registration_number = models.CharField(max_length=255)
+class TourPackage(models.Model):
+    PACKAGE_TYPES = [
+        ('STANDARD', 'Standard'),
+        ('PREMIUM', 'Premium'),
+        ('LUXURY', 'Luxury'),
+    ]
+    
+    agency = models.ForeignKey(
+        Agency,
+        on_delete=models.CASCADE,
+        related_name='tour_packages'
+    )
+    name = models.CharField(max_length=255)
     description = models.TextField()
-    is_independent = models.BooleanField(default=False)
-    location = models.CharField(max_length=255)
-    is_active = models.BooleanField(default=False)
-
-    class Meta:
-        verbose_name_plural = 'Branches'
-        ordering = ['agency', 'name']
-
-    def __str__(self):
-        return self.name
-
-
-class Vehicle(models.Model):
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey("content_type", "object_id")
-    registration_number = models.CharField(max_length=20)
-    model = models.CharField(max_length=100)
-    capacity = models.PositiveIntegerField()
-    image = models.ImageField(upload_to='vehicle_images/', null=True, blank=True)
-    is_active = models.BooleanField(default=False)
+    package_type = models.CharField(max_length=20, choices=PACKAGE_TYPES)
+    duration_days = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        verbose_name_plural = 'Vehicles'
-        ordering = ['content_type', 'object_id']
-
-    def __str__(self):
-        return f"{self.content_object.name} - {self.registration_number}"
-
-
-class Schedule(models.Model):
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
-    departure_time = models.DateTimeField()
-    arrival_time = models.DateTimeField()
-    destination = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    available_seats = models.PositiveIntegerField()
-    schedule_date = models.DateField()
+    # Relationships
+    hotels = models.ManyToManyField(Hotel, blank=True)
+    vehicles = models.ManyToManyField(Vehicle, blank=True)
+    places = models.ManyToManyField(Place, blank=True)
 
     class Meta:
-        verbose_name_plural = 'Schedules'
-        ordering = ['vehicle', 'destination']
+        ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.vehicle.content_object.name} Schedule to {self.destination}"
-
-
-class Referral(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    code = models.CharField(max_length=20, unique=True)
-    agency = models.ForeignKey(Agency, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name_plural = 'Referrals'
-
-    def __str__(self):
-        return f"Referral code: {self.code}"
-
-
-class Booking(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
-    seat_number = models.PositiveIntegerField()
-    payment_status = models.BooleanField(default=False)
-    booking_date = models.DateTimeField(auto_now_add=True)
-    referral = models.ForeignKey(Referral, on_delete=models.SET_NULL, null=True, blank=True)
-
-    class Meta:
-        verbose_name_plural = 'Bookings'
-        ordering = ['user', 'schedule']
-
-    def __str__(self):
-        return f"Booking by {self.user} for {self.schedule}"
+        return f"{self.name} ({self.agency.name})"

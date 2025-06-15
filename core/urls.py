@@ -77,8 +77,9 @@ urlpatterns += [
     path('admins/', include('src.administration.admins.urls', namespace='admins')),
     path('', include('src.web.website.urls', namespace='website')),
     path('', include('src.web.agency.urls', namespace='agency')),
-    path('', include('src.web.branches.urls', namespace='branches')),
-    path('', include('src.web.buyer.urls', namespace='buyer')),
+    path('', include('src.web.local_guide.urls', namespace='local_guide')),
+    path('', include('src.web.traveler.urls', namespace='traveler')),
+
 ]
 
 if ENVIRONMENT != 'server':

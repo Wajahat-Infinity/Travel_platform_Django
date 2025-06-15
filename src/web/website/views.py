@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import TemplateView, DetailView, ListView
 
-from src.web.agency.models import Vehicle, Agency, Schedule, Branch
+from src.web.agency.models import Vehicle, Agency
+from src.web.website.models import LocalGuide
 
 
 # Create your views here.
@@ -35,11 +36,6 @@ class AgencyDetailView(DetailView):
         return context
 
 
-class SchedulesView(ListView):
-    model = Schedule
-    context_object_name = 'schedules'
-    template_name = 'website/schedules.html'
-
 
 class VehicleDetailView(DetailView):
     model = Vehicle
@@ -64,8 +60,22 @@ class FaqView(TemplateView):
     template_name = 'website/faq.html'
 
 
-class LocalExpertView(TemplateView):
-    template_name = 'website/local_expert.html'
+class LocalGuideView(ListView):
+    model = LocalGuide
+    template_name = 'website/local_guide.html'
+    context_object_name = 'guides'
+    queryset = LocalGuide.objects.filter(is_featured=True)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['featured_guides'] = LocalGuide.objects.filter(is_featured=True)[:3]
+        return context
+
+
+class LocalGuideDetailView(DetailView):
+    model = LocalGuide
+    template_name = 'website/local_guide_detail.html'
+    context_object_name = 'guide'
 
 
 class CheckoutView(TemplateView):

@@ -1,0 +1,152 @@
+{% extends 'website/base.html' %}
+
+{% load static %}
+
+<!------------------------------------------------TITLE---------------------------------------------------------------->
+{% block title %}
+LOCAL GUIDE
+{% endblock %}
+
+<!------------------------------------------------MAIN CONTENT--------------------------------------------------------->
+{% block content %}
+
+<!------------------------------------------------BANNER--------------------------------------------------------------->
+<section class="breadcrumb-area bread-bg-10">
+    <div class="breadcrumb-wrap">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb-content">
+                        <div class="section-heading">
+                            <h2 class="sec__title text-white">Local Guides</h2>
+                            <p class="sec__desc text-white">Discover your destination through the eyes of local experts</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bread-svg-box">
+            <svg class="bread-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 10" preserveAspectRatio="none">
+                <polygon points="100 0 50 10 0 0 0 10 100 10"></polygon>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!------------------------------------------------LOCAL GUIDE CONTENT------------------------------------------------->
+<section class="card-area section--padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading text-center">
+                    <h2 class="sec__title">Why Choose a Local Guide?</h2>
+                    <p class="sec__desc">Experience authentic travel with our certified local guides</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row padding-top-50px">
+            <div class="col-lg-4 responsive-column">
+                <div class="card-item">
+                    <div class="card-img">
+                        <img src="{% static 'website/images/img21.jpg' %}" alt="local-knowledge">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Local Knowledge</h3>
+                        <p class="card-text">
+                            Our guides are locals who know every hidden gem, secret spot, and authentic experience in their area.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 responsive-column">
+                <div class="card-item">
+                    <div class="card-img">
+                        <img src="{% static 'website/images/img22.jpg' %}" alt="personalized-experience">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Personalized Experience</h3>
+                        <p class="card-text">
+                            Get customized tours and recommendations based on your interests and preferences.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 responsive-column">
+                <div class="card-item">
+                    <div class="card-img">
+                        <img src="{% static 'website/images/img23.jpg' %}" alt="cultural-insights">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Cultural Insights</h3>
+                        <p class="card-text">
+                            Learn about local customs, traditions, and history from those who live it every day.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!------------------------------------------------FEATURED GUIDES----------------------------------------------------->
+<section class="destination-area padding-top-100px padding-bottom-80px">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading text-center">
+                    <h2 class="sec__title">Featured Local Guides</h2>
+                    <p class="sec__desc">Meet our top-rated local guides</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row padding-top-50px">
+            {% for guide in featured_guides %}
+            <div class="col-lg-4 responsive-column">
+                <div class="card-item">
+                    <div class="card-img">
+                        {% if guide.profile_image %}
+                            <img src="{{ guide.profile_image.url }}" alt="{{ guide.user.get_full_name }}">
+                        {% else %}
+                            <img src="{% static 'website/images/img24.jpg' %}" alt="{{ guide.user.get_full_name }}">
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">{{ guide.user.get_full_name }}</h3>
+                        <p class="card-text">
+                            {{ guide.expertise }}
+                        </p>
+                        <div class="card-rating">
+                            <span class="badge badge-warning text-white">{{ guide.rating }} ★</span>
+                            <span class="rating__text">({{ guide.review_count }} Reviews)</span>
+                        </div>
+                        <div class="btn-box padding-top-20px">
+                            <a href="{% url 'website:local_guide_detail' guide.pk %}" class="theme-btn">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!------------------------------------------------BECOME A GUIDE----------------------------------------------------->
+<section class="cta-area padding-top-100px padding-bottom-100px">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="cta-content text-center">
+                    <h2 class="sec__title text-white">Become a Local Guide</h2>
+                    <p class="sec__desc text-white">Share your local knowledge and earn while doing what you love</p>
+                    <div class="btn-box padding-top-30px">
+                        <a href="{% url 'website:contact' %}" class="theme-btn">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

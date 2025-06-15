@@ -1,0 +1,89 @@
+{% extends 'website/base.html' %}
+
+{% load static %}
+
+<!------------------------------------------------TITLE---------------------------------------------------------------->
+{% block title %}
+{{ guide.user.get_full_name }} - Local Guide
+{% endblock %}
+
+<!------------------------------------------------MAIN CONTENT--------------------------------------------------------->
+{% block content %}
+
+<!------------------------------------------------BANNER--------------------------------------------------------------->
+<section class="breadcrumb-area bread-bg-10">
+    <div class="breadcrumb-wrap">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb-content">
+                        <div class="section-heading">
+                            <h2 class="sec__title text-white">{{ guide.user.get_full_name }}</h2>
+                            <p class="sec__desc text-white">{{ guide.expertise }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bread-svg-box">
+            <svg class="bread-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 10" preserveAspectRatio="none">
+                <polygon points="100 0 50 10 0 0 0 10 100 10"></polygon>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!------------------------------------------------GUIDE PROFILE------------------------------------------------------->
+<section class="card-area section--padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card-item">
+                    <div class="card-img">
+                        {% if guide.profile_image %}
+                            <img src="{{ guide.profile_image.url }}" alt="{{ guide.user.get_full_name }}" class="img-fluid">
+                        {% else %}
+                            <img src="{% static 'website/images/img24.jpg' %}" alt="{{ guide.user.get_full_name }}" class="img-fluid">
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div class="card-rating mb-3">
+                            <span class="badge badge-warning text-white">{{ guide.rating }} ★</span>
+                            <span class="rating__text">({{ guide.review_count }} Reviews)</span>
+                        </div>
+                        <h3 class="card-title">{{ guide.user.get_full_name }}</h3>
+                        <p class="card-text">{{ guide.expertise }}</p>
+                        <div class="btn-box padding-top-20px">
+                            <a href="#" class="theme-btn">Contact Guide</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card-item">
+                    <div class="card-body">
+                        <h3 class="card-title">About Me</h3>
+                        <p class="card-text">{{ guide.bio }}</p>
+                        
+                        <h3 class="card-title mt-4">Expertise</h3>
+                        <ul class="list-items">
+                            <li>{{ guide.expertise }}</li>
+                        </ul>
+
+                        <h3 class="card-title mt-4">Reviews</h3>
+                        <div class="review-list">
+                            {% if guide.review_count > 0 %}
+                                <!-- Add review list here when review model is implemented -->
+                                <p>No reviews yet.</p>
+                            {% else %}
+                                <p>No reviews yet.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %} 
