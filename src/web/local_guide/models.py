@@ -20,8 +20,8 @@ class LocalGuide(models.Model):
     experience_years = models.PositiveIntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(100)]
     )
-    image = models.URLField(max_length=500, blank=True, null=True)
-    cover_image = models.URLField(max_length=500, blank=True, null=True)
+    image = models.ImageField(upload_to='local_guide_images/', blank=True, null=True)
+    cover_image = models.ImageField(upload_to='local_guide_cover_images/', blank=True, null=True)
     skills = models.TextField(blank=True, null=True)
     availability = models.CharField(
         max_length=20,

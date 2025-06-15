@@ -1,7 +1,12 @@
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView,TemplateView
 from django.urls import reverse_lazy
 from .models import LocalGuide
 from .forms import LocalGuideForm
+
+class LocalGuideDashboardView(TemplateView):
+    template_name = 'local_guide/dashboard.html'
+    
+
 
 class LocalGuideListView(ListView):
     model = LocalGuide

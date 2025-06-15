@@ -25,6 +25,14 @@ class UserForm(forms.ModelForm):
 
 
 class IncompleteAgencyForm(ModelForm):
+    establish_year = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                'type': 'date',  # This enables browser's built-in date picker
+                'class': 'form-control',
+            }
+        )
+    )
     class Meta:
         model = Agency
         fields = '__all__'
@@ -39,19 +47,17 @@ class IncompleteAgencyForm(ModelForm):
                 Column('license_number', css_class='form-group col-md-6'),
                 Column('email', css_class='form-group col-md-6'),
                 Column('phone_number', css_class='form-group col-md-6'),
-                Column('address', css_class='form-group col-md-12'),
-                Row(
-                    Column('city', css_class='form-group col-md-4'),
-                    Column('state', css_class='form-group col-md-4'),
-                    Column('zip_code', css_class='form-group col-md-2'),
-                    Column('country', css_class='form-group col-md-2'),
-                ),
-                Column('description', css_class='form-group col-md-12'),
+                Column('city', css_class='form-group col-md-4'),
+                Column('state', css_class='form-group col-md-4'),
+                Column('zip_code', css_class='form-group col-md-2'),
+                Column('country', css_class='form-group col-md-2'),
+                Column('logo', css_class='form-group col-md-6'),
+                Column('cover_image', css_class='form-group col-md-6'),
                 Column('establish_year', css_class='form-group col-md-4'),
                 Column('team_size', css_class='form-group col-md-4'),
                 Column('website', css_class='form-group col-md-4'),
-                Column('logo', css_class='form-group col-md-6'),
-                Column('cover_image', css_class='form-group col-md-6'),
+                Column('description', css_class='form-group col-md-12'),
+                Column('address', css_class='form-group col-md-12'),
             ),
             Submit('submit', 'Submit', css_class='btn btn-success float-right')
         )
@@ -70,24 +76,39 @@ class IncompleteLocalGuideForm(ModelForm):
             Row(
                 Column('full_name', css_class='form-group col-md-6'),
                 Column('phone', css_class='form-group col-md-6'),
-                Column('address', css_class='form-group col-md-12'),
-                Row(
-                    Column('city', css_class='form-group col-md-4'),
-                    Column('state', css_class='form-group col-md-4'),
-                    Column('zip_code', css_class='form-group col-md-2'),
-                    Column('country', css_class='form-group col-md-2'),
-                ),
-                Column('skills', css_class='form-group col-md-12'),
+                Column('city', css_class='form-group col-md-4'),
+                Column('state', css_class='form-group col-md-4'),
+                Column('zip_code', css_class='form-group col-md-4'),
+                Column('country', css_class='form-group col-md-4'),
                 Column('experience_years', css_class='form-group col-md-4'),
                 Column('availability', css_class='form-group col-md-4'),
+               
                 Column('image', css_class='form-group col-md-6'),
                 Column('cover_image', css_class='form-group col-md-6'),
+                Column('address', css_class='form-group col-md-12'),
+                Column('skills', css_class='form-group col-md-12'),
             ),
             Submit('submit', 'Submit', css_class='btn btn-success float-right')
         )
 
 
 class IncompleteTravelerForm(ModelForm):
+    date_of_birth = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                'type': 'date',  # This enables browser's built-in date picker
+                'class': 'form-control',
+            }
+        )
+    )
+    passport_expiry = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                'type': 'date',  # This enables browser's built-in date picker
+                'class': 'form-control',
+            }
+        )
+    )
     class Meta:
         model = Traveler
         fields = '__all__'
@@ -100,30 +121,21 @@ class IncompleteTravelerForm(ModelForm):
             Row(
                 Column('full_name', css_class='form-group col-md-6'),
                 Column('phone_number', css_class='form-group col-md-6'),
-            ),
-            Row(
+            
                 Column('date_of_birth', css_class='form-group col-md-4'),
                 Column('gender', css_class='form-group col-md-4'),
                 Column('profile_picture', css_class='form-group col-md-4'),
-            ),
-            Row(
+         
                 Column('address', css_class='form-group col-md-12'),
-            ),
-            Row(
+        
                 Column('city', css_class='form-group col-md-4'),
                 Column('state', css_class='form-group col-md-4'),
                 Column('zip_code', css_class='form-group col-md-2'),
                 Column('country', css_class='form-group col-md-2'),
-            ),
-            Row(
+        
                 Column('passport_number', css_class='form-group col-md-6'),
                 Column('passport_expiry', css_class='form-group col-md-6'),
-            ),
-            Row(
-                Column('emergency_contact_name', css_class='form-group col-md-6'),
-                Column('emergency_contact_phone', css_class='form-group col-md-6'),
-            ),
-            Row(
+        
                 Column('preferred_language', css_class='form-group col-md-4'),
                 Column('dietary_restrictions', css_class='form-group col-md-4'),
                 Column('special_needs', css_class='form-group col-md-4'),

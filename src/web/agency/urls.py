@@ -1,10 +1,10 @@
 from django.urls import path
-
+from .views import AgencyDashboardView
 
 app_name = "agency"
 
 urlpatterns = [
-    # path('agency/dashboard/', DashboardView.as_view(), name="dashboard"),
+    path('agency/dashboard/', AgencyDashboardView.as_view(), name="dashboard"),
    
     # path('agency/orders/', OrdersView.as_view(), name="orders"),
     # path('agency/vehicle/', VehicleView.as_view(), name="vehicle"),

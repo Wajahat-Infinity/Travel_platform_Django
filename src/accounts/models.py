@@ -22,8 +22,8 @@ class User(AbstractUser):
 
     USER_TYPE_CHOICES = (
         ('agency', 'agency'),
-        ('branch', 'branch'),
-        ('buyer', 'buyer'),
+        ('local_guide', 'local_guide'),
+        ('traveler', 'traveler'),
     )
     is_verified = models.BooleanField(default=False)
     is_completed = models.BooleanField(default=False)
