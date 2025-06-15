@@ -1,0 +1,119 @@
+{% load static %}
+
+<header class="header-area">
+
+    <!-----------------------------TOP HEADER -------------------------------------->
+    <div class="header-top-bar padding-right-100px padding-left-100px">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="header-top-content">
+                        <div class="header-left">
+                            <ul class="list-items">
+                                <li>
+                                    <a href="#"
+                                    ><i class="la la-phone mr-1"></i>(123) 123-456</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="#"
+                                    ><i class="la la-envelope mr-1"></i
+                                    >trizen@example.com</a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="header-top-content">
+                        <div
+                                class="header-right d-flex align-items-center justify-content-end"
+                        >
+                           {% if user.is_authenticated %}
+                            {% else %}
+                             <div class="header-right-action">
+                                <a
+                                        href="{% url 'account_signup' %}"
+                                        class="theme-btn theme-btn-small theme-btn-transparent mr-1"
+
+                                >Sign Up</a
+                                >
+                                <a
+                                        href="{% url 'account_login' %}"
+                                        class="theme-btn theme-btn-small"
+                                >Login</a
+                                >
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-----------------------------BOTTOM HEADER ----------------------------------->
+    <div class="header-menu-wrapper padding-right-100px padding-left-100px">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="menu-wrapper">
+                        <a href="#" class="down-button"
+                        ><i class="la la-angle-down"></i
+                        ></a>
+                        <div class="logo">
+                            <a href="index.html"
+                            ><img src="{% static 'website/images/logo.png' %}" alt="logo"
+                            /></a>
+                            <div class="menu-toggler">
+                                <i class="la la-bars"></i>
+                                <i class="la la-times"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="main-menu-content">
+                            <nav>
+                                <ul>
+                                    <li>
+                                        <a href="{% url 'website:home' %}">HOME</a>
+                                    </li>
+                                      <li>
+                                        <a href="{% url 'website:agency' %}">AGENCIES</a>
+                                    </li>
+                                     <li>
+                                        <a href="{% url 'website:schedules' %}">SCHEDULES</a>
+                                    </li>
+                                      <li>
+                                        <a href="{% url 'website:about' %}">ABOUT</a>
+                                    </li>
+                                      <li>
+                                        <a href="{% url 'website:contact' %}">CONTACT</a>
+                                    </li>
+                                      <li>
+                                        <a href="{% url 'website:faq' %}">FAQ's</a>
+                                    </li>
+
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="nav-btn">
+                            <a href="{% url 'website:local-expert' %}" class="theme-btn"
+                            >Become Local Expert</a
+                            >
+                        </div>
+                         {% if user.is_authenticated %}
+                          <div class="nav-btn">
+                            <a href="{% url 'account_login' %}" class="btn btn-warning text-white ml-2"
+                            >Dashboard</a
+                            >
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</header>

@@ -1,0 +1,114 @@
+{% extends 'account/include/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login Now{% endblock %}
+
+{% block content %}
+<div class="auth-page-content overflow-hidden pt-lg-5 mx-auto">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card overflow-hidden m-0 mt-5">
+                    <div class="row justify-content-center g-0">
+                        <div class="col-lg-12">
+                            <div class="p-lg-5 text-center p-5">
+                                <div class="mt-4">
+                                    <div class="user-form-card p-5">
+
+                                        <div class="user-form-title mb-5">
+                                            <h2 class="font-weight-bold">SELECT USER TYPE!</h2>
+                                            <p class="text-muted">Continue with Agency / Continue with Traveler</p>
+                                        </div>
+
+                                        <div class="user-form-group">
+                                            <form method="post" class="user-form">
+                                                {% csrf_token %}
+                                                <div class="row justify-content-center">
+
+                                                    <div class="col-md-4 mb-4">
+                                                        <div class="card border-0 shadow-lg">
+                                                            <div class="card-body text-center">
+                                                                <img src="{% static 'website/images/agency.png' %}"
+                                                                     class="img-fluid mb-3" alt="Agency"
+                                                                     style="height: 100px;">
+                                                                <h3 class="card-title text- mb-0 font-weight-bold">
+                                                                    AGENCY</h3>
+                                                                <div class="form-check-inline mt-3">
+                                                                    <input type="radio" value="1" name="user_type"
+                                                                           id="user_type"
+                                                                           class="form-check-input" required>
+                                                                    <label for="user_type"
+                                                                           class="form-check-label text-secondary font-weight-bold">Select
+                                                                        Agency</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mb-4">
+                                                        <div class="card border-0 shadow-lg">
+                                                            <div class="card-body text-center">
+                                                                <img src="{% static 'website/images/branch.png' %}"
+                                                                     class="img-fluid mb-3" alt="Agency"
+                                                                     style="height: 100px;">
+                                                                <h3 class="card-title text- mb-0 font-weight-bold">
+                                                                    BRANCH</h3>
+                                                                <div class="form-check-inline mt-3">
+                                                                    <input type="radio" value="3" name="user_type"
+                                                                           class="form-check-input" required>
+                                                                    <label for="user_type"
+                                                                           class="form-check-label text-secondary">Independent
+                                                                        Branch</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mb-4">
+                                                        <div class="card border-0 shadow-lg">
+                                                            <div class="card-body text-center">
+                                                                <img src="{% static 'website/images/traveller.png' %}"
+                                                                     class="img-fluid mb-3" alt="Agency"
+                                                                     style="height: 100px;">
+                                                                < <h3 class="card-title text- mb-0 font-weight-bold">
+                                                                TRAVELLER</h3>
+                                                                <div class="form-check-inline mt-3">
+                                                                    <input type="radio" value="2" name="user_type"
+                                                                           class="form-check-input" required>
+                                                                    <label for="user_type"
+                                                                           class="form-check-label text-secondary">Traveller</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="mt-4 text-center">
+                                                    <button class="btn btn-primary btn-lg px-5 py-3" type="submit">
+                                                        <span class="la la-arrow-right mr-2"></span> Continue
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5 text-center">
+                                    <div class="mt-4 text-center">
+                                        <p class="mb-0 text-muted">
+                                            <span class="la la-lightbulb-o text-warning"></span>
+                                            <b>Note!</b> Not sure where to go?
+                                            <a href="{% url 'website:contact' %}" class="text-primary">Contact us</a>
+                                            or <a href="{% url 'accounts:logout' %}" class="text-danger">logout</a>
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

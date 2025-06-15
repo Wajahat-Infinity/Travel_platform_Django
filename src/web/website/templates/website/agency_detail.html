@@ -1,0 +1,449 @@
+{% extends 'website/base.html' %}
+
+{% load static %}
+
+<!----------------------------------------------TITLE------------------------------------------------------------------>
+{% block title %}
+AGENCY-DETAIL
+{% endblock %}
+
+{% block css %}
+<style>
+    /* Styles for the branch card */
+ .card-item.cruise--card {
+   background-color: #fff;
+   border-radius: 10px;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.2);
+   transition: all 0.2s ease-in-out;
+ }
+
+ .card-item.cruise--card:hover {
+   background-color: #f7f7f7;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 16px 32px rgba(0, 0, 0, 0.4);
+ }
+
+ .card-item.cruise--card .card-img {
+   position: relative;
+   background-color: #fbfbfb;
+   border-radius: 10px 10px 0 0;
+   padding: 20px;
+   text-align: center;
+   animation: pulsate 2s infinite ease-in-out;
+ }
+
+ .card-item.cruise--card .card-img .la-building {
+   font-size: 3em;
+   color: #007bff;
+   transition: transform 0.2s ease-in-out;
+ }
+
+ .card-item.cruise--card:hover .card-img .la-building {
+   transform: scale(1.1);
+ }
+
+ @keyframes pulsate {
+   0% {
+     transform: scale(1);
+   }
+   50% {
+     transform: scale(1.05);
+   }
+   100% {
+     transform: scale(1);
+   }
+ }
+
+ .card-item.cruise--card .card-body {
+   padding: 20px;
+ }
+
+ .card-item.cruise--card .card-title {
+   font-size: 1.2em;
+   font-weight: bold;
+   margin-bottom: 10px;
+ }
+
+ .card-item.cruise--card .card-meta {
+   margin-bottom: 5px;
+   font-size: 1em;
+ }
+
+ .card-item.cruise--card .card-meta span {
+   color: #888;
+   font-weight: bold;
+ }
+
+ .card-item.cruise--card .card-meta strong {
+   color: #333;
+   font-weight: normal;
+ }
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+<!----------------------------------------------BREAD CRUMB------------------------------------------------------------>
+<section class="breadcrumb-top-bar">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-list breadcrumb-top-list">
+                    <ul class="list-items bg-transparent radius-none p-0">
+                        <li><a href="{% url 'website:home'%}">Home</a></li>
+                        <li>France</li>
+                        <li>Hilton Hotel and Resorts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!----------------------------------------------AGENCY LIST------------------------------------------------------------>
+<section class="breadcrumb-area bread-bg-7 py-0">
+    <div class="breadcrumb-wrap">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-btn">
+                        <div class="btn-box">
+                            <a class="theme-btn" data-fancybox="video"
+                               data-src="https://www.youtube.com/watch?v=5u1WISBbo5I" data-speed="700">
+                                <i class="la la-video-camera mr-2"></i>Video
+                            </a>
+                            <a class="theme-btn" data-src="{% static 'website/images/img1.jpg' %}"
+                               data-fancybox="gallery" data-caption="Showing image - 01" data-speed="700">
+                                <i class="la la-photo mr-2"></i>More Photos
+                            </a>
+                        </div>
+                        <a class="d-none" data-fancybox="gallery" data-src="{% static 'website/images/img2.jpg' %}"
+                           data-caption="Showing image - 02" data-speed="700"></a>
+                        <a class="d-none" data-fancybox="gallery" data-src="{% static 'website/images/img3.jpg' %}"
+                           data-caption="Showing image - 03" data-speed="700"></a>
+                        <a class="d-none" data-fancybox="gallery" data-src="{% static 'website/images/img4.jpg' %}"
+                           data-caption="Showing image - 04" data-speed="700"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!----------------------------------------------INFO AREA-------------------------------------------------------------->
+<section class="tour-detail-area padding-bottom-90px">
+
+    <div class="text-center" id="single-content-navbar">
+        <div class="container mt-5 ">
+            <ul class="nav nav-tabs justify-content-center mb-5" id="myTabs">
+                <li class="nav-item">
+                    <a class="nav-link active text-black font-weight-bold " id="tab1-tab" data-toggle="tab" href="#tab1">BRANCHES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-black font-weight-bold" id="tab2-tab" data-toggle="tab" href="#tab2">SCHEDULES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-black font-weight-bold" id="tab3-tab" data-toggle="tab" href="#tab3">BUSES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-black font-weight-bold" id="tab4-tab" data-toggle="tab" href="#tab4">AGENCY DETAILS</a>
+                </li>
+            </ul>
+
+            <div class="tab-content mt-2">
+                <div class="tab-pane fade show active" id="tab1">
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            {% if branches %}
+
+                            {% for branch in branches %}
+                            <div class="card-item cruise--card">
+                                <div class="card-img">
+                                    <span class="la la-building"></span>
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="card-title">
+                                        <a href="branch-details.html">{{ branch.name }}</a>
+                                    </h3>
+                                    <p class="card-meta">
+                                        <span>Location:</span>
+                                        <strong>{{ branch.location }}</strong>
+                                    </p>
+                                    <p class="card-meta">
+                                        <span>Contact Email:</span>
+                                        <strong class="text-primary">{{ branch.contact_email }}</strong>
+                                    </p>
+                                    <p class="card-meta">
+                                        <span>Contact Phone:</span>
+                                        <strong class="text-primary">{{ branch.contact_phone }}</strong>
+                                    </p>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            {% else %}
+                            <div class="col-lg-10 mt-3">
+                                <div class="card-item card-item-list ">
+                                    <div class="card-body">
+                                        <h3 class="card-title text-danger">NO BRANCHES FOUND</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade " id="tab2">
+                    <div class="row">
+
+                        {% if schedules %}
+
+                        {% for schedule in schedules %}
+                        <div class="col-lg-12 mt-3">
+                            <div class="card-item card-item-list card-item-improved">
+                                <div class="card-body">
+                                    <h3 class="card-title mb-3">
+                                        <span class="la la-calendar"></span>&nbsp;
+                                        Date: {{ schedule.schedule_date }}
+                                    </h3>
+
+                                    <div class="row">
+                                        <div class="col-lg-4 mb-3">
+                                            <h3 class="card-title">
+                                                <span class="la la-clock"></span>&nbsp;
+                                                Departure Time:
+                                            </h3>
+                                            <h5 class="text-primary">{{ schedule.departure_time }}</h5>
+
+                                            <p class="mt-3">
+                                                <span class="la la-map-marker"></span>&nbsp;
+                                                From:
+                                                <strong>{{ schedule.vehicle.content_object.location }}</strong>
+                                            </p>
+                                        </div>
+
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="card-img">
+                                                <span style="font-size:800%;color:blue" class="la la-calendar"></span>
+                                                <div class="add-to-wishlist icon-element" data-toggle="tooltip"
+                                                     data-placement="top" title="" data-original-title="Save for Later">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 mb-3">
+                                            <h3 class="card-title">
+                                                <span class="la la-clock"></span>&nbsp;
+                                                Arrival Time:
+                                            </h3>
+                                            <h5 class="text-primary">{{ schedule.arrival_time }}</h5>
+
+                                            <p class="mt-3">
+                                                <span class="la la-map-marker"></span>&nbsp;
+                                                To:
+                                                <strong>{{ schedule.destination }}</strong>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-price d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <span class="price__from">Price: </span>
+                                            <span class="price__num">{{ schedule.price }} RS</span>
+                                        </div>
+
+                                        <a href="{% url 'website:vehicle-detail' schedule.vehicle.id %} " class="btn btn-warning btn-improved">Book Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        {% else %}
+                        <div class="col-lg-10 mt-3">
+                            <div class="card-item card-item-list ">
+                                <div class="card-body">
+                                    <h3 class="card-title text-danger">NO SCHEDULES FOUND</h3>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif%}
+
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="tab3">
+
+                    <div class="row">
+                        {% if vehicles %}
+
+                        {% for vehicle in vehicles %}
+                        <div class="col-lg-4 responsive-column">
+                            <div class="card-item car-card">
+                                <div class="card-img">
+                                    <a href="{% url 'website:vehicle-detail' 1 %}" class="d-block">
+                                        <img src="{{vehicle.image.url}}"
+                                             alt="car-img">
+                                    </a>
+                                    <span class="badge">Bestseller</span>
+                                    <div class="add-to-wishlist icon-element" data-toggle="tooltip"
+                                         data-placement="top" title=""
+                                         data-original-title="Save for later">
+                                        <i class="la la-heart-o"></i>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-meta">Compact SUV</p>
+                                    <h3 class="card-title"><a href="{% url 'website:vehicle-detail' 1 %}">Toyota
+                                        Corolla or Similar</a></h3>
+                                    <div class="card-rating">
+                                        <span class="badge text-white">4.4/5</span>
+                                        <span class="review__text">Average</span>
+                                        <span class="rating__text">(30 Reviews)</span>
+                                    </div>
+                                    <div class="card-attributes">
+                                        <ul class="d-flex align-items-center">
+                                            <li class="d-flex align-items-center" data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="" data-original-title="Passenger"><i
+                                                    class="la la-users"></i><span>4</span>
+                                            </li>
+                                            <li class="d-flex align-items-center" data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="" data-original-title="Luggage"><i
+                                                    class="la la-suitcase"></i><span>1</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-price d-flex align-items-center justify-content-between">
+                                        <p>
+                                            <span class="price__from">From</span>
+                                            <span class="price__num">$23.00</span>
+                                            <span class="price__text">Per day</span>
+                                        </p>
+                                        <a href="{% url 'website:vehicle-detail' 1 %}" class="btn-text">See
+                                            details<i class="la la-angle-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        {% else %}
+                        <div class="col-lg-10 mt-3">
+                            <div class="card-item card-item-list ">
+                                <div class="card-body">
+                                    <h3 class="card-title text-danger">NO BUSES FOUND</h3>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class="tab-pane fade show active" id="tab4">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="single-content-wrap padding-top-60px">
+                                <div id="description" class="page-scroll">
+
+                                    <div class="single-content-item pb-4">
+                                        <h3 class="title font-size-26">Hilton Hotel and Resorts</h3>
+                                        <div class="d-flex align-items-center pt-2">
+                                            <p class="mr-2">Boston, MA, USA</p>
+                                            <p>
+                                                <span class="badge badge-warning text-white font-size-16">4.7</span>
+                                                <span>(4,209 Reviews)</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="section-block"></div>
+
+                                    <div class="single-content-item padding-top-40px padding-bottom-40px">
+                                        <h3 class="title font-size-20">ABOUT</h3>
+                                        <p class="py-3">Per consequat adolescens ex, cu nibh commune temporibus vim, ad
+                                            sumo
+                                            viris eloquentiam sed. Mea appareat omittantur eloquentiam ad, nam ei quas
+                                            oportere
+                                            democritum. Prima causae admodum id est, ei timeam inimicus sed. Sit an meis
+                                            aliquam, cetero inermis vel ut. An sit illum euismod facilisis, tamquam
+                                            vulputate
+                                            pertinacia eum at.</p>
+                                        <p>Cum et probo menandri. Officiis consulatu pro et, ne sea sale invidunt, sed
+                                            ut
+                                            sint
+                                            blandit efficiendi. Atomorum explicari eu qui, est enim quaerendum te. Quo
+                                            harum
+                                            viris id. Per ne quando dolore evertitur, pro ad cibo commune.</p>
+                                    </div>
+                                    <div class="section-block"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-block"></div>
+
+<!----------------------------------------------INFO AREA-------------------------------------------------------------->
+
+<section class="related-tour-area section--padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading text-center">
+                    <h2 class="sec__title">You might also like</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row padding-top-50px">
+
+            {% for i in '1234'%}
+            <div class="col-lg-4 responsive-column">
+                <div class="card-item">
+                    <div class="card-img">
+                        <a href="hotel-single.html" class="d-block">
+                            <img src="{% static 'website/images/img1.jpg' %}" alt="hotel-img">
+                        </a>
+                        <span class="badge">Bestseller</span>
+                        <div class="add-to-wishlist icon-element" data-toggle="tooltip" data-placement="top" title=""
+                             data-original-title="Bookmark">
+                            <i class="la la-heart-o"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title"><a href="hotel-single.html">The Millennium Hilton New York</a></h3>
+                        <p class="card-meta">124 E Huron St, New york</p>
+                        <div class="card-rating">
+                            <span class="badge text-white">4.4/5</span>
+                            <span class="review__text">Average</span>
+                            <span class="rating__text">(30 Reviews)</span>
+                        </div>
+                        <div class="card-price d-flex align-items-center justify-content-between">
+                            <p>
+                                <span class="price__from">From</span>
+                                <span class="price__num">$88.00</span>
+                                <span class="price__text">Per night</span>
+                            </p>
+                            <a href="hotel-single.html" class="btn-text">See details<i
+                                    class="la la-angle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+<!------------------------------------------------SUBSCRIBE EMAIL FORM------------------------------------------------->
+{% include 'website/include/subscriber_form.html' %}
+
+{% endblock %}

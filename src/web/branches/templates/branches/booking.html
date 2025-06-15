@@ -1,0 +1,157 @@
+{% extends 'branches/base.html' %}
+{% load static %}
+
+<!--------------------------------------------------TITLE-------------------------------------------------------------->
+{% block title %}
+DASHBOARD
+{% endblock %}
+
+
+{% block content %}
+<div class="dashboard-content-wrap">
+
+    {#--------------Background Area-------------#}
+    <div class="dashboard-bread dashboard--bread dashboard-bread-2">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="breadcrumb-content">
+                        <div class="section-heading">
+                            <h2 class="sec__title font-size-30 text-white">Booking</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="breadcrumb-list text-right">
+                        <ul class="list-items">
+                            <li><a href="index.html" class="text-white">Home</a></li>
+                            <li>Dashboard</li>
+                            <li>Booking</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#--------------Booking List---------------#}
+    <div class="dashboard-main-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-box">
+                        <div class="form-title-wrap">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h3 class="title">Booking Results</h3>
+                                <div class="select-contain">
+                                    <div class="dropdown bootstrap-select select-contain-select"><select
+                                            class="select-contain-select" tabindex="-98">
+                                        <option value="1">Any Status</option>
+                                        <option value="2">Approved</option>
+                                        <option value="3">Pending</option>
+                                        <option value="4">Cancelled</option>
+                                    </select>
+                                        <button type="button" class="btn dropdown-toggle btn-light"
+                                                data-toggle="dropdown" role="combobox" aria-owns="bs-select-1"
+                                                aria-haspopup="listbox" aria-expanded="false" title="Any Status">
+                                            <div class="filter-option">
+                                                <div class="filter-option-inner">
+                                                    <div class="filter-option-inner-inner">Any Status</div>
+                                                </div>
+                                            </div>
+                                        </button>
+                                        <div class="dropdown-menu ">
+                                            <div class="bs-searchbox"><input type="search" class="form-control"
+                                                                             autocomplete="off" placeholder="Search"
+                                                                             role="combobox" aria-label="Search"
+                                                                             aria-controls="bs-select-1"
+                                                                             aria-autocomplete="list"></div>
+                                            <div class="inner show" role="listbox" id="bs-select-1" tabindex="-1">
+                                                <ul class="dropdown-menu inner show" role="presentation"></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-content pb-2">
+
+                            {% if bookings %}
+
+                            {% for object in bookings %}
+                            <div class="card-item card-item-list card-item--list">
+                                <div class="card-img">
+                                    <img src="{% static 'website/images/img1.jpg' %}" alt="hotel-img">
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <h3 class="card-title">Bus No : {{object.schedule.vehicle.registration_number}}</h3>
+                                        <span class="badge badge-warning text-white ml-2">Pending</span>
+                                    </div>
+                                    <ul class="list-items list-items-2 pt-2 pb-3">
+                                        <li><span>Departure:</span>{{object.schedule.departure_time}}</li>
+                                        <li><span>Arrival:</span>{{object.schedule.arrival_time}}</li>
+                                        <li><span>Seat Number:</span>{{object.seat_number}}</li>
+                                        <li><span>Payment Status:</span>
+                                           {% if object.payment_status %}
+                                            <span class="badge badge-success py-1 text-white">Paid</span>
+                                            {% else %}
+                                            <span class="badge badge-danger py-1 text-white">Paid</span>
+                                            {% endif %}
+                                        </li>
+                                        <li><span>Client:</span>{{object.user}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            {% else %}
+
+
+                            <div class="card-item card-item-list card-item--list">
+                                <div class="card-body">
+                                    <h4
+                                            class="text-danger">No Bookings Availble</h4>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {#---------Pagination---------#}
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link page-link-nav" href="#" aria-label="Previous">
+                                    <span aria-hidden="true"><i class="la la-angle-left"></i></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item"><a class="page-link page-link-nav" href="#">1</a></li>
+                            <li class="page-item active">
+                                <a class="page-link page-link-nav" href="#">2 <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="page-item"><a class="page-link page-link-nav" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link page-link-nav" href="#" aria-label="Next">
+                                    <span aria-hidden="true"><i class="la la-angle-right"></i></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="border-top mt-5"></div>
+
+            {#----------DASH FOOTER---------#}
+            {% include 'agency/include/dashboard_footer.html' %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'account/include/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+<!------------------------------------------------TITLE---------------------------------------------------------------->
+{% block title %}
+SIGNUP
+{% endblock %}
+
+{% block css %}
+<style>
+    #hint_id_password1 {
+    display: none;
+}
+     .invalid-feedback#error_1_id_email {
+        color: red;
+    }
+</style>
+{% endblock %}
+
+<!------------------------------------------------MAIN CONTENT--------------------------------------------------------->
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="authfy-container col-xs-12 col-sm-10 col-md-8 col-lg-6 col-sm-offset-1 col-md-offset-2 col-lg-offset-3">
+            <div class="col-sm-5 authfy-panel-left">
+                <div class="brand-col">
+                    <div class="headline">
+
+                        <div class="brand-logo">
+                            <img src="{% static 'login/images/brand-logo-white.png' %}" width="150" alt="brand-logo">
+                        </div>
+
+                        <p>Login using social media to get quick access</p>
+
+                        <div class="row social-buttons">
+                            <div class="col-xs-4 col-sm-4 col-md-12">
+                                <a href="#" class="btn btn-block btn-facebook">
+                                    <i class="fa fa-facebook"></i> <span class="hidden-xs hidden-sm">Signin with facebook</span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4 col-sm-4 col-md-12">
+                                <a href="#" class="btn btn-block btn-twitter">
+                                    <i class="fa fa-twitter"></i> <span
+                                        class="hidden-xs hidden-sm">Signin with twitter</span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4 col-sm-4 col-md-12">
+                                <a href="#" class="btn btn-block btn-google">
+                                    <i class="fa fa-google-plus"></i> <span class="hidden-xs hidden-sm">Signin with google</span>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-7 authfy-panel-right">
+                <div class="authfy-login">
+                    <div class="authfy-panel panel-signup text-center active">
+                        <p><strong>Back to =></strong> <a class="" href="{% url 'website:home'%}">Home</a></p>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12">
+                                <div class="authfy-heading">
+                                    <h3 class="auth-title">Sign up for free!</h3>
+                                </div>
+                                <form name="signupForm" class="signupForm" action="#" method="POST">
+                                    {% csrf_token %}
+                                    {{ form|crispy }}
+                                    <div class="form-group">
+                                        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up with
+                                            email
+                                        </button>
+                                    </div>
+                                </form>
+                                <a href="{% url 'account_login' %}">Already have an account?</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
