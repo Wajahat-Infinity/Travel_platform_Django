@@ -99,17 +99,21 @@
                                 </ul>
                             </nav>
                         </div>
-                        <div class="nav-btn">
-                            <a href="{% url 'website:contact' %}" class="theme-btn"
-                            >Become Local Expert</a
-                            >
-                        </div>
+                    
+                      
                          {% if user.is_authenticated %}
                           <div class="nav-btn">
                             <a href="{% url 'account_login' %}" class="btn btn-warning text-white ml-2"
                             >Dashboard</a
                             >
                         </div>
+                        {% else  %}
+                        <div class="nav-btn">
+                            <a href="{% url 'website:contact' %}" class="theme-btn"
+                            >Become Local Expert</a
+                            >
+                        </div>
+
                         {% endif %}
                     </div>
                 </div>

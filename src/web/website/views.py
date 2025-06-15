@@ -3,8 +3,7 @@ from django.views import View
 from django.views.generic import TemplateView, DetailView, ListView
 
 from src.web.agency.models import Vehicle, Agency
-from src.web.website.models import LocalGuide
-
+from src.web.local_guide.models import LocalGuide
 
 # Create your views here.
 
@@ -63,12 +62,11 @@ class FaqView(TemplateView):
 class LocalGuideView(ListView):
     model = LocalGuide
     template_name = 'website/local_guide.html'
-    context_object_name = 'guides'
-    queryset = LocalGuide.objects.filter(is_featured=True)
+    context_object_name = 'local_guide'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['featured_guides'] = LocalGuide.objects.filter(is_featured=True)[:3]
+        context['local_guide'] = LocalGuide.objects.all()
         return context
 
 

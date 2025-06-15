@@ -7,6 +7,38 @@
 LOCAL GUIDE
 {% endblock %}
 
+
+{% block css %}
+<style>
+    .guide-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.guide-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.guide-cover-img {
+    transition: transform 0.5s ease;
+}
+
+.guide-card:hover .guide-cover-img {
+    transform: scale(1.03);
+}
+
+.stretched-link::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    content: "";
+}
+</style>
+{% endblock %}
+
 <!------------------------------------------------MAIN CONTENT--------------------------------------------------------->
 {% block content %}
 
@@ -46,45 +78,95 @@ LOCAL GUIDE
         </div>
 
         <div class="row padding-top-50px">
-            <div class="col-lg-4 responsive-column">
-                <div class="card-item">
-                    <div class="card-img">
-                        <img src="{% static 'website/images/img21.jpg' %}" alt="local-knowledge">
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title">Local Knowledge</h3>
-                        <p class="card-text">
-                            Our guides are locals who know every hidden gem, secret spot, and authentic experience in their area.
-                        </p>
-                    </div>
+
+            {% if local_guide %}
+            {% for guide in local_guide %}
+<div class="col-lg-4 col-md-6 mb-4">
+    <div class="card guide-card h-100 border-0 shadow-sm overflow-hidden">
+        <!-- Cover Image -->
+        <div class="guide-cover-img" style="height: 180px; background-image: url('{% if guide.cover_image %}{{ guide.cover_image.url }}{% else %}{% static 'website/images/guide-default-cover.jpg' %}{% endif %}'); background-size: cover; background-position: center;">
+        </div>
+        
+        <!-- Profile Image -->
+        <div class="text-center mt-n5">
+            <img src="{% if guide.image %}{{ guide.image.url }}{% else %}{% static 'website/images/avatar-default.png' %}{% endif %}" 
+                 alt="{{ guide.full_name }}" 
+                 class="rounded-circle border border-3 border-white shadow-sm" 
+                 style="width: 100px; height: 100px; object-fit: cover;">
+        </div>
+        
+        <!-- Card Body -->
+        <div class="card-body text-center pt-4">
+            <h3 class="h5 mb-1">{{ guide.full_name }}</h3>
+            
+            <!-- Rating - Fixed to handle None values -->
+            <div class="d-flex justify-content-center align-items-center mb-2">
+                <div class="text-warning me-1">
+                    {% if guide.rating %}
+                        {% with ''|center:guide.rating as range %}
+                            {% for _ in range %}
+                                <i class="fas fa-star"></i>
+                            {% endfor %}
+                        {% endwith %}
+                        {% if guide.rating|floatformat:"0" != guide.rating %}
+                            <i class="fas fa-star-half-alt"></i>
+                        {% endif %}
+                    {% else %}
+                        <span class="text-muted">No ratings yet</span>
+                    {% endif %}
+                </div>
+                {% if guide.review_count %}
+                <small class="text-muted">({{ guide.review_count }} reviews)</small>
+                {% endif %}
+            </div>
+            
+            <!-- Location -->
+            <p class="text-muted mb-2">
+                <i class="fas fa-map-marker-alt text-primary me-1"></i>
+                {% if guide.city %}{{ guide.city }}{% endif %}{% if guide.city and guide.country %}, {% endif %}{% if guide.country %}{{ guide.country }}{% endif %}
+            </p>
+            
+            <!-- Experience -->
+            <p class="small mb-3">
+                <i class="fas fa-briefcase text-primary me-1"></i>
+                {% if guide.experience_years %}{{ guide.experience_years }} years experience{% else %}Experience not specified{% endif %}
+            </p>
+            
+            <!-- Skills (truncated) -->
+            <p class="card-text text-muted mb-3">
+                {% if guide.skills %}{{ guide.skills|truncatechars:100 }}{% else %}No skills listed{% endif %}
+            </p>
+            
+            <!-- Languages (badges) -->
+            <div class="d-flex flex-wrap justify-content-center mb-3">
+                {% if guide.languages_spoken.all %}
+                    {% for lang in guide.languages_spoken.all|slice:":3" %}
+                    <span class="badge bg-light text-dark me-1 mb-1">
+                        <i class="fas fa-language text-primary me-1"></i>
+                        {{ lang.language.name }}
+                    </span>
+                    {% endfor %}
+                {% else %}
+                    <span class="badge bg-light text-dark">No languages listed</span>
+                {% endif %}
+            </div>
+            
+            <!-- View Profile Button -->
+            <a href="{% url 'website:local_guide_detail' guide.pk %}" class="btn btn-outline-primary stretched-link">
+                View Profile <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+            {% else %}
+            <div class="col-lg-12">
+                <div class="section-heading text-center">
+                    <h2 class="sec__title">No Local Guides Available</h2>
+                    <p class="sec__desc">Please check back later</p>
                 </div>
             </div>
-            <div class="col-lg-4 responsive-column">
-                <div class="card-item">
-                    <div class="card-img">
-                        <img src="{% static 'website/images/img22.jpg' %}" alt="personalized-experience">
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title">Personalized Experience</h3>
-                        <p class="card-text">
-                            Get customized tours and recommendations based on your interests and preferences.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 responsive-column">
-                <div class="card-item">
-                    <div class="card-img">
-                        <img src="{% static 'website/images/img23.jpg' %}" alt="cultural-insights">
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title">Cultural Insights</h3>
-                        <p class="card-text">
-                            Learn about local customs, traditions, and history from those who live it every day.
-                        </p>
-                    </div>
-                </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 </section>
