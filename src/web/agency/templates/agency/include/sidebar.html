@@ -9,15 +9,15 @@
         <div class="author-content">
             <div class="d-flex align-items-center">
                 <div class="author-img avatar-sm">
-                     {% if user.profile_image %}
-                    <img src="{{user.profile_image.url}}" alt="user">
+                    {% if user.agency.profile_image %}
+                    <img src="{{ user.agency.profile_image.url }}" alt="user">
                     {% else %}
                     <img src="{% static 'website/images/user_default.png' %}" alt="user">
                     {% endif %}
                 </div>
                 <div class="author-bio">
-                    <h4 class="author__title">{{user.username|capfirst}} Travel Agency</h4>
-                    <span class="author__meta">Welcome to Admin Panel</span>
+                    <h4 class="author__title">{{ user.agency.name|default:user.username|capfirst }}</h4>
+                    <span class="author__meta">Travel Agency Dashboard</span>
                 </div>
             </div>
         </div>
@@ -25,34 +25,36 @@
         <div class="sidebar-menu-wrap">
             <ul class="sidebar-menu toggle-menu list-items">
                 <li class="{% if request.path == '/agency/dashboard/' %}page-active{% endif %}">
-                    <a href="{% url 'agency:dashboard' %}"><i class="la la-dashboard mr-2"></i>Website</a></li>
-                <li class="">
-                    <a href="{% url 'agency:dashboard' %}"><i class="la la-dashboard mr-2"></i>Dashboard</a></li>
-                <li class="{% if request.path == '/agency/booking/' %}page-active{% endif %}">
-                    <a href="{% url 'agency:dashboard' %}"><i
-                            class="la la-shopping-cart mr-2 text-color"></i>Packages</a></li>
-                <li class="{% if request.path == '/agency/booking/' %}page-active{% endif %}">
-                    <a href="{% url 'agency:dashboard' %}"><i
-                            class="la la-shopping-cart mr-2 text-color"></i>Booking</a></li>
-
-                <li class="{% if request.path == '/agency/vehicle/' %}page-active{% endif %}">
-                    <a href="{% url 'agency:dashboard' %}"><i
-                            class="la la-car mr-2 text-color"></i>Vehicles</a></li>
-        
-                <li class="{% if request.path == '/agency/travel-agents/' %}page-active{% endif %}"><a href="{% url 'agency:dashboard' %}"><i class="la la-text-width mr-2 text-color-7"></i>Hotels</a></li>
-                <li class="{% if request.path == '/agency/travel-agents/' %}page-active{% endif %}"><a href="{% url 'agency:dashboard' %}"><i class="la la-text-width mr-2 text-color-7"></i>Customers</a></li>
-            
-                <li class="{% if request.path == '/agency/location/' %}page-active{% endif %}">
-                    <a href="{% url 'agency:dashboard' %}"><i class="la la-map-signs mr-2 text-color-9"></i>Analytics</a>
+                    <a href="{% url 'agency:dashboard' %}"><i class="la la-dashboard mr-2"></i>Dashboard</a>
                 </li>
-                <li class="{% if request.path == '/agency/location/' %}page-active{% endif %}">
-                    <a href="{% url 'agency:dashboard' %}"><i class="la la-map-signs mr-2 text-color-9"></i>Payments</a>
+                <li class="{% if 'packages' in request.path %}page-active{% endif %}">
+                    <a href="{% url 'agency:package_list' %}"><i class="la la-suitcase mr-2 text-color"></i>Packages</a>
                 </li>
-                <li class="{% if request.path == '/agency/setting/' %}page-active{% endif %}"><a href="{% url 'agency:dashboard' %}"><i class="la la-cog mr-2 text-color-10"></i>User Settings</a>
+                <li class="{% if 'bookings' in request.path %}page-active{% endif %}">
+                    <a href="{% url 'agency:booking_list' %}"><i class="la la-shopping-cart mr-2 text-color"></i>Bookings</a>
                 </li>
-                <li><a href="{% url 'account_logout' %}"><i class="la la-power-off mr-2 text-color-11"></i>Logout</a></li>
+                <li class="{% if 'vehicles' in request.path %}page-active{% endif %}">
+                    <a href="{% url 'agency:vehicle_list' %}"><i class="la la-car mr-2 text-color"></i>Vehicles</a>
+                </li>
+                <li class="{% if 'hotels' in request.path %}page-active{% endif %}">
+                    <a href="{% url 'agency:hotel_list' %}"><i class="la la-hotel mr-2 text-color-7"></i>Hotels</a>
+                </li>
+                <li class="{% if 'customers' in request.path %}page-active{% endif %}">
+                    <a href="{% url 'agency:customer_list' %}"><i class="la la-users mr-2 text-color-7"></i>Customers</a>
+                </li>
+                <li class="{% if 'analytics' in request.path %}page-active{% endif %}">
+                    <a href="{% url 'agency:analytics' %}"><i class="la la-chart-bar mr-2 text-color-9"></i>Analytics</a>
+                </li>
+                <li class="{% if 'payments' in request.path %}page-active{% endif %}">
+                    <a href="{% url 'agency:payments' %}"><i class="la la-money mr-2 text-color-9"></i>Payments</a>
+                </li>
+                <li class="{% if 'settings' in request.path %}page-active{% endif %}">
+                    <a href="{% url 'agency:settings' %}"><i class="la la-cog mr-2 text-color-10"></i>Settings</a>
+                </li>
+                <li>
+                    <a href="{% url 'account_logout' %}"><i class="la la-power-off mr-2 text-color-11"></i>Logout</a>
+                </li>
             </ul>
         </div>
-
     </div>
 </div>

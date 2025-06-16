@@ -6,7 +6,7 @@ class Agency(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='agency_profile'
+        related_name='agency'
     )
     name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True)
@@ -20,6 +20,7 @@ class Agency(models.Model):
     description = models.TextField()
     establish_year = models.DateField()
     cover_image = models.ImageField(upload_to='agency/cover_images/', null=True, blank=True)
+    profile_image = models.ImageField(upload_to='agency/profile_images/', null=True, blank=True)
     website = models.URLField(max_length=255, null=True, blank=True)
     team_size = models.PositiveIntegerField(default=0)
     rating = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
@@ -39,12 +40,15 @@ class Hotel(models.Model):
         related_name='hotels'
     )
     name = models.CharField(max_length=255)
-    address = models.TextField()
-    contact_phone = models.CharField(max_length=15)
-    star_rating = models.PositiveIntegerField(
+    location = models.CharField(max_length=255)
+    rating = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
+    price_range = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField()
     is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['name']
@@ -60,6 +64,10 @@ class HotelImage(models.Model):
     )
     image = models.ImageField(upload_to='hotel/images/')
     is_featured = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Image for {self.hotel.name}"
 
 class Vehicle(models.Model):
     agency = models.ForeignKey(

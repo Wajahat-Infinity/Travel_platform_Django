@@ -99,7 +99,7 @@ class ProfileCompleteView(View):
     def get(self, request):
         try:
             # Check if user already has an agency profile
-            instance = request.user.agency_profile  # Using related_name
+            instance = request.user.agency  # Using related_name
         except Agency.DoesNotExist:
             instance = None
             
@@ -109,7 +109,7 @@ class ProfileCompleteView(View):
 
     def post(self, request):
         try:
-            instance = request.user.agency_profile  # Get existing profile if exists
+            instance = request.user.agency  # Get existing profile if exists
         except Agency.DoesNotExist:
             instance = None
             

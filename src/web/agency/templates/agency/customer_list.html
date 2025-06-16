@@ -1,0 +1,55 @@
+{% extends 'agency/base.html' %}
+{% load static %}
+
+{% block title %}Customers - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">All Customers</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Total Bookings</th>
+                                    <th>Total Spent</th>
+                                    <th>Last Booking</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for customer in customers %}
+                                <tr>
+                                    <td>{{ customer.user.get_full_name }}</td>
+                                    <td>{{ customer.user.email }}</td>
+                                    <td>{{ customer.phone_number }}</td>
+                                    <td>{{ customer.bookings.count }}</td>
+                                    <td>${{ customer.bookings.aggregate.total|default:"0.00" }}</td>
+                                    <td>{{ customer.bookings.first.created_at|date:"M d, Y"|default:"-" }}</td>
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-info">View Profile</a>
+                                        <a href="#" class="btn btn-sm btn-primary">View Bookings</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center">No customers found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

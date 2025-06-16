@@ -1,0 +1,64 @@
+{% extends 'agency/base.html' %}
+{% load static %}
+
+{% block title %}Vehicles - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title">All Vehicles</h4>
+                    <a href="{% url 'agency:vehicle_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add New Vehicle
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>Capacity</th>
+                                    <th>Registration Number</th>
+                                    <th>Image</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for vehicle in vehicles %}
+                                <tr>
+                                    <td>{{ vehicle.model }}</td>
+                                    <td>{{ vehicle.capacity }} persons</td>
+                                    <td>{{ vehicle.registration_number }}</td>
+                                    <td>
+                                        {% if vehicle.image %}
+                                        <img src="{{ vehicle.image.url }}" alt="{{ vehicle.model }}" class="img-thumbnail" style="max-width: 100px;">
+                                        {% else %}
+                                        <span class="text-muted">No image</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'agency:vehicle_edit' vehicle.pk %}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <a href="{% url 'agency:vehicle_delete' vehicle.pk %}" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No vehicles found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
