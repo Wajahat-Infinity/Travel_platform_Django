@@ -4,14 +4,11 @@
 
 <!--------------------------------------------------TITLE-------------------------------------------------------------->
 {% block title %}
-DASHBOARD
+Settings
 {% endblock %}
-
 
 {% block content %}
 <div class="dashboard-content-wrap">
-
-    {#-------Setting background-------#}
     <div class="dashboard-bread dashboard--bread dashboard-bread-2">
         <div class="container-fluid">
             <div class="row align-items-center">
@@ -35,13 +32,11 @@ DASHBOARD
         </div>
     </div>
 
-    {#-------User Setting-------#}
     <div class="dashboard-main-content">
         <div class="container-fluid">
             <form action="." method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">
-
                     <div class="col-lg-12">
                         <div class="form-box">
                             <div class="form-title-wrap">
@@ -55,70 +50,111 @@ DASHBOARD
                                             150x150 And Suitable files are .jpg &amp; .png</p>
                                         <div class="file-upload-wrap file-upload-wrap-2">
                                             <div class="MultiFile-wrap" id="MultiFile11">
-
-                                                {{ form.profile_image.label_tag }} <br>
-                                                {{ form.profile_image }}
-
-                                                <div class="MultiFile-list" id="MultiFile1_list"></div>
+                                                {{ form.profile_picture|as_crispy_field }}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="contact-form-action">
-                                    <form action="#" class="MultiFile-intercepted">
-                                        <div class="row">
-
-                                            <div class="col-lg-6 responsive-column">
-                                                <div class="input-box">
-                                                    <div class="form-group">
-                                                        {{form.first_name|as_crispy_field}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 responsive-column">
-                                                <div class="input-box">
-                                                    <div class="form-group">
-                                                        {{form.last_name|as_crispy_field}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 responsive-column">
-                                                <div class="input-box">
-                                                    <div class="form-group">
-                                                        {{form.phone_number|as_crispy_field}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 responsive-column">
-                                                <div class="input-box">
-                                                    <div class="form-group">
-                                                        {{form.country|as_crispy_field}}
-                                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 responsive-column">
+                                            <div class="input-box">
+                                                <div class="form-group">
+                                                    {{ form.full_name|as_crispy_field }}
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
+                                        <div class="col-lg-6 responsive-column">
+                                            <div class="input-box">
+                                                <div class="form-group">
+                                                    {{ form.date_of_birth|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 responsive-column">
+                                            <div class="input-box">
+                                                <div class="form-group">
+                                                    {{ form.gender|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 responsive-column">
+                                            <div class="input-box">
+                                                <div class="form-group">
+                                                    {{ form.phone_number|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 responsive-column">
+                                            <div class="input-box">
+                                                <div class="form-group">
+                                                    {{ form.address|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 responsive-column">
+                                            <div class="input-box">
+                                                <div class="form-group">
+                                                    {{ form.city|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 responsive-column">
+                                            <div class="input-box">
+                                                <div class="form-group">
+                                                    {{ form.state|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 responsive-column">
+                                            <div class="input-box">
+                                                <div class="form-group">
+                                                    {{ form.zip_code|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 responsive-column">
+                                            <div class="input-box">
+                                                <div class="form-group">
+                                                    {{ form.country|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 responsive-column">
+                                            <div class="input-box">
+                                                <div class="form-group">
+                                                    {{ form.passport_number|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 responsive-column">
+                                            <div class="input-box">
+                                                <div class="form-group">
+                                                    {{ form.passport_expiry|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 responsive-column">
+                                            <div class="input-box">
+                                                <div class="form-group">
+                                                    {{ form.preferred_language|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="col-lg-12 text-center">
                         <div class="btn-box">
                             <button class="theme-btn" type="submit">Update Profile</button>
                         </div>
                     </div>
-
-
                 </div>
             </form>
-
             <div class="border-top mt-4"></div>
-
-            {#----------DASH FOOTER---------#}
-            {% include 'buyer/include/dashboard_footer.html' %}
-
         </div>
     </div>
 </div>

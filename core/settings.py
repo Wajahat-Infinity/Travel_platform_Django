@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'src.web.website',
     'src.web.agency',
     'src.web.traveler',
+    'src.web.booking',
     'src.web.local_guide',
     'src.accounts.apps.AccountsConfig',
     'src.administration.admins.apps.AdministrationAdminConfig'

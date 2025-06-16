@@ -9,46 +9,85 @@
         <div class="author-content">
             <div class="d-flex align-items-center">
                 <div class="author-img avatar-sm">
-                     {% if user.profile_image %}
-                    <img src="{{user.profile_image.url}}" alt="user">
+                    {% if user.traveler_profile.profile_picture %}
+                    <img src="{{ user.traveler_profile.profile_picture.url }}" alt="user">
                     {% else %}
                     <img src="{% static 'website/images/user_default.png' %}" alt="user">
                     {% endif %}
                 </div>
                 <div class="author-bio">
-                    <h4 class="author__title">{{user.username|capfirst}} Travel Agency</h4>
-                    <span class="author__meta">Welcome to Admin Panel</span>
+                    <h4 class="author__title">{{ traveler.full_name }}</h4>
+                    <span class="author__meta">{{ traveler.user.email }}</span>
                 </div>
             </div>
         </div>
 
         <div class="sidebar-menu-wrap">
             <ul class="sidebar-menu toggle-menu list-items">
-                <li class="{% if request.path == '/agency/dashboard/' %}page-active{% endif %}">
-                    <a href="{% url 'website:home' %}"><i class="la la-dashboard mr-2"></i>Website</a></li>
-                <li class="{% if request.path == '/agency/dashboard/' %}page-active{% endif %}">
-                    <a href="{% url 'traveler:dashboard' %}"><i class="la la-dashboard mr-2"></i>Dashboard</a></li>
-                <li class="{% if request.path == '/agency/booking/' %}page-active{% endif %}">
-                    <a href="{% url 'traveler:booking' %}"><i
-                            class="la la-shopping-cart mr-2 text-color"></i>Booking</a></li>
-              
-                <li>
-                    <span class="side-menu-icon toggle-menu-icon">
-                        
-                    </span>
-                    <a href="{% url 'traveler:finance' %}"><i class="la la-area-chart mr-2 text-color-8"></i>Saved</a>
+                <li class="{% if request.path == '/' %}page-active{% endif %}">
+                    <a href="{% url 'website:home' %}"><i class="la la-home mr-2"></i>Website</a>
+                </li>
+                <li class="{% if request.path == '/traveler/dashboard/' %}page-active{% endif %}">
+                    <a href="{% url 'traveler:dashboard' %}"><i class="la la-dashboard mr-2"></i>Dashboard</a>
+                </li>
+                <li class="{% if request.path == '/traveler/booking/' %}page-active{% endif %}">
+                    <a href="{% url 'traveler:booking' %}">
+                        <i class="la la-shopping-cart mr-2 text-color"></i>My Bookings
+                        {% if booking_stats.active > 0 %}
+                        <span class="badge badge-primary ml-2">{{ booking_stats.active }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                <li class="{% if request.path == '/traveler/saved/' %}page-active{% endif %}">
+                    <a href="{% url 'traveler:saved' %}">
+                        <i class="la la-heart mr-2 text-color-2"></i>Saved Trips
+                    </a>
+                </li>
+                <li class="{% if request.path == '/traveler/trips/' %}page-active{% endif %}">
+                    <a href="{% url 'traveler:trips' %}">
+                        <i class="la la-map-marker mr-2 text-color-3"></i>My Trips
+                        {% if booking_stats.confirmed > 0 %}
+                        <span class="badge badge-info ml-2">{{ booking_stats.confirmed }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+               
+                <li class="{% if request.path == '/traveler/profile/' %}page-active{% endif %}">
+                    <a href="{% url 'traveler:profile' %}">
+                        <i class="la la-user mr-2 text-color-9"></i>My Profile
+                    </a>
+                </li>
+                <li class="{% if request.path == '/traveler/settings/' %}page-active{% endif %}">
+                    <a href="{% url 'traveler:settings' %}">
+                        <i class="la la-cog mr-2 text-color-10"></i>Settings
+                    </a>
                 </li>
                 <li>
-                    <span class="side-menu-icon toggle-menu-icon">
-                        
-                    </span>
-                    <a href="{% url 'traveler:finance' %}"><i class="la la-area-chart mr-2 text-color-8"></i>My Trips</a>
+                    <a href="{% url 'account_logout' %}">
+                        <i class="la la-power-off mr-2 text-color-11"></i>Logout
+                    </a>
                 </li>
-                <li class="{% if request.path == '/traveler/setting/' %}page-active{% endif %}"><a href="{% url 'traveler:settings' %}"><i class="la la-cog mr-2 text-color-10"></i>User Settings</a>
-                </li>
-                <li><a href="{% url 'account_logout' %}"><i class="la la-power-off mr-2 text-color-11"></i>Logout</a></li>
             </ul>
         </div>
+
+        {% if active_bookings %}
+        <div class="sidebar-widget mt-4">
+            <h3 class="widget-title">Active Bookings</h3>
+            <div class="active-bookings-list">
+                {% for booking in active_bookings %}
+                <div class="booking-item p-2 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">{{ booking.trip.title|truncatechars:20 }}</h6>
+                            <small class="text-muted">{{ booking.start_date|date:"M d, Y" }}</small>
+                        </div>
+                        <span class="badge badge-{{ booking.status|lower }}">{{ booking.status }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
 
     </div>
 </div>

@@ -1,0 +1,128 @@
+{% extends 'traveler/base.html' %}
+
+{% load static %}
+
+{% block title %}
+Saved Trips
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-content-wrap">
+    <div class="dashboard-bread dashboard-bread-2">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="breadcrumb-content">
+                        <div class="section-heading">
+                            <h2 class="sec__title font-size-30 text-white">Saved Trips</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="breadcrumb-list text-right">
+                        <ul class="list-items">
+                            <li><a href="{% url 'website:home' %}" class="text-white">Home</a></li>
+                            <li>Pages</li>
+                            <li>Saved Trips</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-main-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-box">
+                        <div class="form-title-wrap">
+                            <h3 class="title">My Saved Trips</h3>
+                        </div>
+                        <div class="form-content">
+                            {% if saved_trips %}
+                            <div class="row">
+                                {% for trip in saved_trips %}
+                                <div class="col-lg-4 responsive-column">
+                                    <div class="card-item">
+                                        <div class="card-img">
+                                            {% if trip.image %}
+                                            <img src="{{ trip.image.url }}" alt="{{ trip.title }}">
+                                            {% else %}
+                                            <img src="{% static 'website/images/default-trip.jpg' %}" alt="Default">
+                                            {% endif %}
+                                            <span class="badge">{{ trip.duration }} days</span>
+                                            <div class="add-to-wishlist">
+                                                <a href="{% url 'traveler:save_trip' trip.id %}" class="heart-icon">
+                                                    <i class="la la-heart"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">
+                                                <a href="#">{{ trip.title }}</a>
+                                            </h3>
+                                            <p class="card-meta">
+                                                <span><i class="la la-map-marker"></i> {{ trip.destination }}</span>
+                                            </p>
+                                            <div class="card-rating">
+                                                <span class="badge text-white">${{ trip.price_per_person }} per person</span>
+                                            </div>
+                                            <div class="card-amenity">
+                                                <ul class="d-flex align-items-center">
+                                                    <li><i class="la la-users text-color-2"></i> Max {{ trip.max_people }} people</li>
+                                                    <li><i class="la la-building text-color-3"></i> {{ trip.agency.name }}</li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-btn mt-4">
+                                                <a href="#" class="theme-btn theme-btn-small theme-btn-transparent">View Details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            {% if is_paginated %}
+                            <div class="pagination-box mt-4">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-center">
+                                        {% if page_obj.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        {% endif %}
+
+                                        {% for num in page_obj.paginator.page_range %}
+                                        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                        </li>
+                                        {% endfor %}
+
+                                        {% if page_obj.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+                            </div>
+                            {% endif %}
+
+                            {% else %}
+                            <div class="alert alert-info">
+                                You haven't saved any trips yet.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

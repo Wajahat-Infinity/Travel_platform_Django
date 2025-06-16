@@ -1,0 +1,168 @@
+{% extends 'traveler/base.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{{ guide.full_name }} - Local Guide
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-content-wrap">
+    <div class="dashboard-bread dashboard-bread-2">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="breadcrumb-content">
+                        <div class="section-heading">
+                            <h2 class="sec__title font-size-30 text-white">Guide Profile</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="breadcrumb-list text-right">
+                        <ul class="list-items">
+                            <li><a href="{% url 'website:home' %}" class="text-white">Home</a></li>
+                            <li>Local Guides</li>
+                            <li>Guide Profile</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-main-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="form-box">
+                        <div class="form-title-wrap">
+                            <h3 class="title">Guide Information</h3>
+                        </div>
+                        <div class="form-content">
+                            <div class="guide-profile">
+                                <div class="guide-header mb-4">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-3">
+                                            {% if guide.image %}
+                                            <img src="{{ guide.image.url }}" alt="{{ guide.full_name }}" class="rounded-circle img-fluid">
+                                            {% else %}
+                                            <img src="{% static 'website/images/default-avatar.jpg' %}" alt="Default" class="rounded-circle img-fluid">
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-9">
+                                            <h3>{{ guide.full_name }}</h3>
+                                            <p class="mb-2">
+                                                <i class="la la-map-marker"></i> {{ guide.city }}, {{ guide.country }}
+                                            </p>
+                                            <p class="mb-0">
+                                                <i class="la la-star text-warning"></i> {{ guide.rating|default:"No ratings yet" }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="guide-details">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="detail-item">
+                                                <h5>Experience</h5>
+                                                <p>{{ guide.experience_years }} years</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="detail-item">
+                                                <h5>Availability</h5>
+                                                <p>
+                                                    <span class="badge {% if guide.availability == 'AVAILABLE' %}badge-success{% elif guide.availability == 'UNAVAILABLE' %}badge-danger{% else %}badge-warning{% endif %}">
+                                                        {{ guide.availability|title }}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {% if guide.skills %}
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <div class="detail-item">
+                                                <h5>Skills</h5>
+                                                <p>{{ guide.skills }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if guide.languages_spoken.all %}
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <div class="detail-item">
+                                                <h5>Languages</h5>
+                                                <ul class="list-unstyled">
+                                                    {% for lang in guide.languages_spoken.all %}
+                                                    <li>{{ lang.language.name }} ({{ lang.proficiency }})</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if guide.certifications.all %}
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <div class="detail-item">
+                                                <h5>Certifications</h5>
+                                                <ul class="list-unstyled">
+                                                    {% for cert in guide.certifications.all %}
+                                                    <li>{{ cert.certification.name }} ({{ cert.date_obtained|date:"Y" }})</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    {% if user.is_authenticated and guide.availability == 'AVAILABLE' %}
+                    <div class="form-box">
+                        <div class="form-title-wrap">
+                            <h3 class="title">Book This Guide</h3>
+                        </div>
+                        <div class="form-content">
+                            <form method="post" action="{% url 'local_guide:book-guide' guide.id %}" class="form">
+                                {% csrf_token %}
+                                {{ booking_form|crispy }}
+                            </form>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="form-box">
+                        <div class="form-title-wrap">
+                            <h3 class="title">Booking Status</h3>
+                        </div>
+                        <div class="form-content">
+                            {% if not user.is_authenticated %}
+                            <div class="alert alert-info">
+                                Please <a href="{% url 'login' %}">login</a> to book this guide.
+                            </div>
+                            {% elif guide.availability != 'AVAILABLE' %}
+                            <div class="alert alert-warning">
+                                This guide is currently {{ guide.availability|lower }}.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

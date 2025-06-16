@@ -2,39 +2,35 @@
 
 {% load static %}
 
-<!--------------------------------------------------TITLE-------------------------------------------------------------->
 {% block title %}
-DASHBOARD
+My Bookings
 {% endblock %}
-
 
 {% block content %}
 <div class="dashboard-content-wrap">
-
-    {#--------------Background Area-------------#}
-    <div class="dashboard-bread dashboard--bread dashboard-bread-2">
+    <div class="dashboard-bread dashboard-bread-2">
         <div class="container-fluid">
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <div class="breadcrumb-content">
                         <div class="section-heading">
-                            <h2 class="sec__title font-size-30 text-white">Booking</h2>
+                            <h2 class="sec__title font-size-30 text-white">My Bookings</h2>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="breadcrumb-list text-right">
                         <ul class="list-items">
-                            <li><a href="index.html" class="text-white">Home</a></li>
-                            <li>Dashboard</li>
-                            <li>Booking</li>
+                            <li><a href="{% url 'website:home' %}" class="text-white">Home</a></li>
+                            <li>Pages</li>
+                            <li>My Bookings</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    {#--------------Booking List---------------#}
+
     <div class="dashboard-main-content">
         <div class="container-fluid">
             <div class="row">
@@ -42,117 +38,208 @@ DASHBOARD
                     <div class="form-box">
                         <div class="form-title-wrap">
                             <div class="d-flex align-items-center justify-content-between">
-                                <h3 class="title">Booking Results</h3>
+                                <h3 class="title">Booking History</h3>
                                 <div class="select-contain">
-                                    <div class="dropdown bootstrap-select select-contain-select"><select
-                                            class="select-contain-select" tabindex="-98">
-                                        <option value="1">Any Status</option>
-                                        <option value="2">Approved</option>
-                                        <option value="3">Pending</option>
-                                        <option value="4">Cancelled</option>
+                                    <select class="select-contain-select" id="status-filter">
+                                        <option value="">All Bookings</option>
+                                        <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Pending</option>
+                                        <option value="confirmed" {% if request.GET.status == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                                        <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>Completed</option>
+                                        <option value="cancelled" {% if request.GET.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
                                     </select>
-                                        <button type="button" class="btn dropdown-toggle btn-light"
-                                                data-toggle="dropdown" role="combobox" aria-owns="bs-select-1"
-                                                aria-haspopup="listbox" aria-expanded="false" title="Any Status">
-                                            <div class="filter-option">
-                                                <div class="filter-option-inner">
-                                                    <div class="filter-option-inner-inner">Any Status</div>
-                                                </div>
-                                            </div>
-                                        </button>
-                                        <div class="dropdown-menu ">
-                                            <div class="bs-searchbox"><input type="search" class="form-control"
-                                                                             autocomplete="off" placeholder="Search"
-                                                                             role="combobox" aria-label="Search"
-                                                                             aria-controls="bs-select-1"
-                                                                             aria-autocomplete="list"></div>
-                                            <div class="inner show" role="listbox" id="bs-select-1" tabindex="-1">
-                                                <ul class="dropdown-menu inner show" role="presentation"></ul>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="form-content pb-2">
-
+                        <div class="form-content">
                             {% if bookings %}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Booking ID</th>
+                                            <th>Trip</th>
+                                            <th>Agency</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>People</th>
+                                            <th>Total Price</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for booking in bookings %}
+                                        <tr>
+                                            <td>#{{ booking.booking_number }}</td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    {% if booking.trip.image %}
+                                                    <img src="{{ booking.trip.image.url }}" alt="{{ booking.trip.title }}" class="rounded mr-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                                    {% endif %}
+                                                    <div>
+                                                        <h6 class="mb-0">{{ booking.trip.title }}</h6>
+                                                        <small class="text-muted">{{ booking.trip.destination }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{ booking.agency.name }}</td>
+                                            <td>{{ booking.start_date|date:"M d, Y" }}</td>
+                                            <td>{{ booking.end_date|date:"M d, Y" }}</td>
+                                            <td>{{ booking.number_of_people }}</td>
+                                            <td>${{ booking.total_price }}</td>
+                                            <td>
+                                                <span class="badge badge-{{ booking.status|lower }}">
+                                                    {{ booking.status }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton{{ booking.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Actions
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ booking.id }}">
+                                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bookingDetails{{ booking.id }}">
+                                                            <i class="la la-eye"></i> View Details
+                                                        </a>
+                                                        {% if booking.status == 'pending' %}
+                                                        <a class="dropdown-item text-danger" href="#" data-toggle="modal" data-target="#cancelBooking{{ booking.id }}">
+                                                            <i class="la la-times"></i> Cancel Booking
+                                                        </a>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
 
-                            {% for object in bookings %}
-                            <div class="card-item card-item-list card-item--list">
-                                <div class="card-img">
-                                    <img src="{% static 'website/images/img1.jpg' %}" alt="hotel-img">
-                                </div>
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <h3 class="card-title">Bus No : {{object.schedule.vehicle.registration_number}}</h3>
-                                        <span class="badge badge-warning text-white ml-2">Pending</span>
-                                    </div>
-                                    <ul class="list-items list-items-2 pt-2 pb-3">
-                                        <li><span>Departure:</span>{{object.schedule.departure_time}}</li>
-                                        <li><span>Arrival:</span>{{object.schedule.arrival_time}}</li>
-                                        <li><span>Seat Number:</span>{{object.seat_number}}</li>
-                                        <li><span>Payment Status:</span>
-                                           {% if object.payment_status %}
-                                            <span class="badge badge-success py-1 text-white">Paid</span>
-                                            {% else %}
-                                            <span class="badge badge-danger py-1 text-white">Paid</span>
-                                            {% endif %}
-                                        </li>
-                                        <li><span>Client:</span>{{object.user}}</li>
-                                    </ul>
-                                </div>
+                                        <!-- Booking Details Modal -->
+                                        <div class="modal fade" id="bookingDetails{{ booking.id }}" tabindex="-1" role="dialog" aria-labelledby="bookingDetailsLabel{{ booking.id }}" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="bookingDetailsLabel{{ booking.id }}">Booking Details #{{ booking.booking_number }}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <h6>Trip Information</h6>
+                                                                <p><strong>Trip:</strong> {{ booking.trip.title }}</p>
+                                                                <p><strong>Destination:</strong> {{ booking.trip.destination }}</p>
+                                                                <p><strong>Duration:</strong> {{ booking.trip.duration }} days</p>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <h6>Booking Information</h6>
+                                                                <p><strong>Start Date:</strong> {{ booking.start_date|date:"M d, Y" }}</p>
+                                                                <p><strong>End Date:</strong> {{ booking.end_date|date:"M d, Y" }}</p>
+                                                                <p><strong>Number of People:</strong> {{ booking.number_of_people }}</p>
+                                                                <p><strong>Total Price:</strong> ${{ booking.total_price }}</p>
+                                                            </div>
+                                                        </div>
+                                                        {% if booking.special_requests %}
+                                                        <div class="row mt-3">
+                                                            <div class="col-12">
+                                                                <h6>Special Requests</h6>
+                                                                <p>{{ booking.special_requests }}</p>
+                                                            </div>
+                                                        </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Cancel Booking Modal -->
+                                        {% if booking.status == 'pending' %}
+                                        <div class="modal fade" id="cancelBooking{{ booking.id }}" tabindex="-1" role="dialog" aria-labelledby="cancelBookingLabel{{ booking.id }}" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="cancelBookingLabel{{ booking.id }}">Cancel Booking #{{ booking.booking_number }}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Are you sure you want to cancel this booking?</p>
+                                                        <p><strong>Trip:</strong> {{ booking.trip.title }}</p>
+                                                        <p><strong>Start Date:</strong> {{ booking.start_date|date:"M d, Y" }}</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <form method="post" action="{% url 'traveler:cancel_booking' booking.id %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-danger">Cancel Booking</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
-                            {% endfor %}
 
-                            {% else %}
+                            {% if is_paginated %}
+                            <div class="pagination-box mt-4">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-center">
+                                        {% if page_obj.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        {% endif %}
 
+                                        {% for num in page_obj.paginator.page_range %}
+                                        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                            <a class="page-link" href="?page={{ num }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">{{ num }}</a>
+                                        </li>
+                                        {% endfor %}
 
-                            <div class="card-item card-item-list card-item--list">
-                                <div class="card-body">
-                                    <h4
-                                            class="text-danger">No Bookings Availble</h4>
-                                </div>
+                                        {% if page_obj.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
                             </div>
                             {% endif %}
 
+                            {% else %}
+                            <div class="alert alert-info">
+                                No bookings found.
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-            {#---------Pagination---------#}
-            <div class="row">
-                <div class="col-lg-12">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link page-link-nav" href="#" aria-label="Previous">
-                                    <span aria-hidden="true"><i class="la la-angle-left"></i></span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                            <li class="page-item"><a class="page-link page-link-nav" href="#">1</a></li>
-                            <li class="page-item active">
-                                <a class="page-link page-link-nav" href="#">2 <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="page-item"><a class="page-link page-link-nav" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link page-link-nav" href="#" aria-label="Next">
-                                    <span aria-hidden="true"><i class="la la-angle-right"></i></span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-            <div class="border-top mt-5"></div>
-
-            {#----------DASH FOOTER---------#}
-            {% include 'agency/include/dashboard_footer.html' %}
-
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block external_js %}
+<script>
+    document.getElementById('status-filter').addEventListener('change', function() {
+        const status = this.value;
+        const currentUrl = new URL(window.location.href);
+        if (status) {
+            currentUrl.searchParams.set('status', status);
+        } else {
+            currentUrl.searchParams.delete('status');
+        }
+        window.location.href = currentUrl.toString();
+    });
+</script>
 {% endblock %}
