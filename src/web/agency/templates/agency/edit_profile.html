@@ -49,116 +49,7 @@ Edit Profile - {{ agency.name }}
                                 <div class="contact-form-action">
                                     <form method="post" enctype="multipart/form-data" class="MultiFile-intercepted">
                                         {% csrf_token %}
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label class="label-text">Agency Name</label>
-                                                    <div class="form-group">
-                                                        <span class="la la-building form-icon"></span>
-                                                        {{ form.name }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label class="label-text">Email Address</label>
-                                                    <div class="form-group">
-                                                        <span class="la la-envelope form-icon"></span>
-                                                        {{ form.email }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label class="label-text">Phone Number</label>
-                                                    <div class="form-group">
-                                                        <span class="la la-phone form-icon"></span>
-                                                        {{ form.phone_number }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label class="label-text">Website</label>
-                                                    <div class="form-group">
-                                                        <span class="la la-globe form-icon"></span>
-                                                        {{ form.website }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="label-text">Address</label>
-                                                    <div class="form-group">
-                                                        <span class="la la-map-marker form-icon"></span>
-                                                        {{ form.address }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <div class="form-group">
-                                                    <label class="label-text">City</label>
-                                                    <div class="form-group">
-                                                        <span class="la la-map form-icon"></span>
-                                                        {{ form.city }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <div class="form-group">
-                                                    <label class="label-text">State</label>
-                                                    <div class="form-group">
-                                                        <span class="la la-map form-icon"></span>
-                                                        {{ form.state }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <div class="form-group">
-                                                    <label class="label-text">Zip Code</label>
-                                                    <div class="form-group">
-                                                        <span class="la la-map form-icon"></span>
-                                                        {{ form.zip_code }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="label-text">Country</label>
-                                                    <div class="form-group">
-                                                        <span class="la la-globe form-icon"></span>
-                                                        {{ form.country }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="label-text">Description</label>
-                                                    <div class="form-group">
-                                                        <span class="la la-pencil form-icon"></span>
-                                                        {{ form.description }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label class="label-text">Profile Image</label>
-                                                    <div class="form-group">
-                                                        <span class="la la-image form-icon"></span>
-                                                        {{ form.profile_image }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label class="label-text">Cover Image</label>
-                                                    <div class="form-group">
-                                                        <span class="la la-image form-icon"></span>
-                                                        {{ form.cover_image }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        {{ form|crispy }}
                                         <div class="section-block"></div>
                                         <div class="btn-box mt-4">
                                             <button type="submit" class="theme-btn">Save Changes</button>
@@ -173,7 +64,7 @@ Edit Profile - {{ agency.name }}
                 <div class="border-top mt-4"></div>
 
                 {#----------DASH FOOTER---------#}
-                {% include 'buyer/include/dashboard_footer.html' %}
+             
 
             </div>
         </div>

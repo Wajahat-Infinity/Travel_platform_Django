@@ -77,58 +77,41 @@
                                        aria-haspopup="true" aria-expanded="false">
                                         <div class="d-flex align-items-center">
                                             <div class="avatar avatar-sm flex-shrink-0 mr-2">
-                                                {% if user.profile_image %}
-                                                <img src="{{user.profile_image.url}}" alt="user">
+                                                {% if user.agency.profile_image %}
+                                                <img src="{{ user.agency.profile_image.url }}" alt="user">
                                                 {% else %}
                                                 <img src="{% static 'website/images/user_default.png' %}" alt="user">
                                                 {% endif %}
-
                                             </div>
                                             <span class="font-size-14 font-weight-bold">{{user.username|capfirst}} Agency Admin</span>
                                         </div>
                                     </a>
-                                    <div class="dropdown-menu dropdown-reveal dropdown-menu-md dropdown-menu-right"
-                                         style="">
+                                    <div class="dropdown-menu dropdown-reveal dropdown-menu-md dropdown-menu-right">
                                         <div class="dropdown-item drop-reveal-header user-reveal-header">
                                             <h6 class="title text-uppercase">Welcome!</h6>
                                         </div>
                                         <div class="list-group drop-reveal-list user-drop-reveal-list">
-
-                                            <a href="{% url 'agency:dashboard' %}"
-                                               class="list-group-item list-group-item-action">
+                                            <a href="{% url 'agency:profile' %}" class="list-group-item list-group-item-action">
                                                 <div class="msg-body">
                                                     <div class="msg-content">
-                                                        <h3 class="title"><i class="la la-user mr-2"></i> Edit Profile
-                                                        </h3>
+                                                        <h3 class="title"><i class="la la-user mr-2"></i> Edit Profile</h3>
                                                     </div>
                                                 </div>
                                             </a>
-                                            <a href="{% url 'account_change_password' %}"
-                                               class="list-group-item list-group-item-action">
+                                            <a href="{% url 'account_change_password' %}" class="list-group-item list-group-item-action">
                                                 <div class="msg-body">
                                                     <div class="msg-content">
-                                                        <h3 class="title"><i class="la la-gear mr-2"></i>Change Password
-                                                        </h3>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="{% url 'agency:dashboard' %}"
-                                               class="list-group-item list-group-item-action">
-                                                <div class="msg-body">
-                                                    <div class="msg-content">
-                                                        <h3 class="title"><i class="la la-gear mr-2"></i>Settings</h3>
+                                                        <h3 class="title"><i class="la la-gear mr-2"></i>Change Password</h3>
                                                     </div>
                                                 </div>
                                             </a>
                                             <div class="section-block"></div>
-                                            <a href="{% url 'account_logout' %}"
-                                               class="list-group-item list-group-item-action">
+                                            <a href="{% url 'account_logout' %}" class="list-group-item list-group-item-action">
                                                 <div class="msg-body">
                                                     <div class="msg-content">
-                                                        <h3 class="title"><i class="la la-power-off mr-2"></i>Logout
-                                                        </h3>
+                                                        <h3 class="title"><i class="la la-power-off mr-2"></i>Logout</h3>
                                                     </div>
-                                                </div><!-- end msg-body -->
+                                                </div>
                                             </a>
                                         </div>
                                     </div>

@@ -138,17 +138,20 @@ class AgencySettingsView(AgencyBaseView, TemplateView):
 class AgencyEditProfileView(AgencyBaseView, UpdateView):
     model = Agency
     template_name = 'agency/edit_profile.html'
-    fields = ['name', 'description', 'address', 'phone', 'email', 'website', 'profile_image']
+    fields = ['name', 'description', 'address', 'email', 'website', 'profile_image']
     success_url = reverse_lazy('agency:profile')
 
     def get_object(self, queryset=None):
         return self.request.user.agency
 
-    def post(self, request, *args, **kwargs):
-        agency = request.user.agency
-        # Handle form submission for profile update
-        messages.success(request, 'Profile updated successfully!')
-        return redirect('agency:profile')
+    def form_valid(self, form):
+        messages.success(self.request, 'Profile updated successfully!')
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['agency'] = self.request.user.agency
+        return context
 
 # Package Views
 class PackageListView(AgencyBaseView, ListView):

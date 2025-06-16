@@ -49,6 +49,9 @@
                     <a href="{% url 'agency:payments' %}"><i class="la la-money mr-2 text-color-9"></i>Payments</a>
                 </li>
                 <li class="{% if 'settings' in request.path %}page-active{% endif %}">
+                    <a href="{% url 'agency:edit_profile' %}"><i class="la la-cog mr-2 text-color-10"></i>Edit Profile</a>
+                </li>
+                <li class="{% if 'settings' in request.path %}page-active{% endif %}">
                     <a href="{% url 'agency:settings' %}"><i class="la la-cog mr-2 text-color-10"></i>Settings</a>
                 </li>
                 <li>
