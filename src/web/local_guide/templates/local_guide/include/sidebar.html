@@ -32,43 +32,18 @@
 
                 <li class="{% if request.path == '/agency/vehicle/' %}page-active{% endif %}">
                     <a href="{% url 'local_guide:dashboard' %}"><i
-                            class="la la-car mr-2 text-color"></i>Vehicles</a></li>
-                
-                <li class="{% if request.path == '/agency/travellers/' %}page-active{% endif %}">
-                    <span class="side-menu-icon toggle-menu-icon">
-                        <i class="la la-angle-down"></i>
-                    </span>
-                    <a href="{% url 'local_guide:dashboard' %}"><i
-                            class="la la-users mr-2 text-color-3"></i>Travellers</a>
-                    <ul class="toggle-drop-menu">
-                        <li><a href="{% url 'local_guide:dashboard' %}">Traveller Details</a></li>
-                    </ul>
-                </li>
-                <!-- <li class="{% if request.path == '/agency/reviews/' %}page-active{% endif %}"><a href="{% url 'local_guide:dashboard' %}"><i class="la la-star mr-2 text-color-5"></i>Reviews</a></li> -->
-<!--                <li class="{% if request.path == '/agency/wishlist/' %}page-active{% endif %}"><a href="{% url 'local_guide:dashboard' %}"><i class="la la-heart mr-2 text-color-6"></i>Wishlist</a>-->
-<!--                </li>-->
-                <li class="{% if request.path == '/agency/travel-agents/' %}page-active{% endif %}"><a href="{% url 'local_guide:dashboard' %}"><i class="la la-text-width mr-2 text-color-7"></i>Travel
-                    Agents</a></li>
-                <li>
-                    <span class="side-menu-icon toggle-menu-icon">
-                        <i class="la la-angle-down"></i>
-                    </span>
-                    <a href="{% url 'local_guide:dashboard' %}"><i class="la la-area-chart mr-2 text-color-8"></i>Finance</a>
-                    <ul class="toggle-drop-menu">
-                        <li><a href="{% url 'local_guide:dashboard' %}">Invoice</a></li>
-                        <li><a href="{% url 'local_guide:dashboard' %}">Payments</a></li>
-                        <li><a href="{% url 'local_guide:dashboard' %}">Currency List</a></li>
-                        <li><a href="{% url 'local_guide:dashboard' %}">Subscribers</a></li>
-                    </ul>
-                </li>
+                            class="la la-car mr-2 text-color"></i>Travelers</a></li>
+                            <li class="{% if request.path == '/agency/vehicle/' %}page-active{% endif %}">
+                                <a href="{% url 'local_guide:dashboard' %}"><i
+                                        class="la la-car mr-2 text-color"></i>Payments</a></li>
+              
                 <li class="{% if request.path == '/agency/location/' %}page-active{% endif %}">
-                    <a href="{% url 'local_guide:dashboard' %}"><i class="la la-map-signs mr-2 text-color-9"></i>Locations</a>
+                    <a href="{% url 'local_guide:dashboard' %}"><i class="la la-map-signs mr-2 text-color-9"></i>Tours</a>
                 </li>
                 <li class="{% if request.path == '/agency/setting/' %}page-active{% endif %}"><a href="{% url 'local_guide:dashboard' %}"><i class="la la-cog mr-2 text-color-10"></i>User Settings</a>
                 </li>
                 <li><a href="{% url 'account_logout' %}"><i class="la la-power-off mr-2 text-color-11"></i>Logout</a></li>
             </ul>
         </div>
-
     </div>
 </div>

@@ -25,47 +25,26 @@
         <div class="sidebar-menu-wrap">
             <ul class="sidebar-menu toggle-menu list-items">
                 <li class="{% if request.path == '/agency/dashboard/' %}page-active{% endif %}">
-                    <a href="{% url 'agency:dashboard' %}"><i class="la la-dashboard mr-2"></i>Dashboard</a></li>
+                    <a href="{% url 'website:home' %}"><i class="la la-dashboard mr-2"></i>Website</a></li>
+                <li class="{% if request.path == '/agency/dashboard/' %}page-active{% endif %}">
+                    <a href="{% url 'traveler:dashboard' %}"><i class="la la-dashboard mr-2"></i>Dashboard</a></li>
                 <li class="{% if request.path == '/agency/booking/' %}page-active{% endif %}">
-                    <a href="{% url 'agency:booking' %}"><i
+                    <a href="{% url 'traveler:booking' %}"><i
                             class="la la-shopping-cart mr-2 text-color"></i>Booking</a></li>
-
-                <li class="{% if request.path == '/agency/vehicle/' %}page-active{% endif %}">
-                    <a href="{% url 'agency:vehicle' %}"><i
-                            class="la la-car mr-2 text-color"></i>Vehicles</a></li>
-                 <li class="{% if request.path == '/agency/branches/' %}page-active{% endif %}"><a href="{% url 'agency:branches' %}"><i class="la la-home mr-2 text-color-6"></i>Branches</a>
-                </li>
-                <li class="{% if request.path == '/agency/travellers/' %}page-active{% endif %}">
-                    <span class="side-menu-icon toggle-menu-icon">
-                        <i class="la la-angle-down"></i>
-                    </span>
-                    <a href="{% url 'agency:travellers' %}"><i
-                            class="la la-users mr-2 text-color-3"></i>Travellers</a>
-                    <ul class="toggle-drop-menu">
-                        <li><a href="{% url 'agency:travellers' %}">Traveller Details</a></li>
-                    </ul>
-                </li>
-                <li class="{% if request.path == '/agency/reviews/' %}page-active{% endif %}"><a href="{% url 'agency:reviews' %}"><i class="la la-star mr-2 text-color-5"></i>Reviews</a></li>
-<!--                <li class="{% if request.path == '/agency/wishlist/' %}page-active{% endif %}"><a href="{% url 'agency:wishlist' %}"><i class="la la-heart mr-2 text-color-6"></i>Wishlist</a>-->
-<!--                </li>-->
-                <li class="{% if request.path == '/agency/travel-agents/' %}page-active{% endif %}"><a href="{% url 'agency:travel-agents' %}"><i class="la la-text-width mr-2 text-color-7"></i>Travel
-                    Agents</a></li>
+              
                 <li>
                     <span class="side-menu-icon toggle-menu-icon">
-                        <i class="la la-angle-down"></i>
+                        
                     </span>
-                    <a href="{% url 'agency:dashboard' %}"><i class="la la-area-chart mr-2 text-color-8"></i>Finance</a>
-                    <ul class="toggle-drop-menu">
-                        <li><a href="{% url 'agency:invoices' %}">Invoice</a></li>
-                        <li><a href="{% url 'agency:payments' %}">Payments</a></li>
-                        <li><a href="{% url 'agency:currency' %}">Currency List</a></li>
-                        <li><a href="{% url 'agency:subscriber' %}">Subscribers</a></li>
-                    </ul>
+                    <a href="{% url 'traveler:finance' %}"><i class="la la-area-chart mr-2 text-color-8"></i>Saved</a>
                 </li>
-                <li class="{% if request.path == '/agency/location/' %}page-active{% endif %}">
-                    <a href="{% url 'agency:location' %}"><i class="la la-map-signs mr-2 text-color-9"></i>Locations</a>
+                <li>
+                    <span class="side-menu-icon toggle-menu-icon">
+                        
+                    </span>
+                    <a href="{% url 'traveler:finance' %}"><i class="la la-area-chart mr-2 text-color-8"></i>My Trips</a>
                 </li>
-                <li class="{% if request.path == '/agency/setting/' %}page-active{% endif %}"><a href="{% url 'agency:setting' %}"><i class="la la-cog mr-2 text-color-10"></i>User Settings</a>
+                <li class="{% if request.path == '/traveler/setting/' %}page-active{% endif %}"><a href="{% url 'traveler:settings' %}"><i class="la la-cog mr-2 text-color-10"></i>User Settings</a>
                 </li>
                 <li><a href="{% url 'account_logout' %}"><i class="la la-power-off mr-2 text-color-11"></i>Logout</a></li>
             </ul>

@@ -16,3 +16,18 @@ from django.contrib.auth.decorators import login_required
 class DashboardView(TemplateView):
     template_name = 'traveler/dashboard.html'
 
+
+@method_decorator(login_required, name='dispatch')
+class BookingView(TemplateView):
+    template_name = 'traveler/booking.html'
+
+
+@method_decorator(login_required, name='dispatch')
+class FinanceView(TemplateView):
+    template_name = 'traveler/invoices.html'
+
+
+@method_decorator(login_required, name='dispatch')
+class SettingView(TemplateView):
+    template_name = 'traveler/setting.html'
+
