@@ -84,7 +84,7 @@ Settings
                                         <div class="input-box">
                                             <label class="label-text">Experience (Years)</label>
                                             <div class="form-group">
-                                                <input class="form-control" type="number" name="experience_years" value="{{ guide.experience_years }}" min="0">
+                                                <input class="form-control" type="number" name="experience_years" value="{{ guide.experience_years }}" min="0" max="100">
                                             </div>
                                         </div>
                                     </div>
@@ -98,31 +98,87 @@ Settings
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="input-box">
+                                            <label class="label-text">State</label>
+                                            <div class="form-group">
+                                                <input class="form-control" type="text" name="state" value="{{ guide.state }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-box">
                                             <label class="label-text">Country</label>
                                             <div class="form-group">
                                                 <input class="form-control" type="text" name="country" value="{{ guide.country }}">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-6">
                                         <div class="input-box">
-                                            <label class="label-text">Bio</label>
+                                            <label class="label-text">Zip Code</label>
                                             <div class="form-group">
-                                                <textarea class="form-control" name="bio" rows="4">{{ guide.bio }}</textarea>
+                                                <input class="form-control" type="text" name="zip_code" value="{{ guide.zip_code }}">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="input-box">
+                                            <label class="label-text">Address</label>
+                                            <div class="form-group">
+                                                <textarea class="form-control" name="address" rows="2">{{ guide.address }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="input-box">
+                                            <label class="label-text">Skills</label>
+                                            <div class="form-group">
+                                                <textarea class="form-control" name="skills" rows="3">{{ guide.skills }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-box">
+                                            <label class="label-text">Availability</label>
+                                            <div class="form-group">
+                                                <select class="form-control" name="availability">
+                                                    {% for value, label in availability_choices %}
+                                                    <option value="{{ value }}" {% if guide.availability == value %}selected{% endif %}>{{ label }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-box">
                                             <label class="label-text">Profile Image</label>
                                             <div class="form-group">
                                                 <div class="file-upload-wrap">
-                                                    <input class="file-upload-input" type="file" name="profile_image" accept="image/*" id="profile_image">
+                                                    <input class="file-upload-input" type="file" name="image" accept="image/*" id="profile_image">
                                                     <div class="file-upload-content">
-                                                        {% if guide.profile_image %}
-                                                        <img src="{{ guide.profile_image.url }}" alt="Current profile image" class="img-fluid mb-2" style="max-width: 200px;">
+                                                        {% if guide.image %}
+                                                        <img src="{{ guide.image.url }}" alt="Current profile image" class="img-fluid mb-2" style="max-width: 200px;">
                                                         {% else %}
                                                         <img src="{% static 'website/images/user_default.png' %}" alt="Default profile image" class="img-fluid mb-2" style="max-width: 200px;">
+                                                        {% endif %}
+                                                        <div class="file-upload-btn">
+                                                            <span class="btn-text">Choose File</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-box">
+                                            <label class="label-text">Cover Image</label>
+                                            <div class="form-group">
+                                                <div class="file-upload-wrap">
+                                                    <input class="file-upload-input" type="file" name="cover_image" accept="image/*" id="cover_image">
+                                                    <div class="file-upload-content">
+                                                        {% if guide.cover_image %}
+                                                        <img src="{{ guide.cover_image.url }}" alt="Current cover image" class="img-fluid mb-2" style="max-width: 200px;">
+                                                        {% else %}
+                                                        <img src="{% static 'website/images/cover_default.jpg' %}" alt="Default cover image" class="img-fluid mb-2" style="max-width: 200px;">
                                                         {% endif %}
                                                         <div class="file-upload-btn">
                                                             <span class="btn-text">Choose File</span>
@@ -150,24 +206,46 @@ Settings
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const fileInput = document.getElementById('profile_image');
-    const fileUploadContent = document.querySelector('.file-upload-content');
-    const fileUploadBtn = document.querySelector('.file-upload-btn');
-    const previewImage = fileUploadContent.querySelector('img');
+    // Profile image upload preview
+    const profileImageInput = document.getElementById('profile_image');
+    const profileImageContent = profileImageInput.closest('.file-upload-wrap').querySelector('.file-upload-content');
+    const profileImagePreview = profileImageContent.querySelector('img');
+    const profileImageBtn = profileImageContent.querySelector('.file-upload-btn');
 
-    fileInput.addEventListener('change', function(e) {
+    profileImageInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                previewImage.src = e.target.result;
+                profileImagePreview.src = e.target.result;
             }
             reader.readAsDataURL(file);
         }
     });
 
-    fileUploadBtn.addEventListener('click', function() {
-        fileInput.click();
+    profileImageBtn.addEventListener('click', function() {
+        profileImageInput.click();
+    });
+
+    // Cover image upload preview
+    const coverImageInput = document.getElementById('cover_image');
+    const coverImageContent = coverImageInput.closest('.file-upload-wrap').querySelector('.file-upload-content');
+    const coverImagePreview = coverImageContent.querySelector('img');
+    const coverImageBtn = coverImageContent.querySelector('.file-upload-btn');
+
+    coverImageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                coverImagePreview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    coverImageBtn.addEventListener('click', function() {
+        coverImageInput.click();
     });
 });
 </script>
