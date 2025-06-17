@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
 from src.web.traveler.models import Traveler
+import os
 
 class LocalGuide(models.Model):
     AVAILABILITY_CHOICES = [
@@ -16,6 +17,11 @@ class LocalGuide(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='local_guide_app_profile'
+    )
+    travelers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='guides_followed',
+        blank=True
     )
     full_name = models.CharField(max_length=255)
     experience_years = models.PositiveIntegerField(
