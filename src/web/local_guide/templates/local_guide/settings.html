@@ -1,0 +1,175 @@
+{% extends 'local_guide/base.html' %}
+
+{% load static %}
+
+{% block title %}
+Settings
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-content-wrap">
+    <div class="dashboard-bread dashboard-bread-2">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="breadcrumb-content">
+                        <div class="section-heading">
+                            <h2 class="sec__title font-size-30 text-white">Settings</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="breadcrumb-list text-right">
+                        <ul class="list-items">
+                            <li><a href="{% url 'website:home' %}" class="text-white">Home</a></li>
+                            <li>Pages</li>
+                            <li>Settings</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-main-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="form-box">
+                        <div class="form-title-wrap">
+                            <h3 class="title">Account Settings</h3>
+                        </div>
+                        <div class="form-content">
+                            <form method="post" enctype="multipart/form-data" class="form">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="input-box">
+                                            <label class="label-text">Full Name</label>
+                                            <div class="form-group">
+                                                <input class="form-control" type="text" name="full_name" value="{{ guide.full_name }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-box">
+                                            <label class="label-text">Email</label>
+                                            <div class="form-group">
+                                                <input class="form-control" type="email" value="{{ guide.user.email }}" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-box">
+                                            <label class="label-text">Phone Number</label>
+                                            <div class="form-group">
+                                                <input class="form-control" type="tel" name="phone" value="{{ guide.phone }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-box">
+                                            <label class="label-text">Experience (Years)</label>
+                                            <div class="form-group">
+                                                <input class="form-control" type="number" name="experience_years" value="{{ guide.experience_years }}" min="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-box">
+                                            <label class="label-text">City</label>
+                                            <div class="form-group">
+                                                <input class="form-control" type="text" name="city" value="{{ guide.city }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-box">
+                                            <label class="label-text">Country</label>
+                                            <div class="form-group">
+                                                <input class="form-control" type="text" name="country" value="{{ guide.country }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="input-box">
+                                            <label class="label-text">Bio</label>
+                                            <div class="form-group">
+                                                <textarea class="form-control" name="bio" rows="4">{{ guide.bio }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="input-box">
+                                            <label class="label-text">Profile Image</label>
+                                            <div class="form-group">
+                                                <div class="file-upload-wrap">
+                                                    <input class="file-upload-input" type="file" name="profile_image" accept="image/*" id="profile_image">
+                                                    <div class="file-upload-content">
+                                                        {% if guide.profile_image %}
+                                                        <img src="{{ guide.profile_image.url }}" alt="Current profile image" class="img-fluid mb-2" style="max-width: 200px;">
+                                                        {% else %}
+                                                        <img src="{% static 'website/images/user_default.png' %}" alt="Default profile image" class="img-fluid mb-2" style="max-width: 200px;">
+                                                        {% endif %}
+                                                        <div class="file-upload-btn">
+                                                            <span class="btn-text">Choose File</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="btn-box">
+                                            <button class="theme-btn" type="submit">Save Changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('profile_image');
+    const fileUploadContent = document.querySelector('.file-upload-content');
+    const fileUploadBtn = document.querySelector('.file-upload-btn');
+    const previewImage = fileUploadContent.querySelector('img');
+
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    fileUploadBtn.addEventListener('click', function() {
+        fileInput.click();
+    });
+});
+</script>
+{% endblock %}
+{% endblock %} 

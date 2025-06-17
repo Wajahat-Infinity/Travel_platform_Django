@@ -1,16 +1,15 @@
 from django.urls import path
-from .views import (
-    LocalGuideListView, LocalGuideCreateView, LocalGuideDetailView,
-    LocalGuideDashboardView, BookGuideView, BookingSuccessView
-)
+from . import views
 
-app_name = "local_guide"
+app_name = 'local_guide'
 
 urlpatterns = [
-    path('guides/dashboard/', LocalGuideDashboardView.as_view(), name='dashboard'),
-    path('guides/', LocalGuideListView.as_view(), name='localguide-list'),
-    path('guides/create/', LocalGuideCreateView.as_view(), name='localguide-create'),
-    path('guides/<int:pk>/', LocalGuideDetailView.as_view(), name='localguide-detail'),
-    path('guides/<int:guide_id>/book/', BookGuideView.as_view(), name='book-guide'),
-    path('bookings/<int:pk>/success/', BookingSuccessView.as_view(), name='booking-success'),
+    path('guides/dashboard/', views.LocalGuideDashboardView.as_view(), name='dashboard'),
+    path('guides/bookings/', views.BookingListView.as_view(), name='booking_list'),
+    path('guides/bookings/<int:pk>/', views.BookingDetailView.as_view(), name='booking_detail'),
+    path('guides/bookings/<int:pk>/update/', views.BookingUpdateView.as_view(), name='booking_update'),
+    path('guides/payments/', views.PaymentListView.as_view(), name='payment_list'),
+    path('guides/travelers/', views.TravellerListView.as_view(), name='traveller_list'),
+    path('guides/tours/', views.TourListView.as_view(), name='tour_list'),
+    path('guides/settings/', views.SettingsView.as_view(), name='settings'),
 ]

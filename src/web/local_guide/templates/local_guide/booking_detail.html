@@ -1,0 +1,157 @@
+{% extends 'local_guide/base.html' %}
+
+{% load static %}
+
+{% block title %}
+Booking Details
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-content-wrap">
+    <div class="dashboard-bread dashboard-bread-2">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="breadcrumb-content">
+                        <div class="section-heading">
+                            <h2 class="sec__title font-size-30 text-white">Booking Details</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="breadcrumb-list text-right">
+                        <ul class="list-items">
+                            <li><a href="{% url 'website:home' %}" class="text-white">Home</a></li>
+                            <li><a href="{% url 'local_guide:booking_list' %}" class="text-white">Bookings</a></li>
+                            <li>Booking Details</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-main-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="form-box">
+                        <div class="form-title-wrap">
+                            <h3 class="title">Booking Information</h3>
+                        </div>
+                        <div class="form-content">
+                            <div class="card-item">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>Booking ID</label>
+                                                <p class="form-control-static">#{{ booking.id }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>Status</label>
+                                                <p class="form-control-static">
+                                                    <span class="badge {% if booking.status == 'confirmed' %}badge-success{% elif booking.status == 'pending' %}badge-warning{% else %}badge-danger{% endif %}">
+                                                        {{ booking.status|title }}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>Start Date</label>
+                                                <p class="form-control-static">{{ booking.start_date|date:"M d, Y" }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>End Date</label>
+                                                <p class="form-control-static">{{ booking.end_date|date:"M d, Y" }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>Number of People</label>
+                                                <p class="form-control-static">{{ booking.number_of_people }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>Total Price</label>
+                                                <p class="form-control-static">${{ booking.total_price }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Special Requests</label>
+                                        <p class="form-control-static">{{ booking.special_requests|default:"No special requests" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-box">
+                        <div class="form-title-wrap">
+                            <h3 class="title">Traveler Information</h3>
+                        </div>
+                        <div class="form-content">
+                            <div class="card-item">
+                                <div class="card-body">
+                                    <div class="text-center mb-4">
+                                        {% if booking.traveler.profile_image %}
+                                        <img src="{{ booking.traveler.profile_image.url }}" alt="{{ booking.traveler.user.get_full_name }}" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                                        {% else %}
+                                        <img src="{% static 'website/images/user_default.png' %}" alt="{{ booking.traveler.user.get_full_name }}" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                                        {% endif %}
+                                        <h4 class="mt-3">{{ booking.traveler.user.get_full_name }}</h4>
+                                        <p class="text-muted">{{ booking.traveler.user.email }}</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Phone</label>
+                                        <p class="form-control-static">{{ booking.traveler.phone|default:"Not provided" }}</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Address</label>
+                                        <p class="form-control-static">{{ booking.traveler.address|default:"Not provided" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if booking.status == 'pending' %}
+                    <div class="form-box mt-4">
+                        <div class="form-title-wrap">
+                            <h3 class="title">Update Status</h3>
+                        </div>
+                        <div class="form-content">
+                            <form method="post" action="{% url 'local_guide:booking_update' booking.id %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select name="status" class="form-control">
+                                        <option value="pending" {% if booking.status == 'pending' %}selected{% endif %}>Pending</option>
+                                        <option value="confirmed" {% if booking.status == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                                        <option value="cancelled" {% if booking.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="theme-btn">Update Status</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
