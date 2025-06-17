@@ -79,7 +79,7 @@ urlpatterns += [
     path('', include('src.web.agency.urls', namespace='agency')),
     path('', include('src.web.local_guide.urls', namespace='local_guide')),
     path('', include('src.web.traveler.urls', namespace='traveler')),
-
+    path('destination/', include('destination_predictor.urls', namespace='destination_predictor')),
 ]
 
 if ENVIRONMENT != 'server':
