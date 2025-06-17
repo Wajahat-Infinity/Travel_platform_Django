@@ -8,7 +8,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(
     DEBUG=(bool, True)
 )
-environ.Env.read_env(BASE_DIR / '.env')
 
 DEBUG = True
 ROOT_URLCONF = 'core.urls'
@@ -19,11 +18,10 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/accounts/cross-auth/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SECRET_KEY = env('SECRET_KEY')
-ENVIRONMENT = env('ENVIRONMENT')
+SECRET_KEY = 'django-insecure-development-key-123'
+ENVIRONMENT = 'local'
+SITE_ID = 1
 ALLOWED_HOSTS = ["*"]
-# GOOGLE_CALLBACK_ADDRESS = env('GOOGLE_CALLBACK_URL')
-SITE_ID = int(env('SITE_ID'))
 
 INSTALLED_APPS = [
     # DJANGO APPS
@@ -63,11 +61,11 @@ INSTALLED_APPS = [
     'src.web.booking',
     'src.web.local_guide',
     'src.accounts.apps.AccountsConfig',
-    'src.administration.admins.apps.AdministrationAdminConfig'
+    'src.administration.admins.apps.AdministrationAdminConfig',
+    'destination_predictor',
 ]
 
 MIDDLEWARE = [
-    # DJANGO MIDDLEWARES
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,17 +73,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-    # YOUR MIDDLEWARES
 ]
 
 AUTHENTICATION_BACKENDS = [
-    # DJANGO BACKENDS
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
-
-    # YOUR BACKENDS
 ]
 
 TEMPLATES = [
@@ -106,24 +99,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-if ENVIRONMENT == 'server':
-    DATABASES = {
-        'default': {
-            'ENGINE': env('DB_ENGINE'),
-            'NAME': env('DB_NAME'),
-            'USER': env('DB_USER'),
-            'PASSWORD': env('DB_PASS'),
-            'HOST': env('DB_HOST'),
-            'PORT': env('DB_PORT'),
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -140,32 +121,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-""" INTERNATIONALIZATION --------------------------------------------------------------------------------"""
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Tashkent'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-""" EMAIL CONFIGURATION --------------------------------------------------------------------------------"""
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = env('EMAIL_PORT')
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
-
-""" RESIZER IMAGE --------------------------------------------------------------------------------"""
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static'
-]
+STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'assets'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-""" RESIZER IMAGE --------------------------------------------------------------------------------"""
 DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]
 DJANGORESIZED_DEFAULT_QUALITY = 75
 DJANGORESIZED_DEFAULT_KEEP_META = True
@@ -177,7 +144,6 @@ DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {
 }
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
-""" ALL-AUTH SETUP --------------------------------------------------------------------------------"""
 ACCOUNT_LOGOUT_ON_GET = True
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
@@ -188,14 +154,6 @@ OLD_PASSWORD_FIELD_ENABLED = True
 LOGOUT_ON_PASSWORD_CHANGE = False
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
-
-""" DEBUGGING TOOLS """
-
-# Make sure to remove this in live server - use it on local server
 if ENVIRONMENT != 'server':
-    INSTALLED_APPS += [
-        'django_browser_reload'
-    ]
-    MIDDLEWARE += [
-        'django_browser_reload.middleware.BrowserReloadMiddleware'
-    ]
+    INSTALLED_APPS += ['django_browser_reload']
+    MIDDLEWARE += ['django_browser_reload.middleware.BrowserReloadMiddleware']

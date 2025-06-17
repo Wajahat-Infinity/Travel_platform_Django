@@ -1,0 +1,823 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}Destination Predictor{% endblock %}
+{% block css %}
+<style>
+    .range-value {
+        display: inline-block;
+        margin-left: 10px;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="breadcrumb-area bread-bg-8">
+    <div class="breadcrumb-wrap">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb-content">
+                        <div class="section-heading">
+                            <h2 class="sec__title text-white">Destination Predictor</h2>
+                            <p class="sec__desc text-white">Find your perfect travel destination based on your preferences</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="card-area section--padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <div class="card-item">
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="Interest" class="form-label">Interest</label>
+                                    <select class="form-select" id="Interest" name="Interest" required>
+                                        <option value="">Select Interest</option>
+                                        <option value="Mountains">Mountains</option>
+                                        <option value="Wildlife/Adventure">Wildlife/Adventure</option>
+                                        <option value="Adventure">Adventure</option>
+                                        <option value="History/Culture">History/Culture</option>
+                                        <option value="Adventure/Nature">Adventure/Nature</option>
+                                        <option value="Nature">Nature</option>
+                                        <option value="Adventure/Sports">Adventure/Sports</option>
+                                        <option value="Nature/Adventure">Nature/Adventure</option>
+                                        <option value="Culture/Adventure">Culture/Adventure</option>
+                                        <option value="Mountains/Adventure">Mountains/Adventure</option>
+                                        <option value="Wildlife/Nature">Wildlife/Nature</option>
+                                        <option value="Culture/History">Culture/History</option>
+                                        <option value="Adventure/Culture">Adventure/Culture</option>
+                                        <option value="Nature/Relaxation">Nature/Relaxation</option>
+                                        <option value="Scenic Beauty">Scenic Beauty</option>
+                                        <option value="Nature/Culture">Nature/Culture</option>
+                                        <option value="Nature/Spirituality">Nature/Spirituality</option>
+                                        <option value="Cultural Immersion">Cultural Immersion</option>
+                                        <option value="Adventure/Scenic">Adventure/Scenic</option>
+                                        <option value="Scenic/Adventure">Scenic/Adventure</option>
+                                        <option value="Nature, Adventure">Nature, Adventure</option>
+                                        <option value="Culture, Adventure">Culture, Adventure</option>
+                                        <option value="Wildlife, Nature">Wildlife, Nature</option>
+                                        <option value="History, Culture">History, Culture</option>
+                                        <option value="Nature, Culture">Nature, Culture</option>
+                                        <option value="Adventure, Culture">Adventure, Culture</option>
+                                        <option value="Culture, History">Culture, History</option>
+                                        <option value="Adventure, Nature">Adventure, Nature</option>
+                                        <option value="Adventure, History">Adventure, History</option>
+                                        <option value="Adventure, Mountaineering">Adventure, Mountaineering</option>
+                                        <option value="Religious, Culture">Religious, Culture</option>
+                                        <option value="Culture, Nature">Culture, Nature</option>
+                                        <option value="Food, Culture">Food, Culture</option>
+                                        <option value="History, Adventure">History, Adventure</option>
+                                        <option value="Culture, Food">Culture, Food</option>
+                                        <option value="Adventure, Wildlife">Adventure, Wildlife</option>
+                                        <option value="Nature, Relaxation">Nature, Relaxation</option>
+                                        <option value="Nature, Wildlife">Nature, Wildlife</option>
+                                        <option value="Nature, History">Nature, History</option>
+                                        <option value="Culture, Religion">Culture, Religion</option>
+                                        <option value="History">History</option>
+                                        <option value="Food">Food</option>
+                                        <option value="Exploration">Exploration</option>
+                                        <option value="Archaeological">Archaeological</option>
+                                        <option value="Cultural">Cultural</option>
+                                        <option value="Religious">Religious</option>
+                                        <option value="Agriculture">Agriculture</option>
+                                        <option value="Culture">Culture</option>
+                                        <option value="Nature/History">Nature/History</option>
+                                        <option value="History/Nature">History/Nature</option>
+                                        <option value="History/Architecture">History/Architecture</option>
+                                        <option value="Spiritual/History">Spiritual/History</option>
+                                        <option value="Nature/Leisure">Nature/Leisure</option>
+                                        <option value="Education">Education</option>
+                                        <option value="Architecture">Architecture</option>
+                                        <option value="Leisure">Leisure</option>
+                                        <option value="Engineering Marvel">Engineering Marvel</option>
+                                        <option value="Archaeology">Archaeology</option>
+                                        <option value="Handicrafts">Handicrafts</option>
+                                        <option value="Adventure/History">Adventure/History</option>
+                                        <option value="Art">Art</option>
+                                        <option value="Nature/Wildlife">Nature/Wildlife</option>
+                                        <option value="History/Religion">History/Religion</option>
+                                        <option value="Sports/Adventure">Sports/Adventure</option>
+                                        <option value="Shopping/Entertainment">Shopping/Entertainment</option>
+                                        <option value="Science/History">Science/History</option>
+                                        <option value="Culture/Art">Culture/Art</option>
+                                        <option value="Culture/Local Life">Culture/Local Life</option>
+                                        <option value="Sports/Leisure">Sports/Leisure</option>
+                                        <option value="Culture/Heritage">Culture/Heritage</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="Goal" class="form-label">Goal of Travel</label>
+                                    <select class="form-select" id="Goal" name="Goal" required>
+                                        <option value="">Select Goal</option>
+                                        <option value="Adventure">Adventure</option>
+                                        <option value="Exploration">Exploration</option>
+                                        <option value="Discover Nature">Discover Nature</option>
+                                        <option value="Trekking">Trekking</option>
+                                        <option value="Skiing">Skiing</option>
+                                        <option value="Photography">Photography</option>
+                                        <option value="Road Trip">Road Trip</option>
+                                        <option value="Sports">Sports</option>
+                                        <option value="Photography/Adventure">Photography/Adventure</option>
+                                        <option value="Trekking/Exploration">Trekking/Exploration</option>
+                                        <option value="Cultural Exploration">Cultural Exploration</option>
+                                        <option value="Trekking/Photography">Trekking/Photography</option>
+                                        <option value="Skiing/Photography">Skiing/Photography</option>
+                                        <option value="Photography/Relaxation">Photography/Relaxation</option>
+                                        <option value="Safari/Exploration">Safari/Exploration</option>
+                                        <option value="Boating/Trekking">Boating/Trekking</option>
+                                        <option value="Photography/Trekking">Photography/Trekking</option>
+                                        <option value="Photography/Exploration">Photography/Exploration</option>
+                                        <option value="Historical Tour">Historical Tour</option>
+                                        <option value="Boating/Photography">Boating/Photography</option>
+                                        <option value="Climbing/Photography">Climbing/Photography</option>
+                                        <option value="Relaxation/Trekking">Relaxation/Trekking</option>
+                                        <option value="Trekking/Climbing">Trekking/Climbing</option>
+                                        <option value="Exploration/Trekking">Exploration/Trekking</option>
+                                        <option value="Scenic Views/Camping">Scenic Views/Camping</option>
+                                        <option value="Ancient Heritage Tour">Ancient Heritage Tour</option>
+                                        <option value="Kayaking/Fishing">Kayaking/Fishing</option>
+                                        <option value="Glacier Walk">Glacier Walk</option>
+                                        <option value="Wildlife Photography">Wildlife Photography</option>
+                                        <option value="Exploration/Photography">Exploration/Photography</option>
+                                        <option value="Jeep Safari">Jeep Safari</option>
+                                        <option value="Rural Life Exploration">Rural Life Exploration</option>
+                                        <option value="Bird Watching">Bird Watching</option>
+                                        <option value="Stargazing">Stargazing</option>
+                                        <option value="Ice Climbing">Ice Climbing</option>
+                                        <option value="Traditional Craft Tour">Traditional Craft Tour</option>
+                                        <option value="High-Altitude Trekking">High-Altitude Trekking</option>
+                                        <option value="Canoeing/Relaxation">Canoeing/Relaxation</option>
+                                        <option value="Architectural Tour">Architectural Tour</option>
+                                        <option value="Mountaineering">Mountaineering</option>
+                                        <option value="Meditation Retreat">Meditation Retreat</option>
+                                        <option value="Hiking/Peaceful Retreat">Hiking/Peaceful Retreat</option>
+                                        <option value="Polo Festival Experience">Polo Festival Experience</option>
+                                        <option value="Kayaking">Kayaking</option>
+                                        <option value="Picnic/Relaxation">Picnic/Relaxation</option>
+                                        <option value="Ice Trekking">Ice Trekking</option>
+                                        <option value="Rural Village Tour">Rural Village Tour</option>
+                                        <option value="Boating/Leisure">Boating/Leisure</option>
+                                        <option value="Ice Hiking Expedition">Ice Hiking Expedition</option>
+                                        <option value="Silk Road Exploration">Silk Road Exploration</option>
+                                        <option value="Wildlife Watching">Wildlife Watching</option>
+                                        <option value="Camping/Stargazing">Camping/Stargazing</option>
+                                        <option value="Fishing/Leisure">Fishing/Leisure</option>
+                                        <option value="Sunset Viewing">Sunset Viewing</option>
+                                        <option value="Desert Camping">Desert Camping</option>
+                                        <option value="Rock Climbing/Exploration">Rock Climbing/Exploration</option>
+                                        <option value="Paragliding">Paragliding</option>
+                                        <option value="Canoeing">Canoeing</option>
+                                        <option value="Bird Migration Watching">Bird Migration Watching</option>
+                                        <option value="Picnic and Nature Walk">Picnic and Nature Walk</option>
+                                        <option value="Historical Monument Tour">Historical Monument Tour</option>
+                                        <option value="Wildlife Exploration">Wildlife Exploration</option>
+                                        <option value="High Altitude Trekking">High Altitude Trekking</option>
+                                        <option value="Ice Hiking">Ice Hiking</option>
+                                        <option value="Glacier Camping">Glacier Camping</option>
+                                        <option value="Peak Climbing Prep">Peak Climbing Prep</option>
+                                        <option value="Ice Adventure">Ice Adventure</option>
+                                        <option value="Climbing Expedition">Climbing Expedition</option>
+                                        <option value="Photography and Trekking">Photography and Trekking</option>
+                                        <option value="Glacier Traverse">Glacier Traverse</option>
+                                        <option value="High-Altitude Camping">High-Altitude Camping</option>
+                                        <option value="Ice Crossing">Ice Crossing</option>
+                                        <option value="Rock Climbing">Rock Climbing</option>
+                                        <option value="Trekking and Camping">Trekking and Camping</option>
+                                        <option value="Ice Climbing Expedition">Ice Climbing Expedition</option>
+                                        <option value="Wilderness Trekking">Wilderness Trekking</option>
+                                        <option value="Alpine Climbing">Alpine Climbing</option>
+                                        <option value="Climbing Preparation">Climbing Preparation</option>
+                                        <option value="Trekking, Rafting">Trekking, Rafting</option>
+                                        <option value="Trekking, Photography">Trekking, Photography</option>
+                                        <option value="Exploration, Photography">Exploration, Photography</option>
+                                        <option value="Heritage Exploration">Heritage Exploration</option>
+                                        <option value="Heritage Tour">Heritage Tour</option>
+                                        <option value="Cultural Exploration, Trekking">Cultural Exploration, Trekking</option>
+                                        <option value="Boating, Photography">Boating, Photography</option>
+                                        <option value="Polo Festival, Trekking">Polo Festival, Trekking</option>
+                                        <option value="River Rafting, Fishing">River Rafting, Fishing</option>
+                                        <option value="Sightseeing, Photography">Sightseeing, Photography</option>
+                                        <option value="Trekking, Cultural Exploration">Trekking, Cultural Exploration</option>
+                                        <option value="Trekking, Exploration">Trekking, Exploration</option>
+                                        <option value="Wildlife Watching, Hiking">Wildlife Watching, Hiking</option>
+                                        <option value="Religious Tourism, Exploration">Religious Tourism, Exploration</option>
+                                        <option value="Hot Springs, Photography">Hot Springs, Photography</option>
+                                        <option value="Food Exploration, Cultural Exploration">Food Exploration, Cultural Exploration</option>
+                                        <option value="Historical Exploration, Photography">Historical Exploration, Photography</option>
+                                        <option value="Trekking, Historical Exploration">Trekking, Historical Exploration</option>
+                                        <option value="Hiking, Photography">Hiking, Photography</option>
+                                        <option value="Food Exploration, Cultural Heritage">Food Exploration, Cultural Heritage</option>
+                                        <option value="Wildlife Watching, Photography">Wildlife Watching, Photography</option>
+                                        <option value="Adventure Exploration, Cultural Heritage">Adventure Exploration, Cultural Heritage</option>
+                                        <option value="Trekking, Wildlife Watching">Trekking, Wildlife Watching</option>
+                                        <option value="Sightseeing, Heritage">Sightseeing, Heritage</option>
+                                        <option value="Trekking, Camping, Fishing">Trekking, Camping, Fishing</option>
+                                        <option value="Trekking, Camping">Trekking, Camping</option>
+                                        <option value="Trekking, Sightseeing">Trekking, Sightseeing</option>
+                                        <option value="Boating, Relaxation">Boating, Relaxation</option>
+                                        <option value="Sightseeing, Trekking">Sightseeing, Trekking</option>
+                                        <option value="Trekking, Fishing">Trekking, Fishing</option>
+                                        <option value="River Views, Camping">River Views, Camping</option>
+                                        <option value="Wildlife Watching, Trekking">Wildlife Watching, Trekking</option>
+                                        <option value="Relaxation, Sightseeing">Relaxation, Sightseeing</option>
+                                        <option value="Trekking, River Views">Trekking, River Views</option>
+                                        <option value="Sightseeing, Exploration">Sightseeing, Exploration</option>
+                                        <option value="River Views, Heritage">River Views, Heritage</option>
+                                        <option value="Pilgrimage, Heritage">Pilgrimage, Heritage</option>
+                                        <option value="Food Tour">Food Tour</option>
+                                        <option value="History">History</option>
+                                        <option value="Religious">Religious</option>
+                                        <option value="Archaeological">Archaeological</option>
+                                        <option value="Nature">Nature</option>
+                                        <option value="Culinary">Culinary</option>
+                                        <option value="Architecture">Architecture</option>
+                                        <option value="Nature & Culture">Nature & Culture</option>
+                                        <option value="Agriculture">Agriculture</option>
+                                        <option value="Cultural">Cultural</option>
+                                        <option value="Eco-Tourism">Eco-Tourism</option>
+                                        <option value="Pilgrimage">Pilgrimage</option>
+                                        <option value="Heritage">Heritage</option>
+                                        <option value="Rural Experience">Rural Experience</option>
+                                        <option value="Archaeological Exploration">Archaeological Exploration</option>
+                                        <option value="Exploration/Heritage">Exploration/Heritage</option>
+                                        <option value="Cultural/Spiritual">Cultural/Spiritual</option>
+                                        <option value="Rural Exploration">Rural Exploration</option>
+                                        <option value="Nature Trekking">Nature Trekking</option>
+                                        <option value="Spiritual/Cultural">Spiritual/Cultural</option>
+                                        <option value="Pilgrimage/Cultural">Pilgrimage/Cultural</option>
+                                        <option value="Historical Exploration">Historical Exploration</option>
+                                        <option value="Cultural Heritage">Cultural Heritage</option>
+                                        <option value="Relaxation/Walks">Relaxation/Walks</option>
+                                        <option value="Scenic Views">Scenic Views</option>
+                                        <option value="Experience">Experience</option>
+                                        <option value="Relaxation">Relaxation</option>
+                                        <option value="Hiking">Hiking</option>
+                                        <option value="Snorkeling/Relaxation">Snorkeling/Relaxation</option>
+                                        <option value="Adventure/Exploration">Adventure/Exploration</option>
+                                        <option value="Educational">Educational</option>
+                                        <option value="Wildlife Safari">Wildlife Safari</option>
+                                        <option value="Religious Exploration">Religious Exploration</option>
+                                        <option value="Hiking/Trekking">Hiking/Trekking</option>
+                                        <option value="Boating/Relaxation">Boating/Relaxation</option>
+                                        <option value="Wildlife Viewing">Wildlife Viewing</option>
+                                        <option value="Boating/Exploration">Boating/Exploration</option>
+                                        <option value="Scuba Diving/Snorkeling">Scuba Diving/Snorkeling</option>
+                                        <option value="Archaeological Visit">Archaeological Visit</option>
+                                        <option value="Desert Safari">Desert Safari</option>
+                                        <option value="Boating/Fishing">Boating/Fishing</option>
+                                        <option value="Agro-Tourism">Agro-Tourism</option>
+                                        <option value="Cultural Appreciation">Cultural Appreciation</option>
+                                        <option value="Relaxation/Exploration">Relaxation/Exploration</option>
+                                        <option value="Beach Exploration">Beach Exploration</option>
+                                        <option value="Hiking/Exploration">Hiking/Exploration</option>
+                                        <option value="Wildlife Observation">Wildlife Observation</option>
+                                        <option value="Trekking/Wildlife Spotting">Trekking/Wildlife Spotting</option>
+                                        <option value="Coastal Exploration">Coastal Exploration</option>
+                                        <option value="Archaeological Tour">Archaeological Tour</option>
+                                        <option value="Boating">Boating</option>
+                                        <option value="Beach & Exploration">Beach & Exploration</option>
+                                        <option value="Peace & Relaxation">Peace & Relaxation</option>
+                                        <option value="Wildlife & Exploration">Wildlife & Exploration</option>
+                                        <option value="Heritage & Exploration">Heritage & Exploration</option>
+                                        <option value="Beach & Relaxation">Beach & Relaxation</option>
+                                        <option value="Border Exploration">Border Exploration</option>
+                                        <option value="Spiritual & Exploration">Spiritual & Exploration</option>
+                                        <option value="Relaxation & Exploration">Relaxation & Exploration</option>
+                                        <option value="Wilderness">Wilderness</option>
+                                        <option value="Mountain Climbing">Mountain Climbing</option>
+                                        <option value="Religious & Cultural">Religious & Cultural</option>
+                                        <option value="Desert Exploration">Desert Exploration</option>
+                                        <option value="Relaxation & Fishing">Relaxation & Fishing</option>
+                                        <option value="Water Exploration">Water Exploration</option>
+                                        <option value="Exploration & Mining">Exploration & Mining</option>
+                                        <option value="Exploration & Trekking">Exploration & Trekking</option>
+                                        <option value="Adventure & Exploration">Adventure & Exploration</option>
+                                        <option value="Trekking & Exploration">Trekking & Exploration</option>
+                                        <option value="Exploration & Hiking">Exploration & Hiking</option>
+                                        <option value="Cultural & Heritage Exploration">Cultural & Heritage Exploration</option>
+                                        <option value="Exploration & Agriculture">Exploration & Agriculture</option>
+                                        <option value="Coastal Relaxation">Coastal Relaxation</option>
+                                        <option value="Beach & Water Sports">Beach & Water Sports</option>
+                                        <option value="Mountain Trekking">Mountain Trekking</option>
+                                        <option value="Archaeological Site">Archaeological Site</option>
+                                        <option value="Fishing & Water Sports">Fishing & Water Sports</option>
+                                        <option value="River & Forest Trek">River & Forest Trek</option>
+                                        <option value="Eco-Tourism & Trekking">Eco-Tourism & Trekking</option>
+                                        <option value="Ancient Fort Exploration">Ancient Fort Exploration</option>
+                                        <option value="Hill Station & Exploration">Hill Station & Exploration</option>
+                                        <option value="Hiking & Exploration">Hiking & Exploration</option>
+                                        <option value="Desert Trekking">Desert Trekking</option>
+                                        <option value="Sea View & Relaxation">Sea View & Relaxation</option>
+                                        <option value="Hill Station & Scenic Views">Hill Station & Scenic Views</option>
+                                        <option value="Coastal & Desert Exploration">Coastal & Desert Exploration</option>
+                                        <option value="Secluded Island Exploration">Secluded Island Exploration</option>
+                                        <option value="Hiking & Mountain Climbing">Hiking & Mountain Climbing</option>
+                                        <option value="Port Exploration">Port Exploration</option>
+                                        <option value="Cave Exploration">Cave Exploration</option>
+                                        <option value="Lake & Mountain Views">Lake & Mountain Views</option>
+                                        <option value="Water Sports & Scenic Views">Water Sports & Scenic Views</option>
+                                        <option value="Mining & Cave Exploration">Mining & Cave Exploration</option>
+                                        <option value="Heritage & Nature">Heritage & Nature</option>
+                                        <option value="Canyon Exploration">Canyon Exploration</option>
+                                        <option value="River & Port Exploration">River & Port Exploration</option>
+                                        <option value="Forest Walk & Nature Photography">Forest Walk & Nature Photography</option>
+                                        <option value="Hiking & Wildlife">Hiking & Wildlife</option>
+                                        <option value="Scenic View & Relaxation">Scenic View & Relaxation</option>
+                                        <option value="Relaxation & Viewpoint">Relaxation & Viewpoint</option>
+                                        <option value="Boating & Scenic Views">Boating & Scenic Views</option>
+                                        <option value="Spiritual & Scenic Visit">Spiritual & Scenic Visit</option>
+                                        <option value="Scenic Exploration">Scenic Exploration</option>
+                                        <option value="Cricket Match & Sports">Cricket Match & Sports</option>
+                                        <option value="Shopping & Dining">Shopping & Dining</option>
+                                        <option value="Cultural Heritage Visit">Cultural Heritage Visit</option>
+                                        <option value="Hill Station & Viewpoint">Hill Station & Viewpoint</option>
+                                        <option value="Educational Visit">Educational Visit</option>
+                                        <option value="Wildlife & Relaxation">Wildlife & Relaxation</option>
+                                        <option value="Botanical Garden">Botanical Garden</option>
+                                        <option value="Adventure & Outdoor Sports">Adventure & Outdoor Sports</option>
+                                        <option value="Wildlife & Nature Walk">Wildlife & Nature Walk</option>
+                                        <option value="Lake & Hill Station">Lake & Hill Station</option>
+                                        <option value="Agricultural Heritage">Agricultural Heritage</option>
+                                        <option value="Spiritual Exploration">Spiritual Exploration</option>
+                                        <option value="Hiking & Adventure">Hiking & Adventure</option>
+                                        <option value="Recreation & Relaxation">Recreation & Relaxation</option>
+                                        <option value="Scenic View & Waterfall">Scenic View & Waterfall</option>
+                                        <option value="Arts & Culture Exploration">Arts & Culture Exploration</option>
+                                        <option value="Explore Local Culture">Explore Local Culture</option>
+                                        <option value="Relaxation & Recreation">Relaxation & Recreation</option>
+                                        <option value="Water Fun & Relaxation">Water Fun & Relaxation</option>
+                                        <option value="Exploration & Photography">Exploration & Photography</option>
+                                        <option value="Scenic View & Recreation">Scenic View & Recreation</option>
+                                        <option value="Golfing & Relaxation">Golfing & Relaxation</option>
+                                        <option value="Leisure & Recreation">Leisure & Recreation</option>
+                                        <option value="Scenic View & Photography">Scenic View & Photography</option>
+                                        <option value="Village Exploration">Village Exploration</option>
+                                        <option value="Waterfall & Scenic Views">Waterfall & Scenic Views</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="Climate" class="form-label">Climate</label>
+                                    <select class="form-select" id="Climate" name="Climate" required>
+                                        <option value="">Select Climate</option>
+            <option value="Temperate">Temperate</option>
+            <option value="Cold">Cold</option>
+            <option value="Moderate">Moderate</option>
+            <option value="Cool">Cool</option>
+            <option value="Warm">Warm</option>
+            <option value="Extreme">Extreme</option>
+            <option value="Mild">Mild</option>
+            <option value="Hot">Hot</option>
+            <option value="Humid">Humid</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="SoloGroup" class="form-label">Solo/Group</label>
+                                    <select class="form-select" id="SoloGroup" name="SoloGroup" required>
+                                        <option value="">Select Type</option>
+                                        <option value="">Select Type</option>
+            <option value="Group ">Group </option>
+            <option value="Solo ">Solo </option>
+            <option value="Solo/Group">Solo/Group</option>
+            <option value="Group">Group</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="Access" class="form-label">Access</label>
+                                    <select class="form-select" id="Access" name="Access" required>
+                                        <option value="">Select Access</option>
+            <option value="Road">Road</option>
+            <option value="Trek">Trek</option>
+            <option value="Road to Naran, then Trek to Lake">Road to Naran, then Trek to Lake</option>
+            <option value="Road/Air">Road/Air</option>
+            <option value="Road/Boat">Road/Boat</option>
+            <option value="Boat">Boat</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="Activity" class="form-label">Activity</label>
+                                    <select class="form-select" id="Activity" name="Activity" required>
+                                        <option value="">Select Activity</option>
+            <option value="Hiking">Hiking</option>
+            <option value="Camping/Photography">Camping/Photography</option>
+            <option value="Trekking">Trekking</option>
+            <option value="Sightseeing">Sightseeing</option>
+            <option value="Skiing">Skiing</option>
+            <option value="Photography">Photography</option>
+            <option value="Road Trip">Road Trip</option>
+            <option value="Polo">Polo</option>
+            <option value="Boating/Photography">Boating/Photography</option>
+            <option value="Hiking/Trekking">Hiking/Trekking</option>
+            <option value="Cultural Tour">Cultural Tour</option>
+            <option value="Photography/Trekking">Photography/Trekking</option>
+            <option value="Hiking/Photography">Hiking/Photography</option>
+            <option value="Skiing/Photography">Skiing/Photography</option>
+            <option value="Photography/Relaxation">Photography/Relaxation</option>
+            <option value="Trekking/Photography">Trekking/Photography</option>
+            <option value="Wildlife Safari">Wildlife Safari</option>
+            <option value="Trekking/Boating">Trekking/Boating</option>
+            <option value="Photography/Exploration">Photography/Exploration</option>
+            <option value="Climbing/Photography">Climbing/Photography</option>
+            <option value="Trekking/Relaxation">Trekking/Relaxation</option>
+            <option value="Trekking/Exploration">Trekking/Exploration</option>
+            <option value="Boating/Relaxation">Boating/Relaxation</option>
+            <option value="Trekking/Climbing">Trekking/Climbing</option>
+            <option value="Trekking/Cultural Tour">Trekking/Cultural Tour</option>
+            <option value="Nature Watching">Nature Watching</option>
+            <option value="Historical Exploration">Historical Exploration</option>
+            <option value="Fishing/Kayaking">Fishing/Kayaking</option>
+            <option value="Glacier Hiking">Glacier Hiking</option>
+            <option value="Wildlife Photography">Wildlife Photography</option>
+            <option value="Landscape Photography">Landscape Photography</option>
+            <option value="Desert Adventure">Desert Adventure</option>
+            <option value="Cultural Immersion">Cultural Immersion</option>
+            <option value="Wildlife Watching">Wildlife Watching</option>
+            <option value="Astrotourism">Astrotourism</option>
+            <option value="Glacier Climbing">Glacier Climbing</option>
+            <option value="Cultural Arts Tour">Cultural Arts Tour</option>
+            <option value="Extreme Hiking">Extreme Hiking</option>
+            <option value="Canoeing/Leisure">Canoeing/Leisure</option>
+            <option value="Heritage Exploration">Heritage Exploration</option>
+            <option value="High-Altitude Trekking">High-Altitude Trekking</option>
+            <option value="Nature Photography">Nature Photography</option>
+            <option value="Meditation">Meditation</option>
+            <option value="Nature Hiking">Nature Hiking</option>
+            <option value="Sports Tourism">Sports Tourism</option>
+            <option value="Water Adventure">Water Adventure</option>
+            <option value="Waterfall Viewing">Waterfall Viewing</option>
+            <option value="Glacier Trekking">Glacier Trekking</option>
+            <option value="Boating/Leisure">Boating/Leisure</option>
+            <option value="Fishing and Leisure">Fishing and Leisure</option>
+            <option value="Ice Adventure">Ice Adventure</option>
+            <option value="Scenic Photography">Scenic Photography</option>
+            <option value="Rock Climbing">Rock Climbing</option>
+            <option value="Aerial Adventure">Aerial Adventure</option>
+            <option value="Nature Walk">Nature Walk</option>
+            <option value="Water Sports">Water Sports</option>
+            <option value="Waterfall Adventure">Waterfall Adventure</option>
+            <option value="Historical and Cultural">Historical and Cultural</option>
+            <option value="Wildlife Adventure">Wildlife Adventure</option>
+            <option value="Mountain Hiking">Mountain Hiking</option>
+            <option value="Extreme Trekking">Extreme Trekking</option>
+            <option value="Glacier Exploration">Glacier Exploration</option>
+            <option value="Peak Climbing">Peak Climbing</option>
+            <option value="Glacier Photography">Glacier Photography</option>
+            <option value="Glacier Crossing">Glacier Crossing</option>
+            <option value="Scenic Trekking">Scenic Trekking</option>
+            <option value="Glacier Adventure">Glacier Adventure</option>
+            <option value="Advanced Rock Climbing">Advanced Rock Climbing</option>
+            <option value="High-Altitude Hiking">High-Altitude Hiking</option>
+            <option value="Extreme Ice Climbing">Extreme Ice Climbing</option>
+            <option value="Remote Hiking">Remote Hiking</option>
+            <option value="Advanced Mountaineering">Advanced Mountaineering</option>
+            <option value="Peak Training">Peak Training</option>
+            <option value="Trekking, Rafting">Trekking, Rafting</option>
+            <option value="Trekking, Photography">Trekking, Photography</option>
+            <option value="Mountaineering">Mountaineering</option>
+            <option value="Sightseeing, Cultural Tour">Sightseeing, Cultural Tour</option>
+            <option value="Archaeological Tour">Archaeological Tour</option>
+            <option value="Cultural Tour, Trekking">Cultural Tour, Trekking</option>
+            <option value="Boating, Photography">Boating, Photography</option>
+            <option value="Cultural Tour, Photography">Cultural Tour, Photography</option>
+            <option value="Polo, Trekking, Photography">Polo, Trekking, Photography</option>
+            <option value="Cultural Tour, Food Exploration">Cultural Tour, Food Exploration</option>
+            <option value="Rafting, Fishing">Rafting, Fishing</option>
+            <option value="Heritage Tour">Heritage Tour</option>
+            <option value="Sightseeing, Photography">Sightseeing, Photography</option>
+            <option value="Trekking, Sightseeing">Trekking, Sightseeing</option>
+            <option value="Trekking, Exploration">Trekking, Exploration</option>
+            <option value="Wildlife Watching, Hiking">Wildlife Watching, Hiking</option>
+            <option value="Religious Tourism, Exploration">Religious Tourism, Exploration</option>
+            <option value="Exploration, Photography">Exploration, Photography</option>
+            <option value="Hot Springs, Photography">Hot Springs, Photography</option>
+            <option value="Cultural Exploration">Cultural Exploration</option>
+            <option value="Exploration">Exploration</option>
+            <option value="Exploring local food, Cultural tours">Exploring local food, Cultural tours</option>
+            <option value="Cultural tour, Trekking, Photography">Cultural tour, Trekking, Photography</option>
+            <option value="Historical tours, Photography, Sightseeing">Historical tours, Photography, Sightseeing</option>
+            <option value="Trekking, Historical exploration">Trekking, Historical exploration</option>
+            <option value="Hiking, Photography">Hiking, Photography</option>
+            <option value="Local food tasting, Heritage tours">Local food tasting, Heritage tours</option>
+            <option value="Wildlife Watching, Photography">Wildlife Watching, Photography</option>
+            <option value="Historical tours, Photography">Historical tours, Photography</option>
+            <option value="Cultural tours, Adventure exploration">Cultural tours, Adventure exploration</option>
+            <option value="Trekking, Wildlife Watching">Trekking, Wildlife Watching</option>
+            <option value="Sightseeing, Museum, River Views">Sightseeing, Museum, River Views</option>
+            <option value="Trekking, Camping, Fishing">Trekking, Camping, Fishing</option>
+            <option value="Trekking, Exploration, Photography">Trekking, Exploration, Photography</option>
+            <option value="Trekking, Camping, Photography">Trekking, Camping, Photography</option>
+            <option value="Trekking, Sightseeing, Photography">Trekking, Sightseeing, Photography</option>
+            <option value="Boating, Relaxation, Photography">Boating, Relaxation, Photography</option>
+            <option value="Sightseeing, River Views, Photography">Sightseeing, River Views, Photography</option>
+            <option value="Trekking, Camping, Nature Walks">Trekking, Camping, Nature Walks</option>
+            <option value="Trekking, Fishing, Photography">Trekking, Fishing, Photography</option>
+            <option value="River Views, Camping, Fishing">River Views, Camping, Fishing</option>
+            <option value="Trekking, Photography, Nature">Trekking, Photography, Nature</option>
+            <option value="Historical Sightseeing">Historical Sightseeing</option>
+            <option value="Wildlife Watching, Nature Walks">Wildlife Watching, Nature Walks</option>
+            <option value="Relaxation, Photography">Relaxation, Photography</option>
+            <option value="Sightseeing, River Views">Sightseeing, River Views</option>
+            <option value="River Views, Historical Sites">River Views, Historical Sites</option>
+            <option value="Trekking, Photography, Relaxation">Trekking, Photography, Relaxation</option>
+            <option value="Religious Exploration">Religious Exploration</option>
+            <option value="Food tour">Food tour</option>
+            <option value="Culinary tour">Culinary tour</option>
+            <option value="Cultural tour">Cultural tour</option>
+            <option value="Religious tour">Religious tour</option>
+            <option value="Historical sites">Historical sites</option>
+            <option value="Skiing, hiking">Skiing, hiking</option>
+            <option value="Hiking, birdwatching">Hiking, birdwatching</option>
+            <option value="Cultural sightseeing">Cultural sightseeing</option>
+            <option value="Boating">Boating</option>
+            <option value="Architectural tour">Architectural tour</option>
+            <option value="Cultural exploration">Cultural exploration</option>
+            <option value="Boating, hiking">Boating, hiking</option>
+            <option value="Fort exploration">Fort exploration</option>
+            <option value="History walk">History walk</option>
+            <option value="Archaeological tour">Archaeological tour</option>
+            <option value="Nature walk">Nature walk</option>
+            <option value="Agricultural exploration">Agricultural exploration</option>
+            <option value="Religious pilgrimage">Religious pilgrimage</option>
+            <option value="Hiking, exploration">Hiking, exploration</option>
+            <option value="Desert safari">Desert safari</option>
+            <option value="Heritage tour">Heritage tour</option>
+            <option value="Eco-tourism">Eco-tourism</option>
+            <option value="Cultural fair">Cultural fair</option>
+            <option value="Heritage exploration">Heritage exploration</option>
+            <option value="Historical exploration">Historical exploration</option>
+            <option value="Cultural heritage">Cultural heritage</option>
+            <option value="Wilderness exploration">Wilderness exploration</option>
+            <option value="Folk arts">Folk arts</option>
+            <option value="Boating, sightseeing">Boating, sightseeing</option>
+            <option value="Trekking, exploration">Trekking, exploration</option>
+            <option value="Wildlife safari">Wildlife safari</option>
+            <option value="History exploration">History exploration</option>
+            <option value="Nature hike">Nature hike</option>
+            <option value="Wildlife viewing">Wildlife viewing</option>
+            <option value="Kayaking">Kayaking</option>
+            <option value="Nature trek">Nature trek</option>
+            <option value="Historical tour">Historical tour</option>
+            <option value="Adventure trek">Adventure trek</option>
+            <option value="Adventure">Adventure</option>
+            <option value="Nature trekking">Nature trekking</option>
+            <option value="Adventure trail">Adventure trail</option>
+            <option value="Eco-cultural tour">Eco-cultural tour</option>
+            <option value="Camping">Camping</option>
+            <option value="Salt mine tour">Salt mine tour</option>
+            <option value="Cultural visit, Photography">Cultural visit, Photography</option>
+            <option value="Exploration, Hiking">Exploration, Hiking</option>
+            <option value="Garden walk, Photography">Garden walk, Photography</option>
+            <option value="Cultural exploration, Trekking">Cultural exploration, Trekking</option>
+            <option value="Pilgrimage, Cultural visit">Pilgrimage, Cultural visit</option>
+            <option value="Religious visit, Photography">Religious visit, Photography</option>
+            <option value="Photography, Heritage walk">Photography, Heritage walk</option>
+            <option value="Mine tour, Photography">Mine tour, Photography</option>
+            <option value="Historical architecture">Historical architecture</option>
+            <option value="Mosque tour, Photography">Mosque tour, Photography</option>
+            <option value="Walking, Photography">Walking, Photography</option>
+            <option value="Scenic photography, Walks">Scenic photography, Walks</option>
+            <option value="Food tasting">Food tasting</option>
+            <option value="Historical sightseeing">Historical sightseeing</option>
+            <option value="Religious festival">Religious festival</option>
+            <option value="Boating/Fishing">Boating/Fishing</option>
+            <option value="Beach activities">Beach activities</option>
+            <option value="Religious gathering">Religious gathering</option>
+            <option value="Snorkeling/Boating">Snorkeling/Boating</option>
+            <option value="Hiking/Wildlife spotting">Hiking/Wildlife spotting</option>
+            <option value="Museum visit">Museum visit</option>
+            <option value="Trekking/Wildlife spotting">Trekking/Wildlife spotting</option>
+            <option value="Spiritual retreat">Spiritual retreat</option>
+            <option value="Archaeological site visit">Archaeological site visit</option>
+            <option value="Wildlife observation">Wildlife observation</option>
+            <option value="Art and cultural events">Art and cultural events</option>
+            <option value="Scuba diving">Scuba diving</option>
+            <option value="Jeep safari/Cultural events">Jeep safari/Cultural events</option>
+            <option value="Bird watching/Photography">Bird watching/Photography</option>
+            <option value="Hiking/Climbing">Hiking/Climbing</option>
+            <option value="Boating/Bird watching">Boating/Bird watching</option>
+            <option value="Port visit">Port visit</option>
+            <option value="Shopping/Sightseeing">Shopping/Sightseeing</option>
+            <option value="Fruit picking/Tasting">Fruit picking/Tasting</option>
+            <option value="Sightseeing/Photography">Sightseeing/Photography</option>
+            <option value="Art exhibition">Art exhibition</option>
+            <option value="Bathing/Exploration">Bathing/Exploration</option>
+            <option value="Boating/Wildlife viewing">Boating/Wildlife viewing</option>
+            <option value="Climbing/Hiking">Climbing/Hiking</option>
+            <option value="Beach cleanup/snorkeling">Beach cleanup/snorkeling</option>
+            <option value="Stargazing/Camping">Stargazing/Camping</option>
+            <option value="Photography/Hiking">Photography/Hiking</option>
+            <option value="Boating/Wildlife spotting">Boating/Wildlife spotting</option>
+            <option value="Camel safari/Cultural shows">Camel safari/Cultural shows</option>
+            <option value="Hiking/Wildlife photography">Hiking/Wildlife photography</option>
+            <option value="Diving/Fishing">Diving/Fishing</option>
+            <option value="Boating/Snorkeling">Boating/Snorkeling</option>
+            <option value="Sailing/Fishing">Sailing/Fishing</option>
+            <option value="Photography/Wildlife viewing">Photography/Wildlife viewing</option>
+            <option value="Hiking/Nature walks">Hiking/Nature walks</option>
+            <option value="Sightseeing, Museum">Sightseeing, Museum</option>
+            <option value="Beach Activities, Fishing">Beach Activities, Fishing</option>
+            <option value="Hiking, Nature Walk">Hiking, Nature Walk</option>
+            <option value="Scuba Diving, Hiking">Scuba Diving, Hiking</option>
+            <option value="Wildlife Safari, Trekking">Wildlife Safari, Trekking</option>
+            <option value="History Tour, Sightseeing">History Tour, Sightseeing</option>
+            <option value="Cultural Tour, Hiking">Cultural Tour, Hiking</option>
+            <option value="Trekking, Camping">Trekking, Camping</option>
+            <option value="Cultural Exploration, Desert Safari">Cultural Exploration, Desert Safari</option>
+            <option value="Trekking, Waterfall Hiking">Trekking, Waterfall Hiking</option>
+            <option value="Cultural Festival, Sightseeing">Cultural Festival, Sightseeing</option>
+            <option value="Beach, Bird Watching">Beach, Bird Watching</option>
+            <option value="Desert Safari, Hiking">Desert Safari, Hiking</option>
+            <option value="Geological Exploration, Photography">Geological Exploration, Photography</option>
+            <option value="Archaeological Tour, Cultural Exploration">Archaeological Tour, Cultural Exploration</option>
+            <option value="River Trekking, Photography">River Trekking, Photography</option>
+            <option value="Fishing, Hiking">Fishing, Hiking</option>
+            <option value="Border Exploration, Sightseeing">Border Exploration, Sightseeing</option>
+            <option value="Pilgrimage, Religious Tourism">Pilgrimage, Religious Tourism</option>
+            <option value="Boating, Nature Walk">Boating, Nature Walk</option>
+            <option value="Historical Sightseeing, Cultural Tour">Historical Sightseeing, Cultural Tour</option>
+            <option value="Wildlife Safari, Hiking">Wildlife Safari, Hiking</option>
+            <option value="Lake Trekking, Photography">Lake Trekking, Photography</option>
+            <option value="Cultural Exploration, Sightseeing">Cultural Exploration, Sightseeing</option>
+            <option value="Nature Walks, Photography">Nature Walks, Photography</option>
+            <option value="Water System Tour, History Exploration">Water System Tour, History Exploration</option>
+            <option value="Desert Trekking, Landscape Photography">Desert Trekking, Landscape Photography</option>
+            <option value="Historical Tour, Photography">Historical Tour, Photography</option>
+            <option value="Archaeological Exploration">Archaeological Exploration</option>
+            <option value="Trekking, Nature Walk">Trekking, Nature Walk</option>
+            <option value="Wildlife, Photography">Wildlife, Photography</option>
+            <option value="Agricultural Tourism, Nature Walks">Agricultural Tourism, Nature Walks</option>
+            <option value="Cultural Exploration, Archaeology">Cultural Exploration, Archaeology</option>
+            <option value="Desert Safari, Trekking">Desert Safari, Trekking</option>
+            <option value="Photography, Desert Trekking">Photography, Desert Trekking</option>
+            <option value="Border Exploration, Historical Sites">Border Exploration, Historical Sites</option>
+            <option value="Desert Trekking, Photography">Desert Trekking, Photography</option>
+            <option value="Trekking, Scenic Views">Trekking, Scenic Views</option>
+            <option value="Nature Trekking, Photography">Nature Trekking, Photography</option>
+            <option value="Wildlife Photography, Trekking">Wildlife Photography, Trekking</option>
+            <option value="Nature Walks, River Photography">Nature Walks, River Photography</option>
+            <option value="Fishing, Boating">Fishing, Boating</option>
+            <option value="Nature Walk, Hiking">Nature Walk, Hiking</option>
+            <option value="Wildlife, Bird Watching">Wildlife, Bird Watching</option>
+            <option value="Mountain Climbing, Hiking">Mountain Climbing, Hiking</option>
+            <option value="Religious Site, Pilgrimage">Religious Site, Pilgrimage</option>
+            <option value="Beach Walks, Fishing">Beach Walks, Fishing</option>
+            <option value="Historical Sites, Cultural Exploration">Historical Sites, Cultural Exploration</option>
+            <option value="Nature Walk, Forest Trek">Nature Walk, Forest Trek</option>
+            <option value="Coastal Walks, Photography">Coastal Walks, Photography</option>
+            <option value="Boat Tours, Fishing">Boat Tours, Fishing</option>
+            <option value="Mining Exploration, Desert Trekking">Mining Exploration, Desert Trekking</option>
+            <option value="Wildlife Safari, Photography">Wildlife Safari, Photography</option>
+            <option value="Hiking, Waterfall Exploration">Hiking, Waterfall Exploration</option>
+            <option value="Beach Walk, Swimming">Beach Walk, Swimming</option>
+            <option value="Hiking, Scenic Views">Hiking, Scenic Views</option>
+            <option value="Hiking, Nature Walks">Hiking, Nature Walks</option>
+            <option value="Fort Exploration, Photography">Fort Exploration, Photography</option>
+            <option value="Agricultural Tourism, Photography">Agricultural Tourism, Photography</option>
+            <option value="Swimming, Boating">Swimming, Boating</option>
+            <option value="Heritage Sites, Culture Walks">Heritage Sites, Culture Walks</option>
+            <option value="Trekking, Desert Safari">Trekking, Desert Safari</option>
+            <option value="Border Viewing, Photography">Border Viewing, Photography</option>
+            <option value="Hiking, Nature Photography">Hiking, Nature Photography</option>
+            <option value="Historical Site, Photography">Historical Site, Photography</option>
+            <option value="Coastal Walk, Bird Watching">Coastal Walk, Bird Watching</option>
+            <option value="Boating, Swimming">Boating, Swimming</option>
+            <option value="Desert Trekking">Desert Trekking</option>
+            <option value="Boating, Fishing">Boating, Fishing</option>
+            <option value="Desert Safari, Photography">Desert Safari, Photography</option>
+            <option value="Trekking, River Exploration">Trekking, River Exploration</option>
+            <option value="Cultural Walks, Historical Exploration">Cultural Walks, Historical Exploration</option>
+            <option value="Eco-tourism, Trekking">Eco-tourism, Trekking</option>
+            <option value="Gorge Trekking, Photography">Gorge Trekking, Photography</option>
+            <option value="Lighthouse Viewing">Lighthouse Viewing</option>
+            <option value="Mountain Trekking, Photography">Mountain Trekking, Photography</option>
+            <option value="Swimming, Beach Walk">Swimming, Beach Walk</option>
+            <option value="Scenic View, Hiking">Scenic View, Hiking</option>
+            <option value="Wildlife Viewing, Coastal Walk">Wildlife Viewing, Coastal Walk</option>
+            <option value="Beach Walk, Scuba Diving">Beach Walk, Scuba Diving</option>
+            <option value="Mountain Climbing">Mountain Climbing</option>
+            <option value="Port Viewing, Photography">Port Viewing, Photography</option>
+            <option value="Cave Exploration, Photography">Cave Exploration, Photography</option>
+            <option value="Boating, Scenic Photography">Boating, Scenic Photography</option>
+            <option value="Fishing, Scenic Walk">Fishing, Scenic Walk</option>
+            <option value="Cave Exploration, Mining Tours">Cave Exploration, Mining Tours</option>
+            <option value="Mountain Climbing, Photography">Mountain Climbing, Photography</option>
+            <option value="Canyon Trekking, Photography">Canyon Trekking, Photography</option>
+            <option value="Cave Trekking, Photography">Cave Trekking, Photography</option>
+            <option value="River Exploration, Photography">River Exploration, Photography</option>
+            <option value="Nature Walk, Photography">Nature Walk, Photography</option>
+            <option value="Hiking, Wildlife Viewing">Hiking, Wildlife Viewing</option>
+            <option value="Scenic Viewing, Photography">Scenic Viewing, Photography</option>
+            <option value="Museum Visit, Photography">Museum Visit, Photography</option>
+            <option value="Scenic Views, Photography">Scenic Views, Photography</option>
+            <option value="Museum Visit, Cultural Tour">Museum Visit, Cultural Tour</option>
+            <option value="Cricket Match, Photography">Cricket Match, Photography</option>
+            <option value="Shopping, Dining">Shopping, Dining</option>
+            <option value="Scenic Views, Dining">Scenic Views, Dining</option>
+            <option value="Educational Tour, Exhibition">Educational Tour, Exhibition</option>
+            <option value="Rock Climbing, Outdoor Sports">Rock Climbing, Outdoor Sports</option>
+            <option value="Scenic Views, Hiking">Scenic Views, Hiking</option>
+            <option value="Wildlife Watching, Nature Walk">Wildlife Watching, Nature Walk</option>
+            <option value="Lake Walk, Photography">Lake Walk, Photography</option>
+            <option value="Farm Visit, Nature Photography">Farm Visit, Nature Photography</option>
+            <option value="Boating, Relaxation">Boating, Relaxation</option>
+            <option value="Sightseeing, Spiritual Visit">Sightseeing, Spiritual Visit</option>
+            <option value="Walking, Picnic">Walking, Picnic</option>
+            <option value="Wildlife Viewing, Photography">Wildlife Viewing, Photography</option>
+            <option value="Waterfall Viewing, Photography">Waterfall Viewing, Photography</option>
+            <option value="Art Exhibitions, Cultural Events">Art Exhibitions, Cultural Events</option>
+            <option value="Cultural Exploration, Photography">Cultural Exploration, Photography</option>
+            <option value="Water Fun, Photography">Water Fun, Photography</option>
+            <option value="Photography, Nature Exploration">Photography, Nature Exploration</option>
+            <option value="Scenic Views, Boating, Photography">Scenic Views, Boating, Photography</option>
+            <option value="Golfing, Relaxation">Golfing, Relaxation</option>
+            <option value="Walking, Relaxation">Walking, Relaxation</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="range-container col-md-4 mb-3">
+                                   
+                                    <label for="Distance" class="form-label">Distance (km)</label>
+                                    <input type="range" class="form-control range-container"  min='10'max='1500' step="1" value="10" id="Distance" name="Distance" required>
+                                    <span class="range-value">10</span>
+                                </div>
+                                <div class="range-container col-md-4 mb-3">
+                                    <label for="Latitude" class="form-label">Latitude</label>
+                                    <input type="range" min="24" max="37" step="0.0001" value="24" class="form-control" id="Latitude" name="Latitude" required>
+                                    <span class="range-value">24</span>
+
+                                </div>
+                                <div class=" range-container mb-3">
+                                    <label for="Longitude" class="form-label">Longitude</label>
+                                    <input type="range" min="60" max="78" step="0.0001" value="60" class="form-control" id="Longitude" name="Longitude" required>
+                                    <span class="range-value">60</span>
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="theme-btn">Predict Destination</button>
+                            </div>
+                        </form>
+
+                        {% if prediction %}
+                        <div class="mt-4">
+                            <h4 class="card-title">Prediction Results</h4>
+                            <p class="card-text">{{ prediction }}</p>
+                            
+                            {% if recommendations %}
+                            <h5 class="card-title">Recommended Destinations:</h5>
+                            <ul class="list-group">
+                                {% for destination in recommendations %}
+                                <li class="list-group-item">{{ destination }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Function to update range value display
+    function updateRangeValue(input) {
+        const value = input.value;
+        const valueDisplay = input.nextElementSibling;
+        valueDisplay.textContent = value;
+    }
+
+    // Add event listeners to all range inputs
+    document.addEventListener('DOMContentLoaded', function() {
+        const rangeInputs = document.querySelectorAll('input[type="range"]');
+        rangeInputs.forEach(input => {
+            // Set initial value
+            updateRangeValue(input);
+            
+            // Update value on change
+            input.addEventListener('input', function() {
+                updateRangeValue(this);
+            });
+        });
+    });
+</script>
+
+{% endblock %}
