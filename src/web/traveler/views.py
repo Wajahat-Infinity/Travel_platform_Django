@@ -133,8 +133,8 @@ class BookingView(ListView):
         # Optional filter
         status = self.request.GET.get('status')
 
-        # Use Traveler object directly in TourBooking query
-        queryset = TourBooking.objects.filter(traveler=traveler)
+        # Use User object directly in TourBooking query
+        queryset = TourBooking.objects.filter(traveler=user)
 
         if status:
             queryset = queryset.filter(status=status)

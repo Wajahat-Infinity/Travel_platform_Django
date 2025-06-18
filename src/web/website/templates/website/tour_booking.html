@@ -209,6 +209,9 @@ Book {{ tour_package.name }} - Travel Platform
                             Your payment will be processed securely through Stripe. No payment information is stored on our servers.
                         </div>
                         
+                        <!-- Add a div for general form errors above the payment section -->
+                        <div class="alert alert-danger mt-3" id="form-errors" style="display: none;"></div>
+                        
                         <div class="stripe-card" id="card-element">
                             <!-- Stripe Card Element will be inserted here -->
                         </div>
@@ -283,7 +286,14 @@ Book {{ tour_package.name }} - Travel Platform
         const submitButton = document.getElementById('submit-payment');
         const loadingSpinner = document.getElementById('loading-spinner');
         const form = document.getElementById('booking-form');
+        const formErrors = document.getElementById('form-errors');
         let bookingId = null;
+
+        // Clear previous errors
+        formErrors.style.display = 'none';
+        formErrors.innerHTML = '';
+        const errorFields = form.querySelectorAll('.is-invalid');
+        errorFields.forEach(f => f.classList.remove('is-invalid'));
 
         // Disable button and show spinner
         submitButton.disabled = true;
@@ -314,7 +324,23 @@ Book {{ tour_package.name }} - Travel Platform
                     }
                 });
             } else {
-                throw new Error(data.message || 'Booking failed');
+                // Show all field errors if present
+                if (data.errors) {
+                    let errorHtml = '<ul class="mb-0">';
+                    for (const [field, errors] of Object.entries(data.errors)) {
+                        errorHtml += `<li><strong>${field.replace('_', ' ')}:</strong> ${errors.join('<br>')}</li>`;
+                        // Highlight the field if possible
+                        const fieldInput = form.querySelector(`[name=${field}]`);
+                        if (fieldInput) fieldInput.classList.add('is-invalid');
+                    }
+                    errorHtml += '</ul>';
+                    formErrors.innerHTML = errorHtml;
+                    formErrors.style.display = 'block';
+                } else {
+                    formErrors.textContent = data.message || 'Booking failed.';
+                    formErrors.style.display = 'block';
+                }
+                throw new Error('Form validation failed');
             }
         })
         .then(result => {
@@ -331,10 +357,7 @@ Book {{ tour_package.name }} - Travel Platform
             }
         })
         .catch(error => {
-            // General error
-            const errorElement = document.getElementById('card-errors');
-            errorElement.textContent = error.message;
-            errorElement.style.display = 'block';
+            // General error (already handled above for form errors)
             submitButton.disabled = false;
             loadingSpinner.style.display = 'none';
         });

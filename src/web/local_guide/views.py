@@ -27,10 +27,10 @@ class LocalGuideDashboardView(LoginRequiredMixin, TemplateView):
         # Get total reviews count
         context['total_reviews'] = guide.reviews.count() if hasattr(guide, 'reviews') else 0
         
-        # Get total earnings
+        # Get total earnings (confirmed + completed)
         context['total_earnings'] = GuideBooking.objects.filter(
             guide=guide,
-            status='completed'
+            status__in=['confirmed', 'completed']
         ).aggregate(total=Sum('total_price'))['total'] or 0
         
         # Get recent bookings
@@ -100,7 +100,7 @@ class PaymentListView(LoginRequiredMixin, ListView):
         guide = get_object_or_404(LocalGuide, user=self.request.user)
         return GuideBooking.objects.filter(
             guide=guide,
-            status='completed'
+            status__in=['confirmed', 'completed']
         ).select_related(
             'traveler',
             'traveler__user'
@@ -108,12 +108,15 @@ class PaymentListView(LoginRequiredMixin, ListView):
 
 class TravellerListView(LoginRequiredMixin, ListView):
     template_name = 'local_guide/traveller_list.html'
-    context_object_name = 'travellers'
+    context_object_name = 'travelers'
     paginate_by = 10
     
     def get_queryset(self):
         guide = get_object_or_404(LocalGuide, user=self.request.user)
-        return guide.travelers.all().order_by('-date_joined')
+        # Get all unique Traveler profiles who have booked this guide
+        traveler_ids = GuideBooking.objects.filter(guide=guide).values_list('traveler', flat=True).distinct()
+        from src.web.traveler.models import Traveler
+        return Traveler.objects.filter(id__in=traveler_ids).select_related('user').order_by('-user__date_joined')
 
 class TourListView(LoginRequiredMixin, ListView):
     template_name = 'local_guide/tour_list.html'
@@ -171,6 +174,7 @@ class SettingsView(LoginRequiredMixin, View):
             messages.error(request, f'Error updating profile: {str(e)}')
 
         return redirect('local_guide:settings')
+
 class LocalGuideListView(ListView):
     model = LocalGuide
     template_name = 'localguides/localguide_list.html'

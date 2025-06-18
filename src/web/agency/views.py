@@ -11,6 +11,8 @@ from .models import TourPackage, Hotel, Vehicle, Place, HotelImage, PlaceImage, 
 from .forms import TourPackageForm, HotelForm, VehicleForm, PlaceForm, HotelImageForm, PlaceImageForm
 from src.web.booking.models import Booking, Trip
 from src.web.traveler.models import Traveler
+from src.web.agency.models import TourBooking
+from django.http import Http404
 
 class AgencyBaseView(LoginRequiredMixin):
     def get_context_data(self, **kwargs):
@@ -23,32 +25,23 @@ class AgencyDashboardView(LoginRequiredMixin, View):
     
     def get(self, request):
         agency = request.user.agency
-        
-        # Get total bookings
-        total_bookings = Booking.objects.filter(agency=agency).count()
-        
-        # Get total revenue
-        total_revenue = Booking.objects.filter(agency=agency).aggregate(
-            total=Sum('total_price')
-        )['total'] or 0
-        
-        # Get recent bookings
-        recent_bookings = Booking.objects.filter(agency=agency).order_by('-created_at')[:5]
-        
-        # Get upcoming trips
-        upcoming_trips = Booking.objects.filter(
-            agency=agency,
-            start_date__gte=timezone.now(),
-            status='confirmed'
-        ).order_by('start_date')[:5]
-        
-        # Get popular trips
-        popular_trips = Trip.objects.filter(
-            agency=agency
-        ).annotate(
-            booking_count=Count('bookings', distinct=True)
-        ).order_by('-booking_count')[:5]
-        
+        # Get all tour packages for this agency
+        tour_packages = TourPackage.objects.filter(agency=agency)
+        # Get all tour bookings for this agency's packages
+        tour_bookings = TourBooking.objects.filter(tour_package__in=tour_packages)
+        # Get total bookings (old + new)
+        total_bookings = Booking.objects.filter(agency=agency).count() + tour_bookings.count()
+        # Get total revenue (old + new)
+        total_revenue = (Booking.objects.filter(agency=agency).aggregate(total=Sum('total_price'))['total'] or 0) + (tour_bookings.aggregate(total=Sum('final_amount'))['total'] or 0)
+        # Get recent bookings (old + new, sorted by created_at)
+        recent_bookings = list(Booking.objects.filter(agency=agency)) + list(tour_bookings)
+        recent_bookings = sorted(recent_bookings, key=lambda b: b.created_at, reverse=True)[:5]
+        # Get upcoming trips (old + new, confirmed only)
+        upcoming_bookings = list(Booking.objects.filter(agency=agency, start_date__gte=timezone.now(), status='confirmed'))
+        upcoming_tour_bookings = list(tour_bookings.filter(travel_date__gte=timezone.now().date(), status='confirmed'))
+        upcoming_trips = sorted(upcoming_bookings + upcoming_tour_bookings, key=lambda b: b.created_at)[:5]
+        # Get popular trips (old logic)
+        popular_trips = Trip.objects.filter(agency=agency).annotate(booking_count=Count('bookings', distinct=True)).order_by('-booking_count')[:5]
         context = {
             'agency': agency,
             'total_bookings': total_bookings,
@@ -57,27 +50,32 @@ class AgencyDashboardView(LoginRequiredMixin, View):
             'upcoming_trips': upcoming_trips,
             'popular_trips': popular_trips,
         }
-        
         return render(request, self.template_name, context)
 
 class BookingListView(AgencyBaseView, ListView):
-    model = Booking
     template_name = 'agency/booking_list.html'
     context_object_name = 'bookings'
-    
     def get_queryset(self):
-        return Booking.objects.filter(agency=self.request.user.agency).order_by('-created_at')
+        agency = self.request.user.agency
+        tour_packages = TourPackage.objects.filter(agency=agency)
+        bookings = list(Booking.objects.filter(agency=agency))
+        tour_bookings = list(TourBooking.objects.filter(tour_package__in=tour_packages))
+        all_bookings = sorted(bookings + tour_bookings, key=lambda b: b.created_at, reverse=True)
+        return all_bookings
 
 class CustomerListView(AgencyBaseView, ListView):
-    model = Traveler
     template_name = 'agency/customer_list.html'
     context_object_name = 'customers'
-    
     def get_queryset(self):
-        # Get all travelers who have made bookings with this agency
-        return Traveler.objects.filter(
-            bookings__agency=self.request.user.agency
-        ).distinct().order_by('user__first_name', 'user__last_name')
+        agency = self.request.user.agency
+        tour_packages = TourPackage.objects.filter(agency=agency)
+        # Travelers from old Booking model
+        old_travelers = Traveler.objects.filter(bookings__agency=agency)
+        # Travelers from new TourBooking model
+        new_travelers = Traveler.objects.filter(user__tour_bookings__tour_package__in=tour_packages)
+        # Combine and deduplicate
+        all_travelers = old_travelers | new_travelers
+        return all_travelers.distinct().order_by('user__first_name', 'user__last_name')
 
 class AnalyticsView(AgencyBaseView, TemplateView):
     template_name = 'agency/analytics.html'
@@ -283,36 +281,22 @@ class HotelDeleteView(AgencyBaseView, DeleteView):
 class PaymentListView(AgencyBaseView, ListView):
     template_name = 'agency/payment_list.html'
     context_object_name = 'payments'
-    
     def get_queryset(self):
-        # Get all bookings with their payment information
-        return Booking.objects.filter(
-            agency=self.request.user.agency
-        ).select_related(
-            'traveler',
-            'trip'
-        ).order_by('-created_at')
-    
+        agency = self.request.user.agency
+        tour_packages = TourPackage.objects.filter(agency=agency)
+        bookings = list(Booking.objects.filter(agency=agency))
+        tour_bookings = list(TourBooking.objects.filter(tour_package__in=tour_packages))
+        all_payments = sorted(bookings + tour_bookings, key=lambda b: b.created_at, reverse=True)
+        return all_payments
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
-        # Get payment statistics
-        context['total_revenue'] = self.get_queryset().aggregate(
-            total=Sum('total_price')
-        )['total'] or 0
-        
-        context['pending_payments'] = self.get_queryset().filter(
-            status='pending'
-        ).aggregate(
-            total=Sum('total_price')
-        )['total'] or 0
-        
-        context['completed_payments'] = self.get_queryset().filter(
-            status='completed'
-        ).aggregate(
-            total=Sum('total_price')
-        )['total'] or 0
-        
+        agency = self.request.user.agency
+        tour_packages = TourPackage.objects.filter(agency=agency)
+        bookings = Booking.objects.filter(agency=agency)
+        tour_bookings = TourBooking.objects.filter(tour_package__in=tour_packages)
+        context['total_revenue'] = (bookings.aggregate(total=Sum('total_price'))['total'] or 0) + (tour_bookings.aggregate(total=Sum('final_amount'))['total'] or 0)
+        context['pending_payments'] = (bookings.filter(status='pending').aggregate(total=Sum('total_price'))['total'] or 0) + (tour_bookings.filter(status='pending').aggregate(total=Sum('final_amount'))['total'] or 0)
+        context['completed_payments'] = (bookings.filter(status='completed').aggregate(total=Sum('total_price'))['total'] or 0) + (tour_bookings.filter(status='completed').aggregate(total=Sum('final_amount'))['total'] or 0)
         return context
 
 # Place Views
@@ -359,3 +343,38 @@ class PlaceDeleteView(AgencyBaseView, DeleteView):
 
     def get_queryset(self):
         return Place.objects.filter(agency=self.request.user.agency)
+
+class BookingDetailView(AgencyBaseView, View):
+    template_name = 'agency/booking_detail.html'
+    def get(self, request, type, booking_id):
+        if type == 'old':
+            booking = get_object_or_404(Booking, id=booking_id)
+        elif type == 'tour':
+            booking = get_object_or_404(TourBooking, id=booking_id)
+        else:
+            raise Http404('Invalid booking type')
+        return render(request, self.template_name, {'booking': booking})
+
+def confirm_booking(request, type, booking_id):
+    if type == 'old':
+        booking = get_object_or_404(Booking, id=booking_id)
+    elif type == 'tour':
+        booking = get_object_or_404(TourBooking, id=booking_id)
+    else:
+        raise Http404('Invalid booking type')
+    booking.status = 'confirmed'
+    booking.save()
+    messages.success(request, 'Booking confirmed!')
+    return redirect('agency:booking_list')
+
+def cancel_booking(request, type, booking_id):
+    if type == 'old':
+        booking = get_object_or_404(Booking, id=booking_id)
+    elif type == 'tour':
+        booking = get_object_or_404(TourBooking, id=booking_id)
+    else:
+        raise Http404('Invalid booking type')
+    booking.status = 'cancelled'
+    booking.save()
+    messages.success(request, 'Booking cancelled!')
+    return redirect('agency:booking_list')

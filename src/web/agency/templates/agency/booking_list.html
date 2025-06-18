@@ -31,11 +31,13 @@
                                 {% for booking in bookings %}
                                 <tr>
                                     <td>{{ booking.booking_number }}</td>
-                                    <td>{{ booking.traveler.full_name }}</td>
-                                    <td>{{ booking.trip.title }}</td>
-                                    <td>{{ booking.start_date }}</td>
-                                    <td>{{ booking.end_date }}</td>
-                                    <td>${{ booking.total_price }}</td>
+                                    <td>{% if booking.traveler.get_full_name %}{{ booking.traveler.get_full_name }}{% else %}{{ booking.traveler }}{% endif %}</td>
+                                    <td>{% if booking.tour_package %}{{ booking.tour_package.name }}{% elif booking.trip %}{{ booking.trip.title }}{% endif %}</td>
+                                    <td>{% if booking.travel_date %}{{ booking.travel_date }}{% elif booking.start_date %}{{ booking.start_date }}{% endif %}</td>
+                                    <td>{% if booking.tour_package %}{{ booking.tour_package.end_date }}{% elif booking.end_date %}{{ booking.end_date }}{% endif %}</td>
+                                    <td>
+                                        {% if booking.final_amount %}${{ booking.final_amount }}{% elif booking.total_price %}${{ booking.total_price }}{% endif %}
+                                    </td>
                                     <td>
                                         <span class="badge {% if booking.status == 'confirmed' %}bg-success{% elif booking.status == 'pending' %}bg-warning{% elif booking.status == 'cancelled' %}bg-danger{% else %}bg-info{% endif %}">
                                             {{ booking.status|title }}
@@ -43,10 +45,10 @@
                                     </td>
                                     <td>{{ booking.created_at|date:"M d, Y" }}</td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-info">View</a>
+                                        <!-- <a href="{% url 'agency:booking_view' type='tour' booking_id=booking.id %}" class="btn btn-sm btn-info">View</a> -->
                                         {% if booking.status == 'pending' %}
-                                        <a href="#" class="btn btn-sm btn-success">Confirm</a>
-                                        <a href="#" class="btn btn-sm btn-danger">Cancel</a>
+                                            <a href="{% url 'agency:booking_confirm' type='tour' booking_id=booking.id %}" class="btn btn-sm btn-success">Confirm</a>
+                                            <a href="{% url 'agency:booking_cancel' type='tour' booking_id=booking.id %}" class="btn btn-sm btn-danger">Cancel</a>
                                         {% endif %}
                                     </td>
                                 </tr>
