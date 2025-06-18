@@ -4,419 +4,341 @@
 
 <!----------------------------------------------TITLE------------------------------------------------------------------>
 {% block title %}
-AGENCIES
+Travel Agencies - Find Your Perfect Travel Partner
 {% endblock %}
 
 {% block css %}
 <style>
-    /* Add to your stylesheet */
-.agency-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+    .agency-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+    }
 
-.agency-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
+    .agency-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
 
-.agency-cover-img {
-    transition: transform 0.5s ease;
-}
+    .agency-cover-img {
+        transition: transform 0.5s ease;
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+    }
 
-.agency-card:hover .agency-cover-img {
-    transform: scale(1.03);
-}
+    .agency-card:hover .agency-cover-img {
+        transform: scale(1.05);
+    }
 
-.agency-logo-badge {
-    position: absolute;
-    bottom: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-}
+    .agency-logo-badge {
+        position: absolute;
+        bottom: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 4px solid white;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
 
-.stretched-link::after {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 1;
-    content: "";
-}
+    .agency-logo-badge img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 50%;
+    }
+
+    .stats-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .rating-badge {
+        background: #ffc107;
+        color: #333;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    .filter-section {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .search-box {
+        border-radius: 25px;
+        border: 2px solid #e9ecef;
+        padding: 12px 20px;
+        transition: all 0.3s ease;
+    }
+
+    .search-box:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .filter-btn {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover {
+        background: #5a6fd8;
+        transform: translateY(-2px);
+    }
+
+    .breadcrumb-area {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 0;
+        position: relative;
+    }
+
+    .breadcrumb-area::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.3);
+    }
+
+    .breadcrumb-content {
+        position: relative;
+        z-index: 2;
+    }
 </style>
 {% endblock %}
 
-
 {% block content %}
 <!----------------------------------------------BREAD CRUMB------------------------------------------------------------>
-<section class="breadcrumb-area bread-bg-7">
-    <div class="breadcrumb-wrap">
-        <div class="container">
+<section class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-content text-center">
+                    <h1 class="display-4 font-weight-bold mb-3">Travel Agencies</h1>
+                    <p class="lead mb-0">Discover trusted travel partners for your next adventure</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!----------------------------------------------FILTER SECTION------------------------------------------------------------>
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="filter-section">
             <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <div class="breadcrumb-content">
-                        <div class="section-heading">
-                            <h2 class="sec__title text-white text-center">Agencies</h2>
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center">
+                        <input type="text" class="form-control search-box me-3" placeholder="Search agencies by name, location, or services...">
+                        <button class="btn filter-btn">
+                            <i class="fas fa-search me-2"></i>Search
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-end">
+                    <div class="d-flex align-items-center justify-content-end">
+                        <span class="me-3 text-muted">View:</span>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-primary active">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-primary">
+                                <i class="fas fa-list"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="bread-svg-box">
-        <svg class="bread-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 10" preserveAspectRatio="none">
-            <polygon points="100 0 50 10 0 0 0 10 100 10"></polygon>
-        </svg>
-    </div>
-
 </section>
 
 <!----------------------------------------------AGENCY LIST------------------------------------------------------------>
-<section class="card-area section--padding">
+<section class="py-5">
     <div class="container">
         <div class="row">
-
-            <div class="col-lg-12">
-                <div class="filter-wrap margin-bottom-30px">
-                    <div class="filter-top d-flex align-items-center justify-content-between pb-4">
-                        <div>
-                            <h3 class="title font-size-24">2224 Agencies Found</h3>
-                            <p class="font-size-14"><span class="mr-1 pt-1">Book with confidence:</span>No booking fees
-                            </p>
-                        </div>
-                        <div class="layout-view d-flex align-items-center">
-                            <a href="hotel-grid.html" data-toggle="tooltip" data-placement="top" title="" class="active"
-                               data-original-title="Grid View"><i class="la la-th-large"></i></a>
-                            <a href="hotel-list.html" data-toggle="tooltip" data-placement="top" title=""
-                               data-original-title="List View"><i class="la la-th-list"></i></a>
-                        </div>
-                    </div>
-
-                    <div class="filter-bar d-flex align-items-center justify-content-between">
-                        <div class="filter-bar-filter d-flex flex-wrap align-items-center">
-                            <div class="filter-option">
-                                <h3 class="title font-size-16">Filter by:</h3>
-                            </div>
-                            <div class="filter-option">
-                                <div class="dropdown dropdown-contain">
-                                    <a class="dropdown-toggle dropdown-btn dropdown--btn" href="#" role="button"
-                                       data-toggle="dropdown">
-                                        Filter Price
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-wrap">
-                                        <div class="dropdown-item">
-                                            <div class="slider-range-wrap">
-                                                <div class="price-slider-amount padding-bottom-20px">
-                                                    <label for="amount" class="filter__label">Price:</label>
-                                                    <input type="text" id="amount" class="amounts">
-                                                </div>
-                                                <div id="slider-range"
-                                                     class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
-                                                    <div class="ui-slider-range ui-corner-all ui-widget-header"
-                                                         style="left: 4%; width: 76%;"></div>
-                                                    <span tabindex="0"
-                                                          class="ui-slider-handle ui-corner-all ui-state-default"
-                                                          style="left: 4%;"></span><span tabindex="0"
-                                                                                         class="ui-slider-handle ui-corner-all ui-state-default"
-                                                                                         style="left: 80%;"></span>
-                                                </div><!-- end slider-range -->
-                                            </div>
-                                            <div class="btn-box pt-4">
-                                                <button class="theme-btn theme-btn-small theme-btn-transparent"
-                                                        type="button">Apply
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="filter-option">
-                                <div class="dropdown dropdown-contain">
-                                    <a class="dropdown-toggle dropdown-btn dropdown--btn" href="#" role="button"
-                                       data-toggle="dropdown">
-                                        Review Score
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-wrap">
-                                        <div class="dropdown-item">
-                                            <div class="checkbox-wrap">
-                                                <div class="custom-checkbox">
-                                                    <input type="checkbox" id="r1">
-                                                    <label for="r1">
-                                                        <span class="ratings d-flex align-items-center">
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <span class="color-text-3 font-size-13 ml-1">(55.590)</span>
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                                <div class="custom-checkbox">
-                                                    <input type="checkbox" id="r2">
-                                                    <label for="r2">
-                                                        <span class="ratings d-flex align-items-center">
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star-o"></i>
-                                                            <span class="color-text-3 font-size-13 ml-1">(40.590)</span>
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                                <div class="custom-checkbox">
-                                                    <input type="checkbox" id="r3">
-                                                    <label for="r3">
-                                                        <span class="ratings d-flex align-items-center">
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star-o"></i>
-                                                            <i class="la la-star-o"></i>
-                                                            <span class="color-text-3 font-size-13 ml-1">(23.590)</span>
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                                <div class="custom-checkbox">
-                                                    <input type="checkbox" id="r4">
-                                                    <label for="r4">
-                                                        <span class="ratings d-flex align-items-center">
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star-o"></i>
-                                                            <i class="la la-star-o"></i>
-                                                            <i class="la la-star-o"></i>
-                                                            <span class="color-text-3 font-size-13 ml-1">(12.590)</span>
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                                <div class="custom-checkbox">
-                                                    <input type="checkbox" id="r5">
-                                                    <label for="r5">
-                                                        <span class="ratings d-flex align-items-center">
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star-o"></i>
-                                                            <i class="la la-star-o"></i>
-                                                            <i class="la la-star-o"></i>
-                                                            <i class="la la-star-o"></i>
-                                                            <span class="color-text-3 font-size-13 ml-1">(590)</span>
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div><!-- end dropdown-item -->
-                                    </div><!-- end dropdown-menu -->
-                                </div><!-- end dropdown -->
-                            </div>
-                            <div class="filter-option">
-                                <div class="dropdown dropdown-contain">
-                                    <a class="dropdown-toggle dropdown-btn dropdown--btn" href="#" role="button"
-                                       data-toggle="dropdown">
-                                        Facilities
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-wrap">
-                                        <div class="dropdown-item">
-                                            <div class="checkbox-wrap">
-                                                <div class="custom-checkbox">
-                                                    <input type="checkbox" id="catChb1">
-                                                    <label for="catChb1">Pet Allowed</label>
-                                                </div>
-                                                <div class="custom-checkbox">
-                                                    <input type="checkbox" id="catChb2">
-                                                    <label for="catChb2">Groups Allowed</label>
-                                                </div>
-                                                <div class="custom-checkbox">
-                                                    <input type="checkbox" id="catChb3">
-                                                    <label for="catChb3">Tour Guides</label>
-                                                </div>
-                                                <div class="custom-checkbox">
-                                                    <input type="checkbox" id="catChb4">
-                                                    <label for="catChb4">Access for disabled</label>
-                                                </div>
-                                                <div class="custom-checkbox">
-                                                    <input type="checkbox" id="catChb5">
-                                                    <label for="catChb5">Room Service</label>
-                                                </div>
-                                                <div class="custom-checkbox">
-                                                    <input type="checkbox" id="catChb6">
-                                                    <label for="catChb6">Parking</label>
-                                                </div>
-                                                <div class="custom-checkbox">
-                                                    <input type="checkbox" id="catChb7">
-                                                    <label for="catChb7">Restaurant</label>
-                                                </div>
-                                                <div class="custom-checkbox">
-                                                    <input type="checkbox" id="catChb8">
-                                                    <label for="catChb8">Pet friendly</label>
-                                                </div>
-                                            </div>
-                                        </div><!-- end dropdown-item -->
-                                    </div><!-- end dropdown-menu -->
-                                </div><!-- end dropdown -->
-                            </div>
-
-                        </div>
-
-                        <div class="select-contain">
-                            <div class="dropdown bootstrap-select select-contain-select"><select
-                                    class="select-contain-select" tabindex="-98">
-                                <option value="1">Short by default</option>
-                                <option value="2">Popular Hotel</option>
-                                <option value="3">Price: low to high</option>
-                                <option value="4">Price: high to low</option>
-                                <option value="5">A to Z</option>
-                            </select>
-                                <button type="button" class="btn dropdown-toggle btn-light" data-toggle="dropdown"
-                                        role="combobox" aria-owns="bs-select-3" aria-haspopup="listbox"
-                                        aria-expanded="false" title="Short by default">
-                                    <div class="filter-option">
-                                        <div class="filter-option-inner">
-                                            <div class="filter-option-inner-inner">Short by default</div>
-                                        </div>
-                                    </div>
-                                </button>
-                                <div class="dropdown-menu ">
-                                    <div class="bs-searchbox"><input type="search" class="form-control"
-                                                                     autocomplete="off" placeholder="Search"
-                                                                     role="combobox" aria-label="Search"
-                                                                     aria-controls="bs-select-3"
-                                                                     aria-autocomplete="list"></div>
-                                    <div class="inner show" role="listbox" id="bs-select-3" tabindex="-1">
-                                        <ul class="dropdown-menu inner show" role="presentation"></ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-
             {% if agencies %}
-
             {% for agency in agencies %}
-<div class="col-lg-4 col-md-6 mb-4">
-    <div class="card agency-card h-100 border-0 shadow-sm overflow-hidden">
-        <!-- Cover Image with Logo Badge -->
-        <div class="position-relative">
-            <div class="agency-cover-img" style="height: 200px; background-image: url('{% if agency.cover_image %}{{ agency.cover_image.url }}{% else %}{% static 'website/images/agency-default-cover.jpg' %}{% endif %}'); background-size: cover; background-position: center;"></div>
-            {% if agency.logo %}
-            <div class="agency-logo-badge">
-                <img src="{{ agency.logo.url }}" alt="{{ agency.name }} logo" class="rounded-circle border border-3 border-white" style="width: 80px; height: 80px; object-fit: contain; background: white;">
-            </div>
-            {% endif %}
-        </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card agency-card h-100">
+                    <!-- Cover Image with Logo Badge -->
+                    <div class="position-relative">
+                        <div class="agency-cover-img" style="background-image: url('{% if agency.cover_image %}{{ agency.cover_image.url }}{% else %}{% static 'website/images/agency-default-cover.jpg' %}{% endif %}');"></div>
+                        <div class="agency-logo-badge">
+                            {% if agency.logo %}
+                            <img src="{{ agency.logo.url }}" alt="{{ agency.name }} logo">
+                            {% else %}
+                            <i class="fas fa-building fa-2x text-muted"></i>
+                            {% endif %}
+                        </div>
+                    </div>
 
-        <!-- Card Body -->
-        <div class="card-body pt-5">
-            <!-- Rating and Years in Business -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                {% if agency.rating %}
-                <span class="badge bg-warning text-dark">
-                    <i class="fas fa-star"></i> {{ agency.rating|floatformat:1 }}
-                </span>
-                {% else %}
-                <span class="badge bg-secondary">No ratings yet</span>
-                {% endif %}
-                
-                {% if agency.establish_year %}
-                <span class="text-muted small">
-                    <i class="fas fa-calendar-alt me-1"></i> Since {{ agency.establish_year|date:"Y" }}
-                </span>
-                {% endif %}
-            </div>
+                    <!-- Card Body -->
+                    <div class="card-body pt-5">
+                        <!-- Rating and Years in Business -->
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            {% if agency.rating %}
+                            <span class="rating-badge">
+                                <i class="fas fa-star"></i> {{ agency.rating|floatformat:1 }}
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary">No ratings yet</span>
+                            {% endif %}
+                            
+                            {% if agency.establish_year %}
+                            <span class="text-muted small">
+                                <i class="fas fa-calendar-alt me-1"></i> Since {{ agency.establish_year|date:"Y" }}
+                            </span>
+                            {% endif %}
+                        </div>
 
-            <!-- Agency Name -->
-            <h3 class="h5 mb-2">
-                <a href="{% url 'website:agency-detail' agency.id %}" class="text-dark stretched-link">{{ agency.name }}</a>
-            </h3>
+                        <!-- Agency Name -->
+                        <h3 class="h5 mb-2">
+                            <a href="{% url 'website:agency-detail' agency.id %}" class="text-dark text-decoration-none">{{ agency.name }}</a>
+                        </h3>
 
-            <!-- Location -->
-            <p class="text-muted mb-3">
-                <i class="fas fa-map-marker-alt text-primary me-1"></i>
-                {% if agency.city %}{{ agency.city }}{% endif %}{% if agency.city and agency.country %}, {% endif %}{% if agency.country %}{{ agency.country }}{% endif %}
-            </p>
+                        <!-- Location -->
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-map-marker-alt text-primary me-1"></i>
+                            {% if agency.city %}{{ agency.city }}{% endif %}{% if agency.city and agency.country %}, {% endif %}{% if agency.country %}{{ agency.country }}{% endif %}
+                        </p>
 
-            <!-- Short Description -->
-            <p class="card-text text-muted small mb-3">
-                {% if agency.description %}
-                    {{ agency.description|truncatechars:120 }}
-                {% else %}
-                    No description available
-                {% endif %}
-            </p>
+                        <!-- Short Description -->
+                        <p class="card-text text-muted small mb-3">
+                            {% if agency.description %}
+                                {{ agency.description|truncatechars:120 }}
+                            {% else %}
+                                No description available
+                            {% endif %}
+                        </p>
 
-            <!-- Stats -->
-            <div class="d-flex justify-content-between small text-muted border-top pt-3">
-                <span>
-                    <i class="fas fa-hotel me-1"></i>
-                    {{ agency.hotels.count }} Hotels
-                </span>
-                <span>
-                    <i class="fas fa-car me-1"></i>
-                    {{ agency.vehicles.count }} Vehicles
-                </span>
-                <span>
-                    <i class="fas fa-map-marked-alt me-1"></i>
-                    {{ agency.places.count }} Places
-                </span>
-            </div>
-        </div>
+                        <!-- Stats -->
+                        <div class="row text-center mb-3">
+                            <div class="col-4">
+                                <div class="stats-badge">
+                                    <i class="fas fa-hotel me-1"></i>
+                                    {{ agency.hotels.count }}
+                                </div>
+                                <small class="text-muted d-block mt-1">Hotels</small>
+                            </div>
+                            <div class="col-4">
+                                <div class="stats-badge">
+                                    <i class="fas fa-car me-1"></i>
+                                    {{ agency.vehicles.count }}
+                                </div>
+                                <small class="text-muted d-block mt-1">Vehicles</small>
+                            </div>
+                            <div class="col-4">
+                                <div class="stats-badge">
+                                    <i class="fas fa-route me-1"></i>
+                                    {{ agency.tour_packages.count }}
+                                </div>
+                                <small class="text-muted d-block mt-1">Tours</small>
+                            </div>
+                        </div>
 
-        <!-- Footer -->
-        <div class="card-footer bg-white border-0 pt-0 pb-3">
-            <div class="d-flex justify-content-between align-items-center">
-                {% if agency.website %}
-                <a href="{{ agency.website }}" target="_blank" class="btn btn-sm btn-outline-secondary">
-                    <i class="fas fa-globe me-1"></i> Website
-                </a>
-                {% else %}
-                <span class="btn btn-sm btn-outline-secondary disabled">
-                    <i class="fas fa-globe me-1"></i> No Website
-                </span>
-                {% endif %}
-                
-                <a href="{% url 'website:agency-detail' agency.id %}" class="btn btn-sm btn-primary">
-                    View Details <i class="fas fa-arrow-right ms-1"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-{% endfor %}
+                        <!-- Contact Info -->
+                        <div class="border-top pt-3">
+                            <div class="row small text-muted">
+                                <div class="col-6">
+                                    <i class="fas fa-envelope me-1"></i>
+                                    {{ agency.email|truncatechars:20 }}
+                                </div>
+                                <div class="col-6">
+                                    <i class="fas fa-phone me-1"></i>
+                                    {{ agency.phone_number|truncatechars:15 }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            {% else %}
-            <div class="col-lg-10 mt-3">
-                <div class="card-item card-item-list ">
-                    <div class="card-body">
-                        <h3 class="card-title text-danger">No Agencies Find</h3>
+                    <!-- Footer -->
+                    <div class="card-footer bg-white border-0 pt-0 pb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            {% if agency.website %}
+                            <a href="{{ agency.website }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-globe me-1"></i> Website
+                            </a>
+                            {% else %}
+                            <span class="btn btn-sm btn-outline-secondary disabled">
+                                <i class="fas fa-globe me-1"></i> No Website
+                            </span>
+                            {% endif %}
+                            
+                            <a href="{% url 'website:agency-detail' agency.id %}" class="btn btn-sm btn-primary">
+                                View Details <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-            {% endif %}
-
-        </div>
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="btn-box mt-3 text-center">
-                    <button type="button" class="theme-btn"><i class="la la-refresh mr-1"></i>Load More</button>
-                    <p class="font-size-13 pt-2">Showing 1 - 6 of 2224 Hotels</p>
+            {% endfor %}
+            {% else %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-building fa-4x text-muted mb-3"></i>
+                    <h3 class="text-muted">No Agencies Found</h3>
+                    <p class="text-muted">We couldn't find any travel agencies matching your criteria.</p>
                 </div>
             </div>
+            {% endif %}
         </div>
+
+        <!-- Pagination -->
+        {% if agencies.has_other_pages %}
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="Agency pagination" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if agencies.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ agencies.previous_page_number }}">Previous</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for num in agencies.paginator.page_range %}
+                        <li class="page-item {% if agencies.number == num %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endfor %}
+                        
+                        {% if agencies.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ agencies.next_page_number }}">Next</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </section>
-
-
-<div class="section-block"></div>
-
 
 <!----------------------------------------------INFO AREA-------------------------------------------------------------->
 <section class="info-area info-bg padding-top-90px padding-bottom-70px">
@@ -430,7 +352,7 @@ AGENCIES
                     <div class="info-content">
                         <h4 class="info__title">Need Help? Contact us</h4>
                         <p class="info__desc">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                            Get in touch with our support team for any questions
                         </p>
                     </div>
                 </a>
@@ -441,23 +363,22 @@ AGENCIES
                         <i class="la la-money"></i>
                     </div>
                     <div class="info-content">
-                        <h4 class="info__title">Payments</h4>
+                        <h4 class="info__title">Secure Payments</h4>
                         <p class="info__desc">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                            All transactions are secure and protected
                         </p>
                     </div>
                 </a>
             </div>
-
             <div class="col-lg-4 responsive-column">
                 <a href="#" class="icon-box icon-layout-2 d-flex">
                     <div class="info-icon flex-shrink-0 bg-rgb-3 text-color-4">
                         <i class="la la-times"></i>
                     </div>
                     <div class="info-content">
-                        <h4 class="info__title">Cancel Policy</h4>
+                        <h4 class="info__title">Flexible Cancellation</h4>
                         <p class="info__desc">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                            Easy cancellation and refund policies
                         </p>
                     </div>
                 </a>

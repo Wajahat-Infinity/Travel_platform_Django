@@ -15,11 +15,19 @@ HOME
                 <ul class="slides-container"
                     style="margin: 0px; padding: 0px; list-style: none; position: relative; height: 100%;">
                    
+                    {% for slider in hero_sliders %}
+                    <li
+                        style="display: block; left: 721px; position: absolute; overflow: hidden; height: 100%; width: 721px; top: 0px; z-index: 2; opacity: 1;">
+                        <img src="{{ slider.image.url }}" alt="{{ slider.title }}"
+                            style="backface-visibility: hidden; position: absolute; left: -323.875px; top: 0px; z-index: -1; max-width: none; height: 730px; width: 1368.75px;">
+                    </li>
+                    {% empty %}
                     <li
                         style="display: block; left: 721px; position: absolute; overflow: hidden; height: 100%; width: 721px; top: 0px; z-index: 2; opacity: 1;">
                         <img src="{% static 'website/images/hero--bg3.jpg' %}" alt=""
                             style="backface-visibility: hidden; position: absolute; left: -323.875px; top: 0px; z-index: -1; max-width: none; height: 730px; width: 1368.75px;">
                     </li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>
@@ -29,9 +37,9 @@ HOME
                 <div class="col-lg-12">
                     <div class="hero-content pb-5 text-center">
                         <div class="section-heading">
-                            <h2 class="sec__title font-size-70 pb-3">Are You Ready...</h2>
+                            <h2 class="sec__title font-size-70 pb-3">{{ site_settings.hero_title|default:"Are You Ready..." }}</h2>
                             <p class="sec__desc font-size-30 font-weight-medium">
-                                To explore new things?
+                                {{ site_settings.hero_subtitle|default:"To explore new things?" }}
                             </p>
                         </div>
                     </div>
@@ -230,181 +238,65 @@ HOME
                         Popular tour in the month
                     </h2>
                 </div>
-                <!-- end section-heading -->
             </div>
-            <!-- end col-lg-12 -->
         </div>
-        <!-- end row -->
+        
         <div class="row padding-top-50px">
             <div class="col-lg-12">
-                <div class="trending-carousel carousel-action owl-carousel">
-                    <!-- Item 1 -->
-                    <div class="card-item trending-card mb-0">
-                        <div class="card-img">
-                            <a href="tour-details.html" class="d-block">
-                                <img src="{% static 'website/images/img9.jpg' %}" alt="Destination-img">
-                            </a>
-                            <span class="badge">Bestseller</span>
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-title mb-0">
-                                <a href="tour-details.html">Empire State Building Admission</a>
-                            </h3>
-                            <div class="card-rating">
-                                <span class="badge text-white">4.4/5</span>
-                                <span class="rating__text">30 Reviews</span>
+                {% if popular_tours %}
+                    <div class="row">  <!-- Changed from carousel to simple row -->
+                        {% for popular_tour in popular_tours %}
+                        <div class="col-lg-4">  <!-- Adjust column size as needed -->
+                            <div class="card-item trending-card mb-4">
+                                <div class="card-img">
+                                    <a href="{% url 'website:tour_detail' popular_tour.tour_package.id %}" class="d-block">
+                                        {% if popular_tour.tour_package.agency.cover_image %}
+                                            <img src="{{ popular_tour.tour_package.agency.cover_image.url }}" alt="{{ popular_tour.tour_package.name }}" class="img-fluid">
+                                        {% else %}
+                                            <img src="{% static 'website/images/img9.jpg' %}" alt="{{ popular_tour.tour_package.name }}" class="img-fluid">
+                                        {% endif %}
+                                    </a>
+                                    {% if popular_tour.badge_text %}
+                                        <span class="badge">{{ popular_tour.badge_text }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="card-title mb-0">
+                                        <a href="{% url 'website:tour_detail' popular_tour.tour_package.id %}">{{ popular_tour.tour_package.name }}</a>
+                                    </h3>
+                                    <div class="card-rating">
+                                        <span class="badge text-white">4.4/5</span>
+                                        <span class="rating__text">30 Reviews</span>
+                                    </div>
+                                    <div class="card-price d-flex align-items-center justify-content-between">
+                                        <span><i class="la la-clock mr-1"></i>{{ popular_tour.tour_package.duration_days }} Days</span>
+                                        <p>
+                                            <span class="price__from">from</span>
+                                            <span class="price__num">${{ popular_tour.tour_package.price }}</span>
+                                            {% if popular_tour.tour_package.discount_price %}
+                                                <span class="price__num before-price color-text-3">${{ popular_tour.tour_package.discount_price }}</span>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-price d-flex align-items-center justify-content-between">
-                                <span><i class="la la-clock mr-1"></i>5 Days</span>
-                                <p>
-                                    <span class="price__from">from</span>
-                                    <span class="price__num">$124.00</span>
-                                </p>
-                            </div>
                         </div>
+                        {% endfor %}
                     </div>
-                    
-                    <!-- Item 2 -->
-                    <div class="card-item trending-card mb-0">
-                        <div class="card-img">
-                            <a href="tour-details.html" class="d-block">
-                                <img src="{% static 'website/images/img10.jpg' %}" alt="Destination-img">
-                            </a>
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-title mb-0">
-                                <a href="tour-details.html">Hut on Blue Water Beach Tour</a>
-                            </h3>
-                            <div class="card-rating">
-                                <span class="badge text-white">4.4/5</span>
-                                <span class="rating__text">30 Reviews</span>
-                            </div>
-                            <div class="card-price d-flex align-items-center justify-content-between">
-                                <span><i class="la la-clock mr-1"></i>7 Hours</span>
-                                <p>
-                                    <span class="price__from">from</span>
-                                    <span class="price__num">$100.00</span>
-                                    <span class="price__num before-price color-text-3">$124.00</span>
-                                </p>
-                            </div>
-                        </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <h4 class="text-muted">No popular tours found this month</h4>
+                        <p class="text-muted">Check back later for exciting tour packages</p>
                     </div>
-                    
-                    <!-- Item 3 -->
-                    <div class="card-item trending-card mb-0">
-                        <div class="card-img">
-                            <a href="tour-details.html" class="d-block">
-                                <img src="{% static 'website/images/img11.jpg' %}" alt="Destination-img">
-                            </a>
-                            <span class="badge">Featured</span>
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-title mb-0">
-                                <a href="tour-details.html">Golden Gate Seaplane Tour</a>
-                            </h3>
-                            <div class="card-rating">
-                                <span class="badge text-white">4.4/5</span>
-                                <span class="rating__text">30 Reviews</span>
-                            </div>
-                            <div class="card-price d-flex align-items-center justify-content-between">
-                                <span><i class="la la-clock mr-1"></i>6 Days</span>
-                                <p>
-                                    <span class="price__from">from</span>
-                                    <span class="price__num">$124.00</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Item 4 -->
-                    <div class="card-item trending-card mb-0">
-                        <div class="card-img">
-                            <a href="tour-details.html" class="d-block">
-                                <img src="{% static 'website/images/img12.jpg' %}" alt="Destination-img">
-                            </a>
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-title mb-0">
-                                <a href="tour-details.html">Two Hours Guided Horseback Tour</a>
-                            </h3>
-                            <div class="card-rating">
-                                <span class="badge text-white">4.4/5</span>
-                                <span class="rating__text">30 Reviews</span>
-                            </div>
-                            <div class="card-price d-flex align-items-center justify-content-between">
-                                <span><i class="la la-clock mr-1"></i>10 Days</span>
-                                <p>
-                                    <span class="price__from">from</span>
-                                    <span class="price__num">$224.00</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Item 5 -->
-                    <div class="card-item trending-card mb-0">
-                        <div class="card-img">
-                            <a href="tour-details.html" class="d-block">
-                                <img src="{% static 'website/images/img13.jpg' %}" alt="Destination-img">
-                            </a>
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-title mb-0">
-                                <a href="tour-details.html">Scuba Diving in Boyton Beach</a>
-                            </h3>
-                            <div class="card-rating">
-                                <span class="badge text-white">4.4/5</span>
-                                <span class="rating__text">30 Reviews</span>
-                            </div>
-                            <div class="card-price d-flex align-items-center justify-content-between">
-                                <span><i class="la la-clock mr-1"></i>2-4 Hours</span>
-                                <p>
-                                    <span class="price__from">from</span>
-                                    <span class="price__num">$124.00</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Item 6 -->
-                    <div class="card-item trending-card mb-0">
-                        <div class="card-img">
-                            <a href="tour-details.html" class="d-block">
-                                <img src="{% static 'website/images/img14.jpg' %}" alt="Destination-img">
-                            </a>
-                            <span class="badge">Featured</span>
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-title mb-0">
-                                <a href="tour-details.html">Mangrove Tunnel Kayak Eco Tour</a>
-                            </h3>
-                            <div class="card-rating">
-                                <span class="badge text-white">4.4/5</span>
-                                <span class="rating__text">30 Reviews</span>
-                            </div>
-                            <div class="card-price d-flex align-items-center justify-content-between">
-                                <span><i class="la la-clock mr-1"></i>10 Days</span>
-                                <p>
-                                    <span class="price__from">from</span>
-                                    <span class="price__num">$224.00</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end car-carousel -->
+                {% endif %}
             </div>
-            <!-- end col-lg-12 -->
         </div>
-        <!-- end row -->
     </div>
-    <!-- end container -->
+    
     <svg class="hero-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 10" preserveAspectRatio="none">
         <path d="M0 10 0 0 A 90 59, 0, 0, 0, 100 0 L 100 10 Z"></path>
     </svg>
 </section>
-
-
 <section class="discount-area">
     <div class="container">
         <div class="row">
@@ -417,10 +309,10 @@ HOME
                     <div class="discount-content d-flex align-items-center justify-content-between">
                         <div class="section-heading">
                             <h2 class="sec__title text-white mb-2">
-                                Explore more with us
+                                {{ site_settings.explore_title|default:"Explore more with us" }}
                             </h2>
                             <p class="sec__desc text-white">
-                                Join 2000+ locals &amp; 1200+ contributors from 3000 cities
+                                {{ site_settings.explore_description|default:"Join 2000+ locals & 1200+ contributors from 3000 cities" }}
                             </p>
                         </div>
                         <!-- end section-heading -->
@@ -590,6 +482,34 @@ HOME
         </div>
         <!-- end row -->
         <div class="row padding-top-50px">
+            {% for activity in top_activities %}
+            <div class="col-lg-3 responsive-column">
+                <div class="flip-box">
+                    <div class="flip-box-front">
+                        <img src="{{ activity.image.url }}" alt="{{ activity.name }}" class="flip-img">
+                        <a href="{{ activity.url|default:'#' }}" class="flip-content d-flex align-items-end justify-content-start">
+                            <h3 class="flip-title">{{ activity.name }}</h3>
+                        </a><!-- end flip-content -->
+                    </div>
+                    <!-- end flip-box-front -->
+                    <div class="flip-box-back">
+                        <img src="{{ activity.image.url }}" alt="{{ activity.name }}" class="flip-img">
+                        <a href="{{ activity.url|default:'#' }}" class="flip-content d-flex align-items-center justify-content-center">
+                            <div>
+                                <div class="icon-element mx-auto mb-3 bg-white text-color-2">
+                                    <i class="la la-arrow-right"></i>
+                                </div>
+                                <h3 class="flip-title">Explore Activity</h3>
+                            </div>
+                        </a><!-- end flip-content -->
+                    </div>
+                    <!-- end flip-box-back -->
+                </div>
+                <!-- end flip-box -->
+            </div>
+            <!-- end col-lg-3 -->
+            {% empty %}
+            <!-- Fallback static content if no activities -->
             <div class="col-lg-3 responsive-column">
                 <div class="flip-box">
                     <div class="flip-box-front">
@@ -615,181 +535,7 @@ HOME
                 <!-- end flip-box -->
             </div>
             <!-- end col-lg-3 -->
-            <div class="col-lg-3 responsive-column">
-                <div class="flip-box">
-                    <div class="flip-box-front">
-                        <img src="{% static 'website/images/img2.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-end justify-content-start">
-                            <h3 class="flip-title">Carnival</h3>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-front -->
-                    <div class="flip-box-back">
-                        <img src="{% static 'website/images/img2.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-center justify-content-center">
-                            <div>
-                                <div class="icon-element mx-auto mb-3 bg-white text-color-2">
-                                    <i class="la la-arrow-right"></i>
-                                </div>
-                                <h3 class="flip-title">Explore Activity</h3>
-                            </div>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-back -->
-                </div>
-                <!-- end flip-box -->
-            </div>
-            <!-- end col-lg-3 -->
-            <div class="col-lg-3 responsive-column">
-                <div class="flip-box">
-                    <div class="flip-box-front">
-                        <img src="{% static 'website/images/img3.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-end justify-content-start">
-                            <h3 class="flip-title">Murano</h3>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-front -->
-                    <div class="flip-box-back">
-                        <img src="{% static 'website/images/img3.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-center justify-content-center">
-                            <div>
-                                <div class="icon-element mx-auto mb-3 bg-white text-color-2">
-                                    <i class="la la-arrow-right"></i>
-                                </div>
-                                <h3 class="flip-title">Explore Activity</h3>
-                            </div>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-back -->
-                </div>
-                <!-- end flip-box -->
-            </div>
-            <!-- end col-lg-3 -->
-            <div class="col-lg-3 responsive-column">
-                <div class="flip-box">
-                    <div class="flip-box-front">
-                        <img src="{% static 'website/images/img4.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-end justify-content-start">
-                            <h3 class="flip-title">Eat + Drink</h3>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-front -->
-                    <div class="flip-box-back">
-                        <img src="{% static 'website/images/img4.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-center justify-content-center">
-                            <div>
-                                <div class="icon-element mx-auto mb-3 bg-white text-color-2">
-                                    <i class="la la-arrow-right"></i>
-                                </div>
-                                <h3 class="flip-title">Explore Activity</h3>
-                            </div>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-back -->
-                </div>
-                <!-- end flip-box -->
-            </div>
-            <!-- end col-lg-3 -->
-            <div class="col-lg-3 responsive-column">
-                <div class="flip-box">
-                    <div class="flip-box-front">
-                        <img src="{% static 'website/images/img5.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-end justify-content-start">
-                            <h3 class="flip-title">Gondola Ride</h3>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-front -->
-                    <div class="flip-box-back">
-                        <img src="{% static 'website/images/img5.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-center justify-content-center">
-                            <div>
-                                <div class="icon-element mx-auto mb-3 bg-white text-color-2">
-                                    <i class="la la-arrow-right"></i>
-                                </div>
-                                <h3 class="flip-title">Explore Activity</h3>
-                            </div>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-back -->
-                </div>
-                <!-- end flip-box -->
-            </div>
-            <!-- end col-lg-3 -->
-            <div class="col-lg-3 responsive-column">
-                <div class="flip-box">
-                    <div class="flip-box-front">
-                        <img src="{% static 'website/images/img6.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-end justify-content-start">
-                            <h3 class="flip-title">Museum Tickets</h3>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-front -->
-                    <div class="flip-box-back">
-                        <img src="{% static 'website/images/img6.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-center justify-content-center">
-                            <div>
-                                <div class="icon-element mx-auto mb-3 bg-white text-color-2">
-                                    <i class="la la-arrow-right"></i>
-                                </div>
-                                <h3 class="flip-title">Explore Activity</h3>
-                            </div>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-back -->
-                </div>
-                <!-- end flip-box -->
-            </div>
-            <!-- end col-lg-3 -->
-            <div class="col-lg-3 responsive-column">
-                <div class="flip-box">
-                    <div class="flip-box-front">
-                        <img src="{% static 'website/images/img7.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-end justify-content-start">
-                            <h3 class="flip-title">Sightseeing</h3>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-front -->
-                    <div class="flip-box-back">
-                        <img src="{% static 'website/images/img7.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-center justify-content-center">
-                            <div>
-                                <div class="icon-element mx-auto mb-3 bg-white text-color-2">
-                                    <i class="la la-arrow-right"></i>
-                                </div>
-                                <h3 class="flip-title">Explore Activity</h3>
-                            </div>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-back -->
-                </div>
-                <!-- end flip-box -->
-            </div>
-            <!-- end col-lg-3 -->
-            <div class="col-lg-3 responsive-column">
-                <div class="flip-box">
-                    <div class="flip-box-front">
-                        <img src="{% static 'website/images/img8.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-end justify-content-start">
-                            <h3 class="flip-title">Outdoor Activities</h3>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-front -->
-                    <div class="flip-box-back">
-                        <img src="{% static 'website/images/img8.jpg' %}" alt="" class="flip-img">
-                        <a href="#" class="flip-content d-flex align-items-center justify-content-center">
-                            <div>
-                                <div class="icon-element mx-auto mb-3 bg-white text-color-2">
-                                    <i class="la la-arrow-right"></i>
-                                </div>
-                                <h3 class="flip-title">Explore Activity</h3>
-                            </div>
-                        </a><!-- end flip-content -->
-                    </div>
-                    <!-- end flip-box-back -->
-                </div>
-                <!-- end flip-box -->
-            </div>
-            <!-- end col-lg-3 -->
+            {% endfor %}
         </div>
         <!-- end row -->
     </div>
@@ -803,11 +549,10 @@ HOME
             <div class="col-lg-12">
                 <div class="section-heading">
                     <h2 class="sec__title text-white font-size-50 line-height-60">
-                        Enjoy Your Holiday <br>
-                        with 50% Discount
+                        {{ site_settings.discount_title|default:"Enjoy Your Holiday with 50% Discount" }}
                     </h2>
                     <p class="sec__desc text-white pt-3">
-                        Nemo enim ipsam voluptatem quia voluptas sit aspernatur
+                        {{ site_settings.discount_description|default:"Nemo enim ipsam voluptatem quia voluptas sit aspernatur" }}
                     </p>
                 </div>
                 <!-- end section-heading -->
@@ -837,6 +582,78 @@ HOME
         </div>
         <!-- end row -->
         <div class="row padding-top-50px">
+            {% for post in recent_posts %}
+            <div class="col-lg-4 responsive-column">
+                <div class="card-item blog-card">
+                    <div class="card-img">
+                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                        <div class="post-format icon-element">
+                            {% if post.post_format == 'VIDEO' %}
+                                <i class="la la-play"></i>
+                            {% elif post.post_format == 'AUDIO' %}
+                                <i class="la la-music"></i>
+                            {% else %}
+                                <i class="la la-photo"></i>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <div class="post-categories">
+                                {% if post.categories %}
+                                    {% for category in post.categories.split|slice:":2" %}
+                                        <a href="#" class="badge">{{ category }}</a>
+                                    {% endfor %}
+                                {% else %}
+                                    <a href="#" class="badge">Travel</a>
+                                {% endif %}
+                            </div>
+                            <h3 class="card-title line-height-26">
+                                <a href="blog-single.html">{{ post.title }}</a>
+                            </h3>
+                            <p class="card-meta">
+                                <span class="post__date">{{ post.published_date|date:"j F, Y" }}</span>
+                                <span class="post-dot"></span>
+                                <span class="post__time">{{ post.read_time }} Mins read</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                        <div class="author-content d-flex align-items-center">
+                            <div class="author-img">
+                                {% if post.author_image %}
+                                    <img src="{{ post.author_image.url }}" alt="{{ post.author_name }}">
+                                {% else %}
+                                    <img src="{% static 'website/images/small-team1.jpg' %}" alt="{{ post.author_name }}">
+                                {% endif %}
+                            </div>
+                            <div class="author-bio">
+                                <a href="#" class="author__title">{{ post.author_name }}</a>
+                            </div>
+                        </div>
+                        <div class="post-share">
+                            <ul>
+                                <li>
+                                    <i class="la la-share icon-element"></i>
+                                    <ul class="post-share-dropdown d-flex align-items-center">
+                                        <li>
+                                            <a href="#"><i class="lab la-facebook-f"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="lab la-twitter"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="lab la-instagram"></i></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card-item -->
+            </div>
+            <!-- end col-lg-4 -->
+            {% empty %}
+            <!-- Fallback static content if no blog posts -->
             <div class="col-lg-4 responsive-column">
                 <div class="card-item blog-card">
                     <div class="card-img">
@@ -891,112 +708,7 @@ HOME
                 <!-- end card-item -->
             </div>
             <!-- end col-lg-4 -->
-            <div class="col-lg-4 responsive-column">
-                <div class="card-item blog-card">
-                    <div class="card-img">
-                        <img src="{% static 'website/images/img6.jpg' %}" alt="blog-img">
-                        <div class="post-format icon-element">
-                            <i class="la la-play"></i>
-                        </div>
-                        <div class="card-body">
-                            <div class="post-categories">
-                                <a href="#" class="badge">Video</a>
-                            </div>
-                            <h3 class="card-title line-height-26">
-                                <a href="blog-single.html">Amazing Places to Stay in Norway</a>
-                            </h3>
-                            <p class="card-meta">
-                                <span class="post__date"> 1 February, 2020</span>
-                                <span class="post-dot"></span>
-                                <span class="post__time">4 Mins read</span>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <div class="author-content d-flex align-items-center">
-                            <div class="author-img">
-                                <img src="{% static 'website/images/small-team2.jpg' %}" alt="testimonial image">
-                            </div>
-                            <div class="author-bio">
-                                <a href="#" class="author__title">Phillip Hunt</a>
-                            </div>
-                        </div>
-                        <div class="post-share">
-                            <ul>
-                                <li>
-                                    <i class="la la-share icon-element"></i>
-                                    <ul class="post-share-dropdown d-flex align-items-center">
-                                        <li>
-                                            <a href="#"><i class="lab la-facebook-f"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><i class="lab la-twitter"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><i class="lab la-instagram"></i></a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- end card-item -->
-            </div>
-            <!-- end col-lg-4 -->
-            <div class="col-lg-4 responsive-column">
-                <div class="card-item blog-card">
-                    <div class="card-img">
-                        <img src="{% static 'website/images/img7.jpg' %}" alt="blog-img">
-                        <div class="post-format icon-element">
-                            <i class="la la-music"></i>
-                        </div>
-                        <div class="card-body">
-                            <div class="post-categories">
-                                <a href="#" class="badge">audio</a>
-                            </div>
-                            <h3 class="card-title line-height-26">
-                                <a href="blog-single.html">Feel Like Home on Your Business Trip</a>
-                            </h3>
-                            <p class="card-meta">
-                                <span class="post__date"> 1 March, 2020</span>
-                                <span class="post-dot"></span>
-                                <span class="post__time">3 Mins read</span>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <div class="author-content d-flex align-items-center">
-                            <div class="author-img">
-                                <img src="{% static 'website/images/small-team3.jpg' %}" alt="testimonial image">
-                            </div>
-                            <div class="author-bio">
-                                <a href="#" class="author__title">Luke Jacobs</a>
-                            </div>
-                        </div>
-                        <div class="post-share">
-                            <ul>
-                                <li>
-                                    <i class="la la-share icon-element"></i>
-                                    <ul class="post-share-dropdown d-flex align-items-center">
-                                        <li>
-                                            <a href="#"><i class="lab la-facebook-f"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><i class="lab la-twitter"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><i class="lab la-instagram"></i></a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- end card-item -->
-            </div>
-            <!-- end col-lg-4 -->
+            {% endfor %}
         </div>
         <!-- end row -->
     </div>
@@ -1009,9 +721,9 @@ HOME
         <div class="row align-items-center">
             <div class="col-lg-7">
                 <div class="section-heading">
-                    <p class="sec__desc text-white-50 pb-1">Newsletter Sign up</p>
+                    <p class="sec__desc text-white-50 pb-1">{{ site_settings.newsletter_description|default:"Newsletter Sign up" }}</p>
                     <h2 class="sec__title font-size-30 text-white">
-                        Subscribe to Get Special Offers
+                        {{ site_settings.newsletter_title|default:"Subscribe to Get Special Offers" }}
                     </h2>
                 </div>
                 <!-- end section-heading -->
@@ -1020,12 +732,12 @@ HOME
             <div class="col-lg-5">
                 <div class="subscriber-box">
                     <div class="contact-form-action">
-                        <form action="#">
+                        <form id="newsletter-form">
                             <div class="input-box">
                                 <label class="label-text text-white">Enter email address</label>
                                 <div class="form-group mb-0">
                                     <span class="la la-envelope form-icon"></span>
-                                    <input class="form-control" type="email" name="email" placeholder="Email address">
+                                    <input class="form-control" type="email" name="email" placeholder="Email address" required>
                                     <button class="theme-btn theme-btn-small submit-btn" type="submit">
                                         Subscribe
                                     </button>
@@ -1051,7 +763,7 @@ HOME
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-heading text-center">
-                    <h2 class="sec__title font-size-35">We were featured in</h2>
+                    <h2 class="sec__title font-size-35">{{ site_settings.featured_in_title|default:"We were featured in" }}</h2>
                 </div>
                 <!-- end section-heading -->
             </div>
@@ -1061,88 +773,37 @@ HOME
         <div class="row padding-top-10px">
             <div class="col-lg-12">
                 <div class="client-logo owl-loaded owl-carousel">
-
-                    <!-- end client-logo-item -->
-
-                    <!-- end client-logo-item -->
-
-                    <!-- end client-logo-item -->
-
-                    <!-- end client-logo-item -->
-
-                    <!-- end client-logo-item -->
-
-                    <!-- end client-logo-item -->
-                    <div class="owl-stage-outer">
-                        <div class="owl-stage"
-                            style="transform: translate3d(-765px, 0px, 0px); transition: 0.7s; width: 3060px;">
-                            <div class="owl-item cloned" style="width: 255px;">
-                                <div class="client-logo-item">
-                                    <img src="{% static 'website/images/client-logo4.png' %}" alt="brand image">
-                                </div>
-                            </div>
-                            <div class="owl-item cloned" style="width: 255px;">
-                                <div class="client-logo-item">
-                                    <img src="{% static 'website/images/client-logo5.png' %}" alt="brand image">
-                                </div>
-                            </div>
-                            <div class="owl-item cloned" style="width: 255px;">
-                                <div class="client-logo-item">
-                                    <img src="{% static 'website/images/client-logo6.png' %}" alt="brand image">
-                                </div>
-                            </div>
-                            <div class="owl-item active" style="width: 255px;">
-                                <div class="client-logo-item">
-                                    <img src="{% static 'website/images/client-logo.png' %}" alt="brand image">
-                                </div>
-                            </div>
-                            <div class="owl-item active" style="width: 255px;">
-                                <div class="client-logo-item">
-                                    <img src="{% static 'website/images/client-logo2.png' %}" alt="brand image">
-                                </div>
-                            </div>
-                            <div class="owl-item" style="width: 255px;">
-                                <div class="client-logo-item">
-                                    <img src="{% static 'website/images/client-logo3.png' %}" alt="brand image">
-                                </div>
-                            </div>
-                            <div class="owl-item" style="width: 255px;">
-                                <div class="client-logo-item">
-                                    <img src="{% static 'website/images/client-logo4.png' %}" alt="brand image">
-                                </div>
-                            </div>
-                            <div class="owl-item" style="width: 255px;">
-                                <div class="client-logo-item">
-                                    <img src="{% static 'website/images/client-logo5.png' %}" alt="brand image">
-                                </div>
-                            </div>
-                            <div class="owl-item" style="width: 255px;">
-                                <div class="client-logo-item">
-                                    <img src="{% static 'website/images/client-logo6.png' %}" alt="brand image">
-                                </div>
-                            </div>
-                            <div class="owl-item cloned" style="width: 255px;">
-                                <div class="client-logo-item">
-                                    <img src="{% static 'website/images/client-logo.png' %}" alt="brand image">
-                                </div>
-                            </div>
-                            <div class="owl-item cloned" style="width: 255px;">
-                                <div class="client-logo-item">
-                                    <img src="{% static 'website/images/client-logo2.png' %}" alt="brand image">
-                                </div>
-                            </div>
-                            <div class="owl-item cloned" style="width: 255px;">
-                                <div class="client-logo-item">
-                                    <img src="{% static 'website/images/client-logo3.png' %}" alt="brand image">
-                                </div>
-                            </div>
-                        </div>
+                    {% for logo in client_logos %}
+                    <div class="client-logo-item">
+                        {% if logo.url %}
+                            <a href="{{ logo.url }}" target="_blank">
+                                <img src="{{ logo.logo.url }}" alt="{{ logo.name }}">
+                            </a>
+                        {% else %}
+                            <img src="{{ logo.logo.url }}" alt="{{ logo.name }}">
+                        {% endif %}
                     </div>
-                    <div class="owl-nav disabled">
-                        <div class="owl-prev">prev</div>
-                        <div class="owl-next">next</div>
+                    {% empty %}
+                    <!-- Fallback static content if no client logos -->
+                    <div class="client-logo-item">
+                        <img src="{% static 'website/images/client-logo.png' %}" alt="brand image">
                     </div>
-                    <div class="owl-dots disabled"></div>
+                    <div class="client-logo-item">
+                        <img src="{% static 'website/images/client-logo2.png' %}" alt="brand image">
+                    </div>
+                    <div class="client-logo-item">
+                        <img src="{% static 'website/images/client-logo3.png' %}" alt="brand image">
+                    </div>
+                    <div class="client-logo-item">
+                        <img src="{% static 'website/images/client-logo4.png' %}" alt="brand image">
+                    </div>
+                    <div class="client-logo-item">
+                        <img src="{% static 'website/images/client-logo5.png' %}" alt="brand image">
+                    </div>
+                    <div class="client-logo-item">
+                        <img src="{% static 'website/images/client-logo6.png' %}" alt="brand image">
+                    </div>
+                    {% endfor %}
                 </div>
                 <!-- end client-logo -->
             </div>
@@ -1157,5 +818,7 @@ HOME
 
 
 {% include 'website/include/subscriber_form.html' %}
+
+<script src="{% static 'website/js/newsletter.js' %}"></script>
 
 {% endblock %}

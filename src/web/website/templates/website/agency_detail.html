@@ -4,441 +4,541 @@
 
 <!----------------------------------------------TITLE------------------------------------------------------------------>
 {% block title %}
-AGENCY-DETAIL
+{{ agency.name }} - Agency Details
 {% endblock %}
 
 {% block css %}
 <style>
-    /* Styles for the branch card */
- .card-item.cruise--card {
-   background-color: #fff;
-   border-radius: 10px;
-   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.2);
-   transition: all 0.2s ease-in-out;
- }
-
- .card-item.cruise--card:hover {
-   background-color: #f7f7f7;
-   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 16px 32px rgba(0, 0, 0, 0.4);
- }
-
- .card-item.cruise--card .card-img {
-   position: relative;
-   background-color: #fbfbfb;
-   border-radius: 10px 10px 0 0;
-   padding: 20px;
-   text-align: center;
-   animation: pulsate 2s infinite ease-in-out;
- }
-
- .card-item.cruise--card .card-img .la-building {
-   font-size: 3em;
-   color: #007bff;
-   transition: transform 0.2s ease-in-out;
- }
-
- .card-item.cruise--card:hover .card-img .la-building {
-   transform: scale(1.1);
- }
-
- @keyframes pulsate {
-   0% {
-     transform: scale(1);
-   }
-   50% {
-     transform: scale(1.05);
-   }
-   100% {
-     transform: scale(1);
-   }
- }
-
- .card-item.cruise--card .card-body {
-   padding: 20px;
- }
-
- .card-item.cruise--card .card-title {
-   font-size: 1.2em;
-   font-weight: bold;
-   margin-bottom: 10px;
- }
-
- .card-item.cruise--card .card-meta {
-   margin-bottom: 5px;
-   font-size: 1em;
- }
-
- .card-item.cruise--card .card-meta span {
-   color: #888;
-   font-weight: bold;
- }
-
- .card-item.cruise--card .card-meta strong {
-   color: #333;
-   font-weight: normal;
- }
-
+    .agency-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .agency-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.3);
+        z-index: 1;
+    }
+    
+    .agency-header-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .agency-logo {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid white;
+        object-fit: cover;
+        background: white;
+    }
+    
+    .stats-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #667eea;
+    }
+    
+    .stats-label {
+        color: #666;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .info-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .info-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    .section-title {
+        color: #333;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #667eea;
+    }
+    
+    .hotel-card, .vehicle-card, .place-card, .tour-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+        margin-bottom: 20px;
+    }
+    
+    .hotel-card:hover, .vehicle-card:hover, .place-card:hover, .tour-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .hotel-image {
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+    
+    .rating-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ffc107;
+        color: #333;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: bold;
+    }
+    
+    .contact-info {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .contact-icon {
+        width: 40px;
+        height: 40px;
+        background: #667eea;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+    
+    .nav-tabs .nav-link {
+        border: none;
+        color: #666;
+        font-weight: 600;
+        padding: 15px 25px;
+        border-radius: 0;
+    }
+    
+    .nav-tabs .nav-link.active {
+        background: #667eea;
+        color: white;
+        border: none;
+    }
+    
+    .tab-content {
+        padding: 30px 0;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
 </style>
 {% endblock %}
 
-
 {% block content %}
-<!----------------------------------------------BREAD CRUMB------------------------------------------------------------>
-<section class="breadcrumb-top-bar">
+<!----------------------------------------------AGENCY HEADER------------------------------------------------------------>
+<section class="agency-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="agency-header-content">
+                    <h1 class="display-4 font-weight-bold mb-3">{{ agency.name }}</h1>
+                    <p class="lead mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        {% if agency.city %}{{ agency.city }}{% endif %}{% if agency.city and agency.country %}, {% endif %}{% if agency.country %}{{ agency.country }}{% endif %}
+                    </p>
+                    {% if agency.rating %}
+                    <div class="mb-3">
+                        <span class="badge bg-warning text-dark fs-6">
+                            <i class="fas fa-star"></i> {{ agency.rating|floatformat:1 }} Rating
+                        </span>
+                    </div>
+                    {% endif %}
+                    {% if agency.establish_year %}
+                    <p class="mb-0">
+                        <i class="fas fa-calendar-alt me-2"></i>
+                        Established in {{ agency.establish_year|date:"Y" }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                {% if agency.logo %}
+                <img src="{{ agency.logo.url }}" alt="{{ agency.name }} logo" class="agency-logo">
+                {% else %}
+                <div class="agency-logo d-flex align-items-center justify-content-center">
+                    <i class="fas fa-building fa-3x text-muted"></i>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!----------------------------------------------AGENCY STATS------------------------------------------------------------>
+<section class="py-5 bg-light">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb-list breadcrumb-top-list">
-                    <ul class="list-items bg-transparent radius-none p-0">
-                        <li><a href="{% url 'website:home'%}">Home</a></li>
-                        <li>France</li>
-                        <li>Hilton Hotel and Resorts</li>
-                    </ul>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-number">{{ hotels.count }}</div>
+                    <div class="stats-label">Hotels</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-number">{{ vehicles.count }}</div>
+                    <div class="stats-label">Vehicles</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-number">{{ places.count }}</div>
+                    <div class="stats-label">Places</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-number">{{ tour_packages.count }}</div>
+                    <div class="stats-label">Tour Packages</div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!----------------------------------------------AGENCY LIST------------------------------------------------------------>
-<section class="breadcrumb-area bread-bg-7 py-0">
-    <div class="breadcrumb-wrap">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="breadcrumb-btn">
-                        <div class="btn-box">
-                            <a class="theme-btn" data-fancybox="video"
-                               data-src="https://www.youtube.com/watch?v=5u1WISBbo5I" data-speed="700">
-                                <i class="la la-video-camera mr-2"></i>Video
-                            </a>
-                            <a class="theme-btn" data-src="{% static 'website/images/img1.jpg' %}"
-                               data-fancybox="gallery" data-caption="Showing image - 01" data-speed="700">
-                                <i class="la la-photo mr-2"></i>More Photos
-                            </a>
-                        </div>
-                        <a class="d-none" data-fancybox="gallery" data-src="{% static 'website/images/img2.jpg' %}"
-                           data-caption="Showing image - 02" data-speed="700"></a>
-                        <a class="d-none" data-fancybox="gallery" data-src="{% static 'website/images/img3.jpg' %}"
-                           data-caption="Showing image - 03" data-speed="700"></a>
-                        <a class="d-none" data-fancybox="gallery" data-src="{% static 'website/images/img4.jpg' %}"
-                           data-caption="Showing image - 04" data-speed="700"></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!----------------------------------------------INFO AREA-------------------------------------------------------------->
-<section class="tour-detail-area padding-bottom-90px">
-
-    <div class="text-center" id="single-content-navbar">
-        <div class="container mt-5 ">
-            <ul class="nav nav-tabs justify-content-center mb-5" id="myTabs">
-                <li class="nav-item">
-                    <a class="nav-link active text-black font-weight-bold " id="tab1-tab" data-toggle="tab" href="#tab1">BRANCHES</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-black font-weight-bold" id="tab2-tab" data-toggle="tab" href="#tab2">SCHEDULES</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-black font-weight-bold" id="tab3-tab" data-toggle="tab" href="#tab3">BUSES</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-black font-weight-bold" id="tab4-tab" data-toggle="tab" href="#tab4">AGENCY DETAILS</a>
-                </li>
-            </ul>
-
-            <div class="tab-content mt-2">
-                <div class="tab-pane fade show active" id="tab1">
-                    <div class="row">
-                        <div class="col-lg-12">
-
-                            {% if branches %}
-
-                            {% for branch in branches %}
-                            <div class="card-item cruise--card">
-                                <div class="card-img">
-                                    <span class="la la-building"></span>
-                                </div>
-                                <div class="card-body">
-                                    <h3 class="card-title">
-                                        <a href="branch-details.html">{{ branch.name }}</a>
-                                    </h3>
-                                    <p class="card-meta">
-                                        <span>Location:</span>
-                                        <strong>{{ branch.location }}</strong>
-                                    </p>
-                                    <p class="card-meta">
-                                        <span>Contact Email:</span>
-                                        <strong class="text-primary">{{ branch.contact_email }}</strong>
-                                    </p>
-                                    <p class="card-meta">
-                                        <span>Contact Phone:</span>
-                                        <strong class="text-primary">{{ branch.contact_phone }}</strong>
-                                    </p>
-                                </div>
+<!----------------------------------------------AGENCY CONTENT------------------------------------------------------------>
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Agency Information -->
+            <div class="col-lg-4">
+                <div class="info-card">
+                    <h3 class="section-title">About {{ agency.name }}</h3>
+                    {% if agency.description %}
+                    <p class="text-muted">{{ agency.description }}</p>
+                    {% else %}
+                    <p class="text-muted">No description available for this agency.</p>
+                    {% endif %}
+                    
+                    <div class="contact-info">
+                        <h5 class="mb-3">Contact Information</h5>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
                             </div>
-                            {% endfor %}
-
-                            {% else %}
-                            <div class="col-lg-10 mt-3">
-                                <div class="card-item card-item-list ">
-                                    <div class="card-body">
-                                        <h3 class="card-title text-danger">NO BRANCHES FOUND</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade " id="tab2">
-                    <div class="row">
-
-                        {% if schedules %}
-
-                        {% for schedule in schedules %}
-                        <div class="col-lg-12 mt-3">
-                            <div class="card-item card-item-list card-item-improved">
-                                <div class="card-body">
-                                    <h3 class="card-title mb-3">
-                                        <span class="la la-calendar"></span>&nbsp;
-                                        Date: {{ schedule.schedule_date }}
-                                    </h3>
-
-                                    <div class="row">
-                                        <div class="col-lg-4 mb-3">
-                                            <h3 class="card-title">
-                                                <span class="la la-clock"></span>&nbsp;
-                                                Departure Time:
-                                            </h3>
-                                            <h5 class="text-primary">{{ schedule.departure_time }}</h5>
-
-                                            <p class="mt-3">
-                                                <span class="la la-map-marker"></span>&nbsp;
-                                                From:
-                                                <strong>{{ schedule.vehicle.content_object.location }}</strong>
-                                            </p>
-                                        </div>
-
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="card-img">
-                                                <span style="font-size:800%;color:blue" class="la la-calendar"></span>
-                                                <div class="add-to-wishlist icon-element" data-toggle="tooltip"
-                                                     data-placement="top" title="" data-original-title="Save for Later">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-4 mb-3">
-                                            <h3 class="card-title">
-                                                <span class="la la-clock"></span>&nbsp;
-                                                Arrival Time:
-                                            </h3>
-                                            <h5 class="text-primary">{{ schedule.arrival_time }}</h5>
-
-                                            <p class="mt-3">
-                                                <span class="la la-map-marker"></span>&nbsp;
-                                                To:
-                                                <strong>{{ schedule.destination }}</strong>
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="card-price d-flex align-items-center justify-content-between">
-                                        <div>
-                                            <span class="price__from">Price: </span>
-                                            <span class="price__num">{{ schedule.price }} RS</span>
-                                        </div>
-
-                                        <a href="{% url 'website:vehicle-detail' schedule.vehicle.id %} " class="btn btn-warning btn-improved">Book Now</a>
-                                    </div>
-                                </div>
+                            <div>
+                                <strong>Email:</strong><br>
+                                <a href="mailto:{{ agency.email }}">{{ agency.email }}</a>
                             </div>
                         </div>
-                        {% endfor %}
-
-                        {% else %}
-                        <div class="col-lg-10 mt-3">
-                            <div class="card-item card-item-list ">
-                                <div class="card-body">
-                                    <h3 class="card-title text-danger">NO SCHEDULES FOUND</h3>
-                                </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <strong>Phone:</strong><br>
+                                <a href="tel:{{ agency.phone_number }}">{{ agency.phone_number }}</a>
                             </div>
                         </div>
-                        {% endif%}
-
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="tab3">
-
-                    <div class="row">
-                        {% if vehicles %}
-
-                        {% for vehicle in vehicles %}
-                        <div class="col-lg-4 responsive-column">
-                            <div class="card-item car-card">
-                                <div class="card-img">
-                                    <a href="{% url 'website:vehicle-detail' 1 %}" class="d-block">
-                                        <img src="{{vehicle.image.url}}"
-                                             alt="car-img">
-                                    </a>
-                                    <span class="badge">Bestseller</span>
-                                    <div class="add-to-wishlist icon-element" data-toggle="tooltip"
-                                         data-placement="top" title=""
-                                         data-original-title="Save for later">
-                                        <i class="la la-heart-o"></i>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-meta">Compact SUV</p>
-                                    <h3 class="card-title"><a href="{% url 'website:vehicle-detail' 1 %}">Toyota
-                                        Corolla or Similar</a></h3>
-                                    <div class="card-rating">
-                                        <span class="badge text-white">4.4/5</span>
-                                        <span class="review__text">Average</span>
-                                        <span class="rating__text">(30 Reviews)</span>
-                                    </div>
-                                    <div class="card-attributes">
-                                        <ul class="d-flex align-items-center">
-                                            <li class="d-flex align-items-center" data-toggle="tooltip"
-                                                data-placement="top"
-                                                title="" data-original-title="Passenger"><i
-                                                    class="la la-users"></i><span>4</span>
-                                            </li>
-                                            <li class="d-flex align-items-center" data-toggle="tooltip"
-                                                data-placement="top"
-                                                title="" data-original-title="Luggage"><i
-                                                    class="la la-suitcase"></i><span>1</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="card-price d-flex align-items-center justify-content-between">
-                                        <p>
-                                            <span class="price__from">From</span>
-                                            <span class="price__num">$23.00</span>
-                                            <span class="price__text">Per day</span>
-                                        </p>
-                                        <a href="{% url 'website:vehicle-detail' 1 %}" class="btn-text">See
-                                            details<i class="la la-angle-right"></i></a>
-                                    </div>
-                                </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <strong>Address:</strong><br>
+                                {{ agency.address }}, {{ agency.city }}, {{ agency.state }} {{ agency.zip_code }}, {{ agency.country }}
                             </div>
                         </div>
-                        {% endfor %}
-
-                        {% else %}
-                        <div class="col-lg-10 mt-3">
-                            <div class="card-item card-item-list ">
-                                <div class="card-body">
-                                    <h3 class="card-title text-danger">NO BUSES FOUND</h3>
-                                </div>
+                        
+                        {% if agency.website %}
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div>
+                                <strong>Website:</strong><br>
+                                <a href="{{ agency.website }}" target="_blank">{{ agency.website }}</a>
                             </div>
                         </div>
                         {% endif %}
-
-                    </div>
-                </div>
-                <div class="tab-pane fade show active" id="tab4">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="single-content-wrap padding-top-60px">
-                                <div id="description" class="page-scroll">
-
-                                    <div class="single-content-item pb-4">
-                                        <h3 class="title font-size-26">Hilton Hotel and Resorts</h3>
-                                        <div class="d-flex align-items-center pt-2">
-                                            <p class="mr-2">Boston, MA, USA</p>
-                                            <p>
-                                                <span class="badge badge-warning text-white font-size-16">4.7</span>
-                                                <span>(4,209 Reviews)</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="section-block"></div>
-
-                                    <div class="single-content-item padding-top-40px padding-bottom-40px">
-                                        <h3 class="title font-size-20">ABOUT</h3>
-                                        <p class="py-3">Per consequat adolescens ex, cu nibh commune temporibus vim, ad
-                                            sumo
-                                            viris eloquentiam sed. Mea appareat omittantur eloquentiam ad, nam ei quas
-                                            oportere
-                                            democritum. Prima causae admodum id est, ei timeam inimicus sed. Sit an meis
-                                            aliquam, cetero inermis vel ut. An sit illum euismod facilisis, tamquam
-                                            vulputate
-                                            pertinacia eum at.</p>
-                                        <p>Cum et probo menandri. Officiis consulatu pro et, ne sea sale invidunt, sed
-                                            ut
-                                            sint
-                                            blandit efficiendi. Atomorum explicari eu qui, est enim quaerendum te. Quo
-                                            harum
-                                            viris id. Per ne quando dolore evertitur, pro ad cibo commune.</p>
-                                    </div>
-                                    <div class="section-block"></div>
-                                </div>
+                        
+                        {% if agency.license_number %}
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <div>
+                                <strong>License:</strong><br>
+                                {{ agency.license_number }}
                             </div>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
-
+                
+                {% if branches %}
+                <div class="info-card">
+                    <h3 class="section-title">Branches</h3>
+                    {% for branch in branches %}
+                    <div class="border-bottom pb-3 mb-3">
+                        <h6 class="font-weight-bold">{{ branch.name }}</h6>
+                        <p class="text-muted small mb-1">
+                            <i class="fas fa-map-marker-alt me-1"></i>
+                            {{ branch.address }}, {{ branch.city }}
+                        </p>
+                        <p class="text-muted small mb-1">
+                            <i class="fas fa-phone me-1"></i>
+                            {{ branch.phone_number }}
+                        </p>
+                        <p class="text-muted small mb-0">
+                            <i class="fas fa-envelope me-1"></i>
+                            {{ branch.email }}
+                        </p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
-        </div>
-    </div>
-</section>
-
-<div class="section-block"></div>
-
-<!----------------------------------------------INFO AREA-------------------------------------------------------------->
-
-<section class="related-tour-area section--padding">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="section-heading text-center">
-                    <h2 class="sec__title">You might also like</h2>
+            
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <!-- Navigation Tabs -->
+                <ul class="nav nav-tabs" id="agencyTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="hotels-tab" data-bs-toggle="tab" data-bs-target="#hotels" type="button" role="tab">
+                            <i class="fas fa-hotel me-2"></i>Hotels
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="vehicles-tab" data-bs-toggle="tab" data-bs-target="#vehicles" type="button" role="tab">
+                            <i class="fas fa-car me-2"></i>Vehicles
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="places-tab" data-bs-toggle="tab" data-bs-target="#places" type="button" role="tab">
+                            <i class="fas fa-map-marked-alt me-2"></i>Places
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tours-tab" data-bs-toggle="tab" data-bs-target="#tours" type="button" role="tab">
+                            <i class="fas fa-route me-2"></i>Tour Packages
+                        </button>
+                    </li>
+                </ul>
+                
+                <!-- Tab Content -->
+                <div class="tab-content" id="agencyTabsContent">
+                    <!-- Hotels Tab -->
+                    <div class="tab-pane fade show active" id="hotels" role="tabpanel">
+                        {% if hotels %}
+                        <div class="row">
+                            {% for hotel in hotels %}
+                            <div class="col-lg-6">
+                                <div class="hotel-card">
+                                    <div class="hotel-image" style="background-image: url('{% if hotel.images.first %}{{ hotel.images.first.image.url }}{% else %}{% static 'website/images/hotel-default.jpg' %}{% endif %}');">
+                                        <div class="rating-badge">
+                                            <i class="fas fa-star"></i> {{ hotel.rating }}/5
+                                        </div>
+                                    </div>
+                                    <div class="p-3">
+                                        <h5 class="font-weight-bold">{{ hotel.name }}</h5>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                            {{ hotel.location }}
+                                        </p>
+                                        <p class="text-muted small mb-2">{{ hotel.description|truncatechars:100 }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="text-primary font-weight-bold">${{ hotel.price_range }}/night</span>
+                                            <span class="badge bg-success">{{ hotel.rating }}★</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-hotel"></i>
+                            <h4>No Hotels Available</h4>
+                            <p>This agency doesn't have any hotels listed yet.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Vehicles Tab -->
+                    <div class="tab-pane fade" id="vehicles" role="tabpanel">
+                        {% if vehicles %}
+                        <div class="row">
+                            {% for vehicle in vehicles %}
+                            <div class="col-lg-6">
+                                <div class="vehicle-card">
+                                    <div class="hotel-image" style="background-image: url('{% if vehicle.image %}{{ vehicle.image.url }}{% else %}{% static 'website/images/vehicle-default.jpg' %}{% endif %}');">
+                                    </div>
+                                    <div class="p-3">
+                                        <h5 class="font-weight-bold">{{ vehicle.model }}</h5>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-users me-1"></i>
+                                            Capacity: {{ vehicle.capacity }} passengers
+                                        </p>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-id-card me-1"></i>
+                                            Reg: {{ vehicle.registration_number }}
+                                        </p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-info">Available</span>
+                                            <a href="{% url 'website:vehicle-detail' vehicle.id %}" class="btn btn-sm btn-primary">
+                                                View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-car"></i>
+                            <h4>No Vehicles Available</h4>
+                            <p>This agency doesn't have any vehicles listed yet.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Places Tab -->
+                    <div class="tab-pane fade" id="places" role="tabpanel">
+                        {% if places %}
+                        <div class="row">
+                            {% for place in places %}
+                            <div class="col-lg-6">
+                                <div class="place-card">
+                                    <div class="hotel-image" style="background-image: url('{% if place.images.first %}{{ place.images.first.image.url }}{% else %}{% static 'website/images/place-default.jpg' %}{% endif %}');">
+                                    </div>
+                                    <div class="p-3">
+                                        <h5 class="font-weight-bold">{{ place.name }}</h5>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                            {{ place.location }}
+                                        </p>
+                                        <p class="text-muted small mb-2">{{ place.description|truncatechars:100 }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-success">Available</span>
+                                            <button class="btn btn-sm btn-outline-primary">Learn More</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <h4>No Places Available</h4>
+                            <p>This agency doesn't have any places listed yet.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Tour Packages Tab -->
+                    <div class="tab-pane fade" id="tours" role="tabpanel">
+                        {% if tour_packages %}
+                        <div class="row">
+                            {% for tour in tour_packages %}
+                            <div class="col-lg-6">
+                                <div class="tour-card">
+                                    <div class="hotel-image" style="background-image: url('{% static 'website/images/tour-default.jpg' %}');">
+                                        {% if tour.get_discount_percentage > 0 %}
+                                        <div class="rating-badge bg-danger">
+                                            -{{ tour.get_discount_percentage }}%
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="p-3">
+                                        <h5 class="font-weight-bold">{{ tour.name }}</h5>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-calendar me-1"></i>
+                                            {{ tour.duration_days }} days
+                                        </p>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-tag me-1"></i>
+                                            {{ tour.get_package_type_display }}
+                                        </p>
+                                        <p class="text-muted small mb-2">{{ tour.description|truncatechars:100 }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                {% if tour.discount_price %}
+                                                <span class="text-muted text-decoration-line-through">${{ tour.price }}</span>
+                                                <span class="text-primary font-weight-bold">${{ tour.discount_price }}</span>
+                                                {% else %}
+                                                <span class="text-primary font-weight-bold">${{ tour.price }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <a href="{% url 'website:tour_detail' tour.id %}" class="btn btn-sm btn-primary">
+                                                View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-route"></i>
+                            <h4>No Tour Packages Available</h4>
+                            <p>This agency doesn't have any tour packages listed yet.</p>
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="row padding-top-50px">
-
-            {% for i in '1234'%}
-            <div class="col-lg-4 responsive-column">
-                <div class="card-item">
-                    <div class="card-img">
-                        <a href="hotel-single.html" class="d-block">
-                            <img src="{% static 'website/images/img1.jpg' %}" alt="hotel-img">
-                        </a>
-                        <span class="badge">Bestseller</span>
-                        <div class="add-to-wishlist icon-element" data-toggle="tooltip" data-placement="top" title=""
-                             data-original-title="Bookmark">
-                            <i class="la la-heart-o"></i>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title"><a href="hotel-single.html">The Millennium Hilton New York</a></h3>
-                        <p class="card-meta">124 E Huron St, New york</p>
-                        <div class="card-rating">
-                            <span class="badge text-white">4.4/5</span>
-                            <span class="review__text">Average</span>
-                            <span class="rating__text">(30 Reviews)</span>
-                        </div>
-                        <div class="card-price d-flex align-items-center justify-content-between">
-                            <p>
-                                <span class="price__from">From</span>
-                                <span class="price__num">$88.00</span>
-                                <span class="price__text">Per night</span>
-                            </p>
-                            <a href="hotel-single.html" class="btn-text">See details<i
-                                    class="la la-angle-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-
         </div>
     </div>
 </section>
@@ -446,4 +546,4 @@ AGENCY-DETAIL
 <!------------------------------------------------SUBSCRIBE EMAIL FORM------------------------------------------------->
 {% include 'website/include/subscriber_form.html' %}
 
-{% endblock %}
+{% endblock %} 

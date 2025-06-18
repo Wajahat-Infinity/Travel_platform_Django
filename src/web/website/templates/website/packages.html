@@ -1,0 +1,84 @@
+{% extends 'website/base.html' %}
+
+{% load static %}
+
+<!------------------------------------------------TITLE---------------------------------------------------------------->
+{% block title %}
+Packages
+{% endblock %}
+
+<!------------------------------------------------MAIN CONTENT--------------------------------------------------------->
+{% block content %}
+
+
+<section class="trending-area position-relative section-bg padding-top-100px padding-bottom-200px">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading">
+                    <h2 class="sec__title curve-shape padding-bottom-30px" data-text="curvs">
+                        Packages
+                    </h2>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row padding-top-50px">
+            <div class="col-lg-12">
+                {% if popular_tours %}
+                    <div class="row">  <!-- Changed from carousel to simple row -->
+                        {% for popular_tour in popular_tours %}
+                        <div class="col-lg-4">  <!-- Adjust column size as needed -->
+                            <div class="card-item trending-card mb-4">
+                                <div class="card-img">
+                                    <a href="{% url 'website:tour_detail' popular_tour.tour_package.id %}" class="d-block">
+                                        {% if popular_tour.tour_package.agency.cover_image %}
+                                            <img src="{{ popular_tour.tour_package.agency.cover_image.url }}" alt="{{ popular_tour.tour_package.name }}" class="img-fluid">
+                                        {% else %}
+                                            <img src="{% static 'website/images/img9.jpg' %}" alt="{{ popular_tour.tour_package.name }}" class="img-fluid">
+                                        {% endif %}
+                                    </a>
+                                    {% if popular_tour.badge_text %}
+                                        <span class="badge">{{ popular_tour.badge_text }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="card-title mb-0">
+                                        <a href="{% url 'website:tour_detail' popular_tour.tour_package.id %}">{{ popular_tour.tour_package.name }}</a>
+                                    </h3>
+                                    <div class="card-rating">
+                                        <span class="badge text-white">4.4/5</span>
+                                        <span class="rating__text">30 Reviews</span>
+                                    </div>
+                                    <div class="card-price d-flex align-items-center justify-content-between">
+                                        <span><i class="la la-clock mr-1"></i>{{ popular_tour.tour_package.duration_days }} Days</span>
+                                        <p>
+                                            <span class="price__from">from</span>
+                                            <span class="price__num">${{ popular_tour.tour_package.price }}</span>
+                                            {% if popular_tour.tour_package.discount_price %}
+                                                <span class="price__num before-price color-text-3">${{ popular_tour.tour_package.discount_price }}</span>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <h4 class="text-muted">No popular tours found this month</h4>
+                        <p class="text-muted">Check back later for exciting tour packages</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <svg class="hero-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 10" preserveAspectRatio="none">
+        <path d="M0 10 0 0 A 90 59, 0, 0, 0, 100 0 L 100 10 Z"></path>
+    </svg>
+</section>
+
+
+{% endblock %}

@@ -63,7 +63,7 @@
                         ><i class="la la-angle-down"></i
                         ></a>
                         <div class="logo">
-                            <a href="index.html" style="font-size: 1.5rem; font-weight: bold; color: #222; text-decoration: none;">Travel Platform</a>
+                            <a href="{% url 'website:home' %}" style="font-size: 1.5rem; font-weight: bold; color: #222; text-decoration: none;">Travel Platform</a>
                             <div class="menu-toggler">
                                 <i class="la la-bars"></i>
                                 <i class="la la-times"></i>
@@ -74,12 +74,8 @@
                         <div class="main-menu-content">
                             <nav>
                                 <ul>
-                                    
                                     <li>
-                                      <a href="{% url 'website:agency' %}">RECOMMENDATIONS</a>
-                                  </li>
-                                    <li>
-                                      <a href="{% url 'website:agency' %}">PACKAGES</a>
+                                      <a href="{% url 'website:packages' %}">PACKAGES</a>
                                   </li>
                                       <li>
                                         <a href="{% url 'website:agency' %}">AGENCIES</a>

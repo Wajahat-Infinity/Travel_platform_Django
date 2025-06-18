@@ -1,0 +1,265 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}
+{{ tour_package.name }} - Tour Details
+{% endblock %}
+
+{% block content %}
+
+<!-- Page Title -->
+<section class="page-title-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-title-content">
+                    <h1 class="title">{{ tour_package.name }}</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'website:home' %}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'website:agency' %}">Tours</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ tour_package.name }}</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tour Details Section -->
+<section class="tour-details-area section-padding">
+    <div class="container">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <!-- Tour Images -->
+                <div class="tour-images mb-4">
+                    {% if tour_package.agency.cover_image %}
+                        <img src="{{ tour_package.agency.cover_image.url }}" alt="{{ tour_package.name }}" class="img-fluid rounded">
+                    {% else %}
+                        <img src="{% static 'website/images/img9.jpg' %}" alt="{{ tour_package.name }}" class="img-fluid rounded">
+                    {% endif %}
+                </div>
+
+                <!-- Tour Description -->
+                <div class="tour-description mb-4">
+                    <h3 class="title mb-3">Tour Description</h3>
+                    <p>{{ tour_package.description }}</p>
+                </div>
+
+                <!-- Tour Highlights -->
+                <div class="tour-highlights mb-4">
+                    <h3 class="title mb-3">Tour Highlights</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li><i class="la la-check text-success mr-2"></i>Duration: {{ tour_package.duration_days }} Days</li>
+                                <li><i class="la la-check text-success mr-2"></i>Package Type: {{ tour_package.get_package_type_display }}</li>
+                                <li><i class="la la-check text-success mr-2"></i>Start Date: {{ tour_package.start_date }}</li>
+                                <li><i class="la la-check text-success mr-2"></i>End Date: {{ tour_package.end_date }}</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                {% if tour_package.hotels.exists %}
+                                    <li><i class="la la-check text-success mr-2"></i>Hotels Included</li>
+                                {% endif %}
+                                {% if tour_package.vehicles.exists %}
+                                    <li><i class="la la-check text-success mr-2"></i>Transportation Included</li>
+                                {% endif %}
+                                {% if tour_package.places.exists %}
+                                    <li><i class="la la-check text-success mr-2"></i>Places to Visit</li>
+                                {% endif %}
+                                <li><i class="la la-check text-success mr-2"></i>Professional Guide</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Included Hotels -->
+                {% if tour_package.hotels.exists %}
+                <div class="tour-hotels mb-4">
+                    <h3 class="title mb-3">Included Hotels</h3>
+                    <div class="row">
+                        {% for hotel in tour_package.hotels.all %}
+                        <div class="col-md-6 mb-3">
+                            <div class="hotel-card border rounded p-3">
+                                <h5 class="hotel-name">{{ hotel.name }}</h5>
+                                <p class="hotel-location text-muted"><i class="la la-map-marker mr-1"></i>{{ hotel.location }}</p>
+                                <div class="hotel-rating">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= hotel.rating %}
+                                            <i class="la la-star text-warning"></i>
+                                        {% else %}
+                                            <i class="la la-star-o text-muted"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span class="ml-2">{{ hotel.rating }}/5</span>
+                                </div>
+                                <p class="hotel-price mt-2"><strong>Price Range: ${{ hotel.price_range }}</strong></p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Places to Visit -->
+                {% if tour_package.places.exists %}
+                <div class="tour-places mb-4">
+                    <h3 class="title mb-3">Places to Visit</h3>
+                    <div class="row">
+                        {% for place in tour_package.places.all %}
+                        <div class="col-md-6 mb-3">
+                            <div class="place-card border rounded p-3">
+                                <h5 class="place-name">{{ place.name }}</h5>
+                                <p class="place-location text-muted"><i class="la la-map-marker mr-1"></i>{{ place.location }}</p>
+                                <p class="place-description">{{ place.description|truncatewords:20 }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Transportation -->
+                {% if tour_package.vehicles.exists %}
+                <div class="tour-transportation mb-4">
+                    <h3 class="title mb-3">Transportation</h3>
+                    <div class="row">
+                        {% for vehicle in tour_package.vehicles.all %}
+                        <div class="col-md-6 mb-3">
+                            <div class="vehicle-card border rounded p-3">
+                                <h5 class="vehicle-model">{{ vehicle.model }}</h5>
+                                <p class="vehicle-capacity text-muted"><i class="la la-users mr-1"></i>Capacity: {{ vehicle.capacity }} people</p>
+                                <p class="vehicle-registration text-muted"><i class="la la-car mr-1"></i>{{ vehicle.registration_number }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Booking Card -->
+                <div class="booking-card border rounded p-4 mb-4">
+                    <h4 class="title mb-3">Book This Tour</h4>
+                    
+                    <!-- Price -->
+                    <div class="price-section mb-3">
+                        {% if tour_package.discount_price %}
+                            <div class="original-price text-muted">
+                                <del>${{ tour_package.price }}</del>
+                            </div>
+                            <div class="discount-price">
+                                <span class="price-amount">${{ tour_package.discount_price }}</span>
+                                <span class="discount-badge badge badge-danger ml-2">
+                                    {{ tour_package.get_discount_percentage }}% OFF
+                                </span>
+                            </div>
+                        {% else %}
+                            <div class="price-amount">${{ tour_package.price }}</div>
+                        {% endif %}
+                        <small class="text-muted">per person</small>
+                    </div>
+
+                    <!-- Tour Info -->
+                    <div class="tour-info mb-3">
+                        <div class="info-item d-flex justify-content-between mb-2">
+                            <span><i class="la la-clock mr-2"></i>Duration:</span>
+                            <span>{{ tour_package.duration_days }} Days</span>
+                        </div>
+                        <div class="info-item d-flex justify-content-between mb-2">
+                            <span><i class="la la-calendar mr-2"></i>Start Date:</span>
+                            <span>{{ tour_package.start_date }}</span>
+                        </div>
+                        <div class="info-item d-flex justify-content-between mb-2">
+                            <span><i class="la la-calendar mr-2"></i>End Date:</span>
+                            <span>{{ tour_package.end_date }}</span>
+                        </div>
+                        <div class="info-item d-flex justify-content-between mb-2">
+                            <span><i class="la la-tag mr-2"></i>Package Type:</span>
+                            <span>{{ tour_package.get_package_type_display }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Booking Button -->
+                    <a href="{% url 'website:checkout' %}" class="btn btn-primary btn-block">Book Now</a>
+                    
+                    <!-- Contact Agency -->
+                    <div class="contact-agency mt-3">
+                        <p class="text-center mb-2">Need help? Contact the agency</p>
+                        <a href="tel:{{ tour_package.agency.phone_number }}" class="btn btn-outline-primary btn-block">
+                            <i class="la la-phone mr-2"></i>{{ tour_package.agency.phone_number }}
+                        </a>
+                        <a href="mailto:{{ tour_package.agency.email }}" class="btn btn-outline-secondary btn-block mt-2">
+                            <i class="la la-envelope mr-2"></i>{{ tour_package.agency.email }}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Agency Information -->
+                <div class="agency-card border rounded p-4 mb-4">
+                    <h4 class="title mb-3">Agency Information</h4>
+                    
+                    <div class="agency-info">
+                        <h5 class="agency-name">{{ tour_package.agency.name }}</h5>
+                        <p class="agency-description">{{ tour_package.agency.description|truncatewords:30 }}</p>
+                        
+                        <div class="agency-details">
+                            <p><i class="la la-map-marker mr-2"></i>{{ tour_package.agency.address }}</p>
+                            <p><i class="la la-phone mr-2"></i>{{ tour_package.agency.phone_number }}</p>
+                            <p><i class="la la-envelope mr-2"></i>{{ tour_package.agency.email }}</p>
+                            {% if tour_package.agency.website %}
+                                <p><i class="la la-globe mr-2"></i><a href="{{ tour_package.agency.website }}" target="_blank">Visit Website</a></p>
+                            {% endif %}
+                        </div>
+
+                        {% if tour_package.agency.rating %}
+                        <div class="agency-rating mt-3">
+                            <div class="stars">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= tour_package.agency.rating %}
+                                        <i class="la la-star text-warning"></i>
+                                    {% else %}
+                                        <i class="la la-star-o text-muted"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <span class="rating-text ml-2">{{ tour_package.agency.rating }}/5</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Similar Tours -->
+                <div class="similar-tours border rounded p-4">
+                    <h4 class="title mb-3">Similar Tours</h4>
+                    {% for similar_tour in similar_tours %}
+                    <div class="similar-tour-card mb-3">
+                        <div class="row">
+                            <div class="col-4">
+                                {% if similar_tour.agency.cover_image %}
+                                    <img src="{{ similar_tour.agency.cover_image.url }}" alt="{{ similar_tour.name }}" class="img-fluid rounded">
+                                {% else %}
+                                    <img src="{% static 'website/images/img9.jpg' %}" alt="{{ similar_tour.name }}" class="img-fluid rounded">
+                                {% endif %}
+                            </div>
+                            <div class="col-8">
+                                <h6 class="tour-name">{{ similar_tour.name }}</h6>
+                                <p class="tour-price">${{ similar_tour.price }}</p>
+                                <a href="{% url 'website:tour_detail' similar_tour.id %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %} 

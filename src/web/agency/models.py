@@ -33,6 +33,29 @@ class Agency(models.Model):
     def __str__(self):
         return self.name
 
+class Branch(models.Model):
+    agency = models.ForeignKey(
+        Agency,
+        on_delete=models.CASCADE,
+        related_name='branches'
+    )
+    name = models.CharField(max_length=255)
+    address = models.TextField()
+    city = models.CharField(max_length=255)
+    state = models.CharField(max_length=255)
+    zip_code = models.CharField(max_length=10)
+    country = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=15)
+    email = models.EmailField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Branches'
+
+    def __str__(self):
+        return f"{self.name} - {self.agency.name}"
+
 class Hotel(models.Model):
     agency = models.ForeignKey(
         Agency,
@@ -85,6 +108,26 @@ class Vehicle(models.Model):
 
     def __str__(self):
         return f"{self.model} ({self.registration_number})"
+
+class Schedule(models.Model):
+    vehicle = models.ForeignKey(
+        Vehicle,
+        on_delete=models.CASCADE,
+        related_name='schedules'
+    )
+    departure_time = models.TimeField()
+    arrival_time = models.TimeField()
+    departure_location = models.CharField(max_length=255)
+    arrival_location = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['departure_time']
+
+    def __str__(self):
+        return f"{self.vehicle.model} - {self.departure_location} to {self.arrival_location}"
 
 class Place(models.Model):
     agency = models.ForeignKey(
@@ -144,3 +187,10 @@ class TourPackage(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.agency.name})"
+
+    def get_discount_percentage(self):
+        """Calculate discount percentage if discount price is available"""
+        if self.discount_price and self.price > 0:
+            discount = ((self.price - self.discount_price) / self.price) * 100
+            return int(discount)
+        return 0
