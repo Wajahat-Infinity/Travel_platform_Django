@@ -1,0 +1,354 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}
+Book {{ tour_package.name }} - Travel Platform
+{% endblock %}
+
+{% block css %}
+<style>
+    .booking-container {
+        background: #f8f9fa;
+        min-height: 100vh;
+        padding: 40px 0;
+    }
+    
+    .booking-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .tour-image {
+        height: 250px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+    
+    .tour-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.7));
+        color: white;
+        padding: 20px;
+    }
+    
+    .price-display {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+    
+    .price-amount {
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+    
+    .form-section {
+        padding: 30px;
+    }
+    
+    .payment-section {
+        background: #f8f9fa;
+        padding: 30px;
+        border-top: 1px solid #dee2e6;
+    }
+    
+    .stripe-card {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+    
+    .stripe-card.focused {
+        border-color: #667eea;
+    }
+    
+    .stripe-card.error {
+        border-color: #dc3545;
+    }
+    
+    .loading-spinner {
+        display: none;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .alert {
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="booking-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="booking-card">
+                    <!-- Tour Image and Info -->
+                    <div class="tour-image" style="background-image: url('{% if tour_package.agency.cover_image %}{{ tour_package.agency.cover_image.url }}{% else %}{% static 'website/images/img9.jpg' %}{% endif %}');">
+                        <div class="tour-overlay">
+                            <h2 class="mb-2">{{ tour_package.name }}</h2>
+                            <p class="mb-0">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                {{ tour_package.agency.name }} • {{ tour_package.duration_days }} Days
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Price Display -->
+                    <div class="price-display">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="price-amount">
+                                    {% if tour_package.discount_price %}
+                                        ${{ tour_package.discount_price }}
+                                    {% else %}
+                                        ${{ tour_package.price }}
+                                    {% endif %}
+                                </div>
+                                <div>per person</div>
+                            </div>
+                            <div class="col-md-6">
+                                {% if tour_package.discount_price %}
+                                    <div class="text-decoration-line-through">${{ tour_package.price }}</div>
+                                    <div class="badge bg-danger fs-6">{{ tour_package.get_discount_percentage }}% OFF</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Booking Form -->
+                    <div class="form-section">
+                        <h3 class="mb-4">Booking Details</h3>
+                        
+                        <form id="booking-form">
+                            {% csrf_token %}
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.number_of_people.id_for_label }}" class="form-label">
+                                        Number of People *
+                                    </label>
+                                    {{ form.number_of_people }}
+                                    {% if form.number_of_people.errors %}
+                                        <div class="text-danger small">{{ form.number_of_people.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.travel_date.id_for_label }}" class="form-label">
+                                        Travel Date *
+                                    </label>
+                                    {{ form.travel_date }}
+                                    {% if form.travel_date.errors %}
+                                        <div class="text-danger small">{{ form.travel_date.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.special_requests.id_for_label }}" class="form-label">
+                                    Special Requests
+                                </label>
+                                {{ form.special_requests }}
+                                {% if form.special_requests.errors %}
+                                    <div class="text-danger small">{{ form.special_requests.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Price Calculation -->
+                            <div class="card bg-light mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">Price Breakdown</h5>
+                                    <div class="row">
+                                        <div class="col-6">Price per person:</div>
+                                        <div class="col-6 text-end">
+                                            {% if tour_package.discount_price %}
+                                                ${{ tour_package.discount_price }}
+                                            {% else %}
+                                                ${{ tour_package.price }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">Number of people:</div>
+                                        <div class="col-6 text-end" id="people-count">1</div>
+                                    </div>
+                                    <hr>
+                                    <div class="row fw-bold">
+                                        <div class="col-6">Total Amount:</div>
+                                        <div class="col-6 text-end" id="total-amount">
+                                            {% if tour_package.discount_price %}
+                                                ${{ tour_package.discount_price }}
+                                            {% else %}
+                                                ${{ tour_package.price }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Payment Section -->
+                    <div class="payment-section">
+                        <h3 class="mb-4">Payment Information</h3>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Your payment will be processed securely through Stripe. No payment information is stored on our servers.
+                        </div>
+                        
+                        <div class="stripe-card" id="card-element">
+                            <!-- Stripe Card Element will be inserted here -->
+                        </div>
+                        
+                        <div class="alert alert-danger mt-3" id="card-errors" style="display: none;">
+                            <!-- Card errors will be displayed here -->
+                        </div>
+                        
+                        <div class="loading-spinner" id="loading-spinner">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Processing payment...</span>
+                            </div>
+                            <p class="mt-2">Processing your payment...</p>
+                        </div>
+                        
+                        <button type="button" class="btn btn-primary btn-lg w-100 mt-4" id="submit-payment">
+                            <i class="fas fa-credit-card me-2"></i>
+                            Pay Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Stripe Scripts -->
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    // Initialize Stripe
+    const stripe = Stripe('pk_test_51OGbliKue2i3LW4Npe6oAwbcfHyFSSUdcRPKRejkqG5z1WggCgT2MnaW3ayQaPV6gnVugP7w3C5crbJyug9weV1e00CESUwd87');
+    const elements = stripe.elements();
+
+    // Create card element
+    const cardElement = elements.create('card', {
+        style: {
+            base: {
+                fontSize: '16px',
+                color: '#424770',
+                '::placeholder': {
+                    color: '#aab7c4',
+                },
+            },
+            invalid: {
+                color: '#9e2146',
+            },
+        },
+    });
+
+    // Mount card element
+    cardElement.mount('#card-element');
+
+    // Handle card changes
+    cardElement.on('change', function(event) {
+        const displayError = document.getElementById('card-errors');
+        const cardContainer = document.getElementById('card-element');
+
+        if (event.error) {
+            displayError.textContent = event.error.message;
+            displayError.style.display = 'block';
+            cardContainer.classList.add('error');
+        } else {
+            displayError.textContent = '';
+            displayError.style.display = 'none';
+            cardContainer.classList.remove('error');
+        }
+    });
+
+    // Handle form submission
+    document.getElementById('submit-payment').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const submitButton = document.getElementById('submit-payment');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const form = document.getElementById('booking-form');
+        let bookingId = null;
+
+        // Disable button and show spinner
+        submitButton.disabled = true;
+        loadingSpinner.style.display = 'block';
+
+        // Get form data
+        const formData = new FormData(form);
+
+        // Create booking first via Django view
+        fetch('{% url "website:tour_booking" tour_package.id %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                bookingId = data.booking_id; // Save booking ID
+                return stripe.confirmCardPayment(data.client_secret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: '{{ user.get_full_name|default:user.username }}',
+                            email: '{{ user.email }}'
+                        }
+                    }
+                });
+            } else {
+                throw new Error(data.message || 'Booking failed');
+            }
+        })
+        .then(result => {
+            if (result.error) {
+                // Payment error
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
+                errorElement.style.display = 'block';
+                submitButton.disabled = false;
+                loadingSpinner.style.display = 'none';
+            } else {
+                // Payment success - redirect to success page
+                window.location.href = '{% url "website:booking_success" 0 %}'.replace('0', bookingId);
+            }
+        })
+        .catch(error => {
+            // General error
+            const errorElement = document.getElementById('card-errors');
+            errorElement.textContent = error.message;
+            errorElement.style.display = 'block';
+            submitButton.disabled = false;
+            loadingSpinner.style.display = 'none';
+        });
+    });
+
+    // Update price when number of people changes
+    document.getElementById('{{ form.number_of_people.id_for_label }}').addEventListener('change', function() {
+        const peopleCount = parseInt(this.value) || 1;
+        const pricePerPerson = {% if tour_package.discount_price %}{{ tour_package.discount_price }}{% else %}{{ tour_package.price }}{% endif %};
+        const totalAmount = peopleCount * pricePerPerson;
+
+        document.getElementById('people-count').textContent = peopleCount;
+        document.getElementById('total-amount').textContent = '$' + totalAmount.toFixed(2);
+    });
+</script>
+
+{% endblock %} 

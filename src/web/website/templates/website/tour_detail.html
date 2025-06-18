@@ -187,7 +187,15 @@
                     </div>
 
                     <!-- Booking Button -->
-                    <a href="{% url 'website:checkout' %}" class="btn btn-primary btn-block">Book Now</a>
+                    {% if user.is_authenticated %}
+                        {% if user.traveler_profile %}
+                            <a href="{% url 'website:tour_booking' tour_package.id %}" class="btn btn-primary btn-block">Book Now</a>
+                        {% else %}
+                            <button class="btn btn-secondary btn-block" disabled>Only Travelers Can Book</button>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'account_login' %}" class="btn btn-primary btn-block">Login to Book</a>
+                    {% endif %}
                     
                     <!-- Contact Agency -->
                     <div class="contact-agency mt-3">

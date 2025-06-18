@@ -9,7 +9,7 @@ from django.utils import timezone
 from django import forms
 
 from src.accounts.forms import IncompleteAgencyForm, UserForm, VehicleForm
-from src.web.agency.models import Agency, Vehicle
+from src.web.agency.models import Agency, Vehicle, TourBooking
 from src.web.traveler.models import Traveler
 from src.web.booking.models import Booking, Trip
 from src.web.local_guide.models import GuideBooking
@@ -24,9 +24,15 @@ class TravelerBaseView(LoginRequiredMixin):
         traveler = get_object_or_404(Traveler, user=self.request.user)
         context['traveler'] = traveler
         
-        # Get active bookings
+        # Get active bookings (old booking system)
         active_bookings = Booking.objects.filter(
             traveler=traveler,
+            status__in=['confirmed', 'pending']
+        ).order_by('-created_at')
+        
+        # Get active tour bookings (new booking system)
+        active_tour_bookings = TourBooking.objects.filter(
+            traveler=self.request.user,
             status__in=['confirmed', 'pending']
         ).order_by('-created_at')
         
@@ -39,8 +45,19 @@ class TravelerBaseView(LoginRequiredMixin):
             'confirmed': Booking.objects.filter(traveler=traveler, status='confirmed').count(),
         }
         
+        # Get tour booking statistics
+        tour_booking_stats = {
+            'total': TourBooking.objects.filter(traveler=self.request.user).count(),
+            'active': active_tour_bookings.count(),
+            'completed': TourBooking.objects.filter(traveler=self.request.user, status='completed').count(),
+            'cancelled': TourBooking.objects.filter(traveler=self.request.user, status='cancelled').count(),
+            'confirmed': TourBooking.objects.filter(traveler=self.request.user, status='confirmed').count(),
+        }
+        
         context['booking_stats'] = booking_stats
+        context['tour_booking_stats'] = tour_booking_stats
         context['active_bookings'] = active_bookings[:5]  # Show only 5 most recent active bookings
+        context['active_tour_bookings'] = active_tour_bookings[:5]  # Show only 5 most recent active tour bookings
         context['guide_bookings'] = GuideBooking.objects.filter(
             traveler=traveler,
             status__in=['pending', 'confirmed']
@@ -56,25 +73,44 @@ class DashboardView(TravelerBaseView, TemplateView):
         context = super().get_context_data(**kwargs)
         traveler = context['traveler']
         
-        # Get recent bookings
+        # Get recent bookings (old system)
         recent_bookings = Booking.objects.filter(
             traveler=traveler
         ).order_by('-created_at')[:5]
         
-        # Get upcoming trips
+        # Get recent tour bookings (new system)
+        recent_tour_bookings = TourBooking.objects.filter(
+            traveler=self.request.user
+        ).order_by('-created_at')[:5]
+        
+        # Get upcoming trips (old system)
         upcoming_trips = Booking.objects.filter(
             traveler=traveler,
             start_date__gte=timezone.now(),
             status='confirmed'
         ).order_by('start_date')[:3]
         
+        # Get upcoming tour trips (new system)
+        upcoming_tour_trips = TourBooking.objects.filter(
+            traveler=self.request.user,
+            travel_date__gte=timezone.now().date(),
+            status='confirmed'
+        ).order_by('travel_date')[:3]
+        
         context.update({
             'recent_bookings': recent_bookings,
+            'recent_tour_bookings': recent_tour_bookings,
             'upcoming_trips': upcoming_trips,
+            'upcoming_tour_trips': upcoming_tour_trips,
             'total_bookings': Booking.objects.filter(traveler=traveler).count(),
+            'total_tour_bookings': TourBooking.objects.filter(traveler=self.request.user).count(),
             'total_guide_bookings': GuideBooking.objects.filter(traveler=traveler).count(),
             'completed_trips': Booking.objects.filter(
                 traveler=traveler,
+                status='completed'
+            ).count(),
+            'completed_tour_trips': TourBooking.objects.filter(
+                traveler=self.request.user,
                 status='completed'
             ).count(),
         })
@@ -82,20 +118,28 @@ class DashboardView(TravelerBaseView, TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class BookingView(TravelerBaseView, ListView):
+class BookingView(ListView):
     template_name = 'traveler/booking.html'
     context_object_name = 'bookings'
-    paginate_by = 10
-    
+    model = TourBooking
+
     def get_queryset(self):
-        traveler = get_object_or_404(Traveler, user=self.request.user)
-        status = self.request.GET.get('status', None)
-        
-        queryset = Booking.objects.filter(traveler=traveler)
+        # self.request.user must be a User object
+        user = self.request.user
+
+        # This must pass a User instance, not a string
+        traveler = get_object_or_404(Traveler, user=user)
+
+        # Optional filter
+        status = self.request.GET.get('status')
+
+        # Use Traveler object directly in TourBooking query
+        queryset = TourBooking.objects.filter(traveler=traveler)
+
         if status:
             queryset = queryset.filter(status=status)
-            
-        return queryset.order_by('-created_at')
+
+        return queryset
 
 
 @method_decorator(login_required, name='dispatch')

@@ -1,0 +1,199 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}
+Booking Confirmed - Travel Platform
+{% endblock %}
+
+{% block css %}
+<style>
+    .success-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 0;
+    }
+    
+    .success-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        overflow: hidden;
+        max-width: 600px;
+        width: 100%;
+    }
+    
+    .success-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        text-align: center;
+        padding: 40px 30px;
+    }
+    
+    .success-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+    }
+    
+    .booking-details {
+        padding: 30px;
+    }
+    
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .detail-row:last-child {
+        border-bottom: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    
+    .action-buttons {
+        padding: 30px;
+        background: #f8f9fa;
+        text-align: center;
+    }
+    
+    .btn-custom {
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-weight: 600;
+        margin: 0 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="success-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="success-card">
+                    <!-- Success Header -->
+                    <div class="success-header">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h1 class="mb-3">Booking Confirmed!</h1>
+                        <p class="mb-0">Your tour booking has been successfully processed.</p>
+                    </div>
+                    
+                    <!-- Booking Details -->
+                    <div class="booking-details">
+                        <h3 class="mb-4">Booking Information</h3>
+                        
+                        <div class="detail-row">
+                            <span>Booking Number:</span>
+                            <span class="fw-bold">{{ booking.booking_number }}</span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span>Tour Package:</span>
+                            <span>{{ booking.tour_package.name }}</span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span>Agency:</span>
+                            <span>{{ booking.tour_package.agency.name }}</span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span>Travel Date:</span>
+                            <span>{{ booking.travel_date|date:"F j, Y" }}</span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span>Number of People:</span>
+                            <span>{{ booking.number_of_people }}</span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span>Duration:</span>
+                            <span>{{ booking.tour_package.duration_days }} Days</span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span>Package Type:</span>
+                            <span>{{ booking.tour_package.get_package_type_display }}</span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span>Price per Person:</span>
+                            <span>${{ booking.price_per_person }}</span>
+                        </div>
+                        
+                        {% if booking.discount_amount > 0 %}
+                        <div class="detail-row">
+                            <span>Discount:</span>
+                            <span class="text-success">-${{ booking.discount_amount }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="detail-row">
+                            <span>Total Amount:</span>
+                            <span class="text-primary">${{ booking.final_amount }}</span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span>Payment Status:</span>
+                            <span class="badge bg-success">{{ booking.get_payment_status_display }}</span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span>Booking Status:</span>
+                            <span class="badge bg-info">{{ booking.get_status_display }}</span>
+                        </div>
+                        
+                        {% if booking.special_requests %}
+                        <div class="detail-row">
+                            <span>Special Requests:</span>
+                            <span>{{ booking.special_requests }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <a href="{% url 'website:home' %}" class="btn btn-outline-primary btn-custom">
+                            <i class="fas fa-home me-2"></i>Back to Home
+                        </a>
+                        
+                        <a href="{% url 'website:tour_detail' booking.tour_package.id %}" class="btn btn-outline-secondary btn-custom">
+                            <i class="fas fa-info-circle me-2"></i>View Tour Details
+                        </a>
+                        
+                        <a href="{% url 'website:agency-detail' booking.tour_package.agency.id %}" class="btn btn-outline-info btn-custom">
+                            <i class="fas fa-building me-2"></i>View Agency
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Additional Information -->
+                <div class="text-center mt-4">
+                    <div class="alert alert-info">
+                        <h5><i class="fas fa-envelope me-2"></i>What's Next?</h5>
+                        <p class="mb-2">You will receive a confirmation email with all the details of your booking.</p>
+                        <p class="mb-0">The agency will contact you within 24 hours to discuss the final arrangements.</p>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <h5><i class="fas fa-phone me-2"></i>Need Help?</h5>
+                        <p class="mb-0">
+                            Contact the agency directly: 
+                            <a href="tel:{{ booking.tour_package.agency.phone_number }}">{{ booking.tour_package.agency.phone_number }}</a> | 
+                            <a href="mailto:{{ booking.tour_package.agency.email }}">{{ booking.tour_package.agency.email }}</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

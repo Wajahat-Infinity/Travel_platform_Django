@@ -1,7 +1,8 @@
 from django.urls import path
 from src.web.website.views import HomeView, AgencyView, AboutView, ContactView, FaqView, LoginView, SignupView, \
     ForgetPasswordView, CheckoutView, AgencyDetailView, VehicleDetailView,  \
-    LocalGuideView, LocalGuideDetailView, NewsletterSubscribeView, TourDetailView,PackagesView
+    LocalGuideView, LocalGuideDetailView, NewsletterSubscribeView, TourDetailView, PackagesView, \
+    TourBookingView, BookingSuccessView, StripeWebhookView
 
 app_name = "website"
 
@@ -12,6 +13,9 @@ urlpatterns = [
     path('agency/details/<int:pk>/', AgencyDetailView.as_view(), name="agency-detail"),
     path('agency/vehicle/details/<int:pk>/', VehicleDetailView.as_view(), name="vehicle-detail"),
     path('tour/<int:pk>/', TourDetailView.as_view(), name="tour_detail"),
+    path('tour/<int:tour_id>/book/', TourBookingView.as_view(), name="tour_booking"),
+    path('booking/success/<int:booking_id>/', BookingSuccessView.as_view(), name="booking_success"),
+    path('webhook/stripe/', StripeWebhookView.as_view(), name="stripe_webhook"),
     path('about/', AboutView.as_view(), name="about"),
     path('contact/', ContactView.as_view(), name="contact"),
     path('faq/', FaqView.as_view(), name="faq"),

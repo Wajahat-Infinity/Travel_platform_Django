@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils import timezone
 
 class Agency(models.Model):
     user = models.OneToOneField(
@@ -194,3 +195,122 @@ class TourPackage(models.Model):
             discount = ((self.price - self.discount_price) / self.price) * 100
             return int(discount)
         return 0
+
+class TourBooking(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+        ('refunded', 'Refunded'),
+    ]
+    
+    PAYMENT_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('processing', 'Processing'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+        ('refunded', 'Refunded'),
+    ]
+
+    # Booking Details
+    booking_number = models.CharField(max_length=50, unique=True)
+    tour_package = models.ForeignKey(
+        TourPackage,
+        on_delete=models.CASCADE,
+        related_name='bookings'
+    )
+    traveler = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='tour_bookings'
+    )
+    
+    # Travel Details
+    number_of_people = models.PositiveIntegerField(default=1)
+    travel_date = models.DateField()
+    special_requests = models.TextField(blank=True, null=True)
+    
+    # Pricing
+    price_per_person = models.DecimalField(max_digits=10, decimal_places=2)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    final_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    # Payment Details
+    stripe_payment_intent_id = models.CharField(max_length=255, blank=True, null=True)
+    stripe_charge_id = models.CharField(max_length=255, blank=True, null=True)
+    payment_status = models.CharField(
+        max_length=20,
+        choices=PAYMENT_STATUS_CHOICES,
+        default='pending'
+    )
+    
+    # Booking Status
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending'
+    )
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    payment_date = models.DateTimeField(blank=True, null=True)
+    
+    # Cancellation
+    cancelled_at = models.DateTimeField(blank=True, null=True)
+    cancellation_reason = models.TextField(blank=True, null=True)
+    refund_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Tour Booking'
+        verbose_name_plural = 'Tour Bookings'
+
+    def __str__(self):
+        return f"Booking #{self.booking_number} - {self.tour_package.name}"
+
+    def save(self, *args, **kwargs):
+        if not self.booking_number:
+            # Generate a unique booking number
+            import uuid
+            self.booking_number = f"TB{uuid.uuid4().hex[:8].upper()}"
+        
+        # Calculate pricing
+        if self.tour_package.discount_price:
+            self.price_per_person = self.tour_package.discount_price
+            self.discount_amount = (self.tour_package.price - self.tour_package.discount_price) * self.number_of_people
+        else:
+            self.price_per_person = self.tour_package.price
+            self.discount_amount = 0
+        
+        self.total_amount = self.tour_package.price * self.number_of_people
+        self.final_amount = self.price_per_person * self.number_of_people
+        
+        super().save(*args, **kwargs)
+
+    @property
+    def agency(self):
+        return self.tour_package.agency
+
+    def get_traveler_profile(self):
+        """Get the traveler profile if it exists"""
+        try:
+            return self.traveler.traveler_profile
+        except:
+            return None
+
+    def can_cancel(self):
+        """Check if booking can be cancelled"""
+        return self.status in ['pending', 'confirmed'] and self.payment_status == 'completed'
+
+    def cancel_booking(self, reason=""):
+        """Cancel the booking"""
+        if self.can_cancel():
+            self.status = 'cancelled'
+            self.cancellation_reason = reason
+            self.cancelled_at = timezone.now()
+            self.save()
+            return True
+        return False
