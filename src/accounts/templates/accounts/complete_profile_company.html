@@ -5,44 +5,73 @@
 
 {% block title %}Complete Now{% endblock %}
 
-
 {% block content %}
+<style>
+    /* Custom CSS for larger form elements */
+    .form-control {
+        height: 50px;
+        font-size: 16px;
+        padding: 12px 15px;
+    }
+    .form-select {
+        height: 50px;
+        font-size: 16px;
+        padding: 12px 15px;
+    }
+    textarea.form-control {
+        min-height: 120px;
+        font-size: 16px;
+        padding: 15px;
+    }
+    .btn {
+        padding: 12px 24px;
+        font-size: 16px;
+    }
+    .form-large-labels .form-control-lg {
+        height: 50px;
+        font-size: 16px;
+        padding: 12px 15px;
+    }
+    .form-large-labels textarea.form-control-lg {
+        min-height: 120px;
+    }
+    .form-large-labels .form-group {
+        margin-bottom: 1.5rem;
+    }
+</style>
 
-<div class="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
+<div class="auth-page-wrapper auth-bg-cover  d-flex justify-content-center align-items-center min-vh-100">
     <div class="bg-overlay"></div>
     <div class="auth-page-content overflow-hidden pt-lg-5">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-12">
-                    <div class="card overflow-hidden m-0">
-                        <div class="row justify-content-center g-0">
-                            <div class="col-lg-12">
-                                <div class="p-lg-5  text-center p-4">
-                                    <div class="mt-4">
-                                        <div class="user-form-card">
-                                            <img src="{% static 'website/images/logo.png' %}" style="height: 30px"
-                                                 class=" mb-4 img-fluid blur-up lazyloaded" alt="">
-                                            <div class="user-form-title "><h2><strong> Complete Your Shop
-                                                Details!</strong></h2>
-                                                <hr>
-
-                                                <div class="user-form-group">
-                                                    <form method="post" class="user-form" enctype="multipart/form-data">
-                                                        {% csrf_token %}
-                                                        {% crispy form %}
-
-                                                    </form>
-                                                </div>
-                                            </div>
-
+                <div class="col-lg-10">
+                    <div class="card overflow-hidden border-0 shadow-lg">
+                        <div class="card-body p-0">
+                            <div class="row g-0">
+                                <div class="col-lg-12">
+                                    <div class="p-5">
+                                        <div class="text-center mb-4">
+                                            <img src="{% static 'website/images/logo.png' %}" style="height: 50px" 
+                                                 class="img-fluid mb-3" alt="Logo">
+                                            <h2 class="mt-2 font-weight-bold text-primary" style="font-size: 28px;">Complete Your Shop Details</h2>
+                                            <p class="text-muted" style="font-size: 16px;">Please fill in all required information to complete your agency profile</p>
                                         </div>
-
-                                        <div class="mt-5 text-center">
-                                            <div class="mt-4 text-center">
-                                                <p class="mb-0"><b>Note!</b> not sure where to go <a
-                                                        href="{% url 'website:contact' %}">contact us</a>
-                                                    or <a href="{% url 'accounts:logout' %}">logout</a></p>
-                                            </div>
+                                        
+                                        <div class="user-form-group">
+                                            <form method="post" class="user-form" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                <div class="mb-4">
+                                                    {% crispy form %}
+                                                </div>
+                                            </form>
+                                        </div>
+                                        
+                                        <div class="mt-4 text-center">
+                                            <p class="text-muted mb-0" style="font-size: 15px;">
+                                                <b>Note:</b> Not sure what to do? <a href="{% url 'website:contact' %}" class="text-primary">Contact us</a>
+                                                or <a href="{% url 'accounts:logout' %}" class="text-primary">logout</a>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -53,5 +82,5 @@
             </div>
         </div>
     </div>
-    <!-- end auth-page-wrapper -->
-    {% endblock %}
+</div>
+{% endblock %}

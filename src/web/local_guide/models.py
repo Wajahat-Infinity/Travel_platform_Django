@@ -29,7 +29,7 @@ class LocalGuide(models.Model):
     )
     image = models.ImageField(upload_to='local_guide_images/', blank=True, null=True)
     cover_image = models.ImageField(upload_to='local_guide_cover_images/', blank=True, null=True)
-    skills = models.TextField(blank=True, null=True)
+    skills = models.CharField(max_length=255, blank=True, null=True)
     availability = models.CharField(
         max_length=20,
         choices=AVAILABILITY_CHOICES,
@@ -45,7 +45,7 @@ class LocalGuide(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     phone = models.CharField(max_length=15, blank=True, null=True)
-    address = models.TextField(blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     state = models.CharField(max_length=255, blank=True, null=True)
     zip_code = models.CharField(max_length=10, blank=True, null=True)

@@ -154,7 +154,7 @@ class AgencyEditProfileView(AgencyBaseView, UpdateView):
 # Package Views
 class PackageListView(AgencyBaseView, ListView):
     model = TourPackage
-    template_name = 'agency/packages.html'
+    template_name = 'agency/packages_list.html'
     context_object_name = 'packages'
 
     def get_queryset(self):
@@ -165,6 +165,11 @@ class PackageCreateView(AgencyBaseView, CreateView):
     form_class = TourPackageForm
     template_name = 'agency/package_form.html'
     success_url = reverse_lazy('agency:package_list')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['agency'] = self.request.user.agency
+        return kwargs
 
     def form_valid(self, form):
         form.instance.agency = self.request.user.agency
@@ -179,6 +184,11 @@ class PackageUpdateView(AgencyBaseView, UpdateView):
 
     def get_queryset(self):
         return TourPackage.objects.filter(agency=self.request.user.agency)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['agency'] = self.request.user.agency
+        return kwargs
 
     def form_valid(self, form):
         messages.success(self.request, 'Tour package updated successfully!')

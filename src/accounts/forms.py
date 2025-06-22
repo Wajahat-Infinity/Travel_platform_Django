@@ -56,8 +56,8 @@ class IncompleteAgencyForm(ModelForm):
                 Column('establish_year', css_class='form-group col-md-4'),
                 Column('team_size', css_class='form-group col-md-4'),
                 Column('website', css_class='form-group col-md-4'),
-                Column('description', css_class='form-group col-md-12'),
-                Column('address', css_class='form-group col-md-12'),
+                Column('description', css_class='form-group col-md-6'),
+                Column('address', css_class='form-group col-md-6'),
             ),
             Submit('submit', 'Submit', css_class='btn btn-success float-right')
         )
@@ -85,8 +85,8 @@ class IncompleteLocalGuideForm(ModelForm):
                
                 Column('image', css_class='form-group col-md-6'),
                 Column('cover_image', css_class='form-group col-md-6'),
-                Column('address', css_class='form-group col-md-12'),
-                Column('skills', css_class='form-group col-md-12'),
+                Column('address', css_class='form-group col-md-6'),
+                Column('skills', css_class='form-group col-md-6'),
             ),
             Submit('submit', 'Submit', css_class='btn btn-success float-right')
         )

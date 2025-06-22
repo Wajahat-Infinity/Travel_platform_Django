@@ -12,13 +12,13 @@ class Agency(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True)
     phone_number = models.CharField(max_length=15, unique=True)
-    address = models.TextField()
+    address = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=255)
     zip_code = models.CharField(max_length=10)
     country = models.CharField(max_length=255)
     license_number = models.CharField(max_length=100, unique=True)
-    description = models.TextField()
+    description = models.CharField(max_length=255)
     establish_year = models.DateField()
     cover_image = models.ImageField(upload_to='agency/cover_images/', null=True, blank=True)
     profile_image = models.ImageField(upload_to='agency/profile_images/', null=True, blank=True)
@@ -172,14 +172,14 @@ class TourPackage(models.Model):
     package_type = models.CharField(max_length=20, choices=PACKAGE_TYPES)
     duration_days = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    discount_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    # discount_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     # Relationships
-    hotels = models.ManyToManyField(Hotel, blank=True)
+    # hotels = models.ManyToManyField(Hotel, blank=True)
     vehicles = models.ManyToManyField(Vehicle, blank=True)
     places = models.ManyToManyField(Place, blank=True)
 
@@ -189,12 +189,7 @@ class TourPackage(models.Model):
     def __str__(self):
         return f"{self.name} ({self.agency.name})"
 
-    def get_discount_percentage(self):
-        """Calculate discount percentage if discount price is available"""
-        if self.discount_price and self.price > 0:
-            discount = ((self.price - self.discount_price) / self.price) * 100
-            return int(discount)
-        return 0
+   
 
 class TourBooking(models.Model):
     STATUS_CHOICES = [

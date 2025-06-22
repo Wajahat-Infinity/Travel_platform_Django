@@ -49,7 +49,7 @@ urlpatterns = [
     path('edit-profile/', views.AgencyEditProfileView.as_view(), name='edit_profile'),
     
     # Packages
-    path('packages/', views.PackageListView.as_view(), name='package_list'),
+    path('agency/packages/', views.PackageListView.as_view(), name='package_list'),
     path('packages/create/', views.PackageCreateView.as_view(), name='package_create'),
     path('packages/<int:pk>/edit/', views.PackageUpdateView.as_view(), name='package_edit'),
     path('packages/<int:pk>/delete/', views.PackageDeleteView.as_view(), name='package_delete'),

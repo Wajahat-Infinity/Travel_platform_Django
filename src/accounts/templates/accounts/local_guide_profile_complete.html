@@ -5,44 +5,68 @@
 
 {% block title %}Complete Now{% endblock %}
 
-
 {% block content %}
+<style>
+    .user-form-card {
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        background: white;
+        overflow: hidden;
+    }
+    .user-form-title h2 {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+    .user-form-group {
+        padding: 2rem;
+    }
+    .note-footer {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+    }
+    .note-footer a {
+        color: #3498db;
+        font-weight: 500;
+    }
+    .form-divider {
+        border-top: 1px solid #ecf0f1;
+        margin: 1.5rem 0;
+    }
+</style>
 
 <div class="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
     <div class="bg-overlay"></div>
     <div class="auth-page-content overflow-hidden pt-lg-5">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-12">
-                    <div class="card overflow-hidden m-0">
+                <div class="col-lg-10 col-xl-8">
+                    <div class="card overflow-hidden m-0 user-form-card">
                         <div class="row justify-content-center g-0">
                             <div class="col-lg-12">
-                                <div class="p-lg-5  text-center p-4">
-                                    <div class="mt-4">
-                                        <div class="user-form-card">
-                                            <img src="{% static 'website/images/logo.png' %}" style="height: 30px"
-                                                 class=" mb-4 img-fluid blur-up lazyloaded" alt="">
-                                            <div class="user-form-title "><h2><strong> Complete Your Profile
-                                                Details!</strong></h2>
-                                                <hr>
+                                <div class="p-lg-5 p-4">
+                                    <div class="mt-4 text-center">
+                                        <img src="{% static 'website/images/logo.png' %}" style="height: 40px"
+                                             class="mb-4 img-fluid" alt="">
+                                    </div>
+                                    
+                                    <div class="user-form-title text-center">
+                                        <h2>Complete Your Profile Details</h2>
+                                        <div class="form-divider"></div>
+                                    </div>
 
-                                                <div class="user-form-group">
-                                                    <form method="post" class="user-form" enctype="multipart/form-data">
-                                                        {% csrf_token %}
-                                                        {% crispy form %}
+                                    <div class="user-form-group">
+                                        <form method="post" class="user-form" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            {% crispy form %}
+                                        </form>
+                                    </div>
 
-                                                    </form>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="mt-5 text-center">
-                                            <div class="mt-4 text-center">
-                                                <p class="mb-0"><b>Note!</b> not sure where to go <a
-                                                        href="{% url 'website:contact' %}">contact us</a>
-                                                    or <a href="{% url 'accounts:logout' %}">logout</a></p>
-                                            </div>
+                                    <div class="mt-5 text-center">
+                                        <div class="mt-4 text-center note-footer">
+                                            <p class="mb-0"><b>Note!</b> Not sure where to go? <a
+                                                    href="{% url 'website:contact' %}">Contact us</a>
+                                                or <a href="{% url 'accounts:logout' %}">logout</a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -53,5 +77,5 @@
             </div>
         </div>
     </div>
-    <!-- end auth-page-wrapper -->
-    {% endblock %}
+</div>
+{% endblock %}

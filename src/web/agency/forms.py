@@ -6,8 +6,8 @@ class TourPackageForm(forms.ModelForm):
         model = TourPackage
         fields = [
             'name', 'description', 'package_type', 'duration_days',
-            'price', 'discount_price', 'start_date', 'end_date',
-            'hotels', 'vehicles', 'places', 'is_active'
+            'price', 'start_date', 'end_date',
+             'vehicles', 'places', 'is_active'
         ]
         widgets = {
             'start_date': forms.DateInput(attrs={'type': 'date'}),
@@ -19,7 +19,7 @@ class TourPackageForm(forms.ModelForm):
         agency = kwargs.pop('agency', None)
         super().__init__(*args, **kwargs)
         if agency:
-            self.fields['hotels'].queryset = Hotel.objects.filter(agency=agency)
+            # self.fields['hotels'].queryset = Hotel.objects.filter(agency=agency)
             self.fields['vehicles'].queryset = Vehicle.objects.filter(agency=agency)
             self.fields['places'].queryset = Place.objects.filter(agency=agency)
 

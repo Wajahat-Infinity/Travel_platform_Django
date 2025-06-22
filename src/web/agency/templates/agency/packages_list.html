@@ -1,0 +1,184 @@
+{% extends 'agency/base.html' %}
+{% load static %}
+
+{% block title %}Tour Packages{% endblock %}
+
+{% block content %}
+<div class="dashboard-content-wrap">
+    <div class="dashboard-bread dashboard--bread dashboard-bread-2">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="breadcrumb-content">
+                        <div class="section-heading">
+                            <h2 class="sec__title font-size-30 text-white">Tour Packages</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="breadcrumb-list text-right">
+                        <ul class="list-items">
+                            <li><a href="{% url 'website:home' %}" class="text-white">Home</a></li>
+                            <li>Dashboard</li>
+                            <li>Tour Packages</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-main-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-box">
+                        <div class="form-title-wrap">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h3 class="title">Tour Packages List</h3>
+                                <a href="{% url 'agency:package_create' %}" class="btn btn-primary">
+                                    <i class="la la-plus"></i> Add New Package
+                                </a>
+                            </div>
+                        </div>
+                        <div class="form-content">
+                            {% if packages %}
+                            <div class="row">
+                                {% for package in packages %}
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="card package-card h-100">
+                                        <div class="card-header bg-primary text-white">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="card-title mb-0">{{ package.name }}</h5>
+                                                <span class="badge badge-light">{{ package.get_package_type_display }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="package-info">
+                                                <p class="text-muted mb-2">{{ package.description|truncatewords:20 }}</p>
+                                                
+                                                <div class="row mb-3">
+                                                    <div class="col-6">
+                                                        <small class="text-muted">Duration</small>
+                                                        <div class="font-weight-bold">{{ package.duration_days }} days</div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <small class="text-muted">Start Date</small>
+                                                        <div class="font-weight-bold">{{ package.start_date|date:"M d, Y" }}</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="price-section mb-3">
+                                                    {% if package.discount_price %}
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="text-decoration-line-through text-muted mr-2">${{ package.price }}</span>
+                                                        <span class="text-success font-weight-bold h5 mb-0">${{ package.discount_price }}</span>
+                                                        <span class="badge badge-success ml-2">{{ package.get_discount_percentage }}% OFF</span>
+                                                    </div>
+                                                    {% else %}
+                                                    <span class="text-primary font-weight-bold h5 mb-0">${{ package.price }}</span>
+                                                    {% endif %}
+                                                </div>
+                                                
+                                                <div class="package-components mb-3">
+                                                    <small class="text-muted d-block mb-1">Package Includes:</small>
+                                                    <div class="row">
+                                                        <div class="col-4 text-center">
+                                                            <i class="la la-hotel text-primary"></i>
+                                                            <small class="d-block">{{ package.hotels.count }} Hotels</small>
+                                                        </div>
+                                                        <div class="col-4 text-center">
+                                                            <i class="la la-car text-success"></i>
+                                                            <small class="d-block">{{ package.vehicles.count }} Vehicles</small>
+                                                        </div>
+                                                        <div class="col-4 text-center">
+                                                            <i class="la la-map-marker text-warning"></i>
+                                                            <small class="d-block">{{ package.places.count }} Places</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="badge {% if package.is_active %}badge-success{% else %}badge-danger{% endif %}">
+                                                    {% if package.is_active %}Active{% else %}Inactive{% endif %}
+                                                </span>
+                                                <div class="btn-group">
+                                                    <a href="{% url 'agency:package_edit' package.pk %}" class="btn btn-sm btn-outline-primary">
+                                                        <i class="la la-pencil"></i> Edit
+                                                    </a>
+                                                    <a href="{% url 'agency:package_delete' package.pk %}" class="btn btn-sm btn-outline-danger">
+                                                        <i class="la la-trash"></i> Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center py-5">
+                                <div class="empty-state">
+                                    <i class="la la-suitcase text-muted" style="font-size: 4rem;"></i>
+                                    <h4 class="mt-3 text-muted">No Tour Packages Found</h4>
+                                    <p class="text-muted">You haven't created any tour packages yet. Start by creating your first package!</p>
+                                    <a href="{% url 'agency:package_create' %}" class="btn btn-primary">
+                                        <i class="la la-plus"></i> Create Your First Package
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.package-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid #e9ecef;
+}
+
+.package-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.package-card .card-header {
+    border-bottom: none;
+}
+
+.package-info {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.price-section {
+    border-top: 1px solid #e9ecef;
+    padding-top: 1rem;
+}
+
+.package-components {
+    border-top: 1px solid #e9ecef;
+    padding-top: 1rem;
+}
+
+.empty-state {
+    padding: 2rem;
+}
+
+.btn-group .btn {
+    margin-left: 0.25rem;
+}
+
+.btn-group .btn:first-child {
+    margin-left: 0;
+}
+</style>
+{% endblock %} 
