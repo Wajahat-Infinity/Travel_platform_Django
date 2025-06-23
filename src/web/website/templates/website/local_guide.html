@@ -186,16 +186,16 @@ LOCAL GUIDE
         <div class="row padding-top-50px">
             {% for guide in featured_guides %}
             <div class="col-lg-4 responsive-column">
-                <div class="card-item">
+                <div class="card-item user-card user-card--style-1 mb-4">
                     <div class="card-img">
-                        {% if guide.profile_image %}
-                            <img src="{{ guide.profile_image.url }}" alt="{{ guide.user.get_full_name }}">
+                        {% if guide.image %}
+                            <img src="{{ guide.image.url }}" alt="{{ guide.full_name }}" class="img-fluid">
                         {% else %}
-                            <img src="{% static 'website/images/img24.jpg' %}" alt="{{ guide.user.get_full_name }}">
+                            <img src="{% static 'website/images/user_default.png' %}" alt="{{ guide.full_name }}" class="img-fluid">
                         {% endif %}
                     </div>
                     <div class="card-body">
-                        <h3 class="card-title">{{ guide.user.get_full_name }}</h3>
+                        <h3 class="card-title">{{ guide.full_name }}</h3>
                         <p class="card-text">
                             {{ guide.expertise }}
                         </p>

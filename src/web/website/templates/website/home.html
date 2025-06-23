@@ -18,8 +18,13 @@ HOME
                     {% for slider in hero_sliders %}
                     <li
                         style="display: block; left: 721px; position: absolute; overflow: hidden; height: 100%; width: 721px; top: 0px; z-index: 2; opacity: 1;">
-                        <img src="{{ slider.image.url }}" alt="{{ slider.title }}"
-                            style="backface-visibility: hidden; position: absolute; left: -323.875px; top: 0px; z-index: -1; max-width: none; height: 730px; width: 1368.75px;">
+                        {% if slider.image %}
+                            <img src="{{ slider.image.url }}" alt="{{ slider.title }}"
+                                style="backface-visibility: hidden; position: absolute; left: -323.875px; top: 0px; z-index: -1; max-width: none; height: 730px; width: 1368.75px;">
+                        {% else %}
+                            <img src="{% static 'website/images/hero--bg3.jpg' %}" alt=""
+                                style="backface-visibility: hidden; position: absolute; left: -323.875px; top: 0px; z-index: -1; max-width: none; height: 730px; width: 1368.75px;">
+                        {% endif %}
                     </li>
                     {% empty %}
                     <li
@@ -486,14 +491,22 @@ HOME
             <div class="col-lg-3 responsive-column">
                 <div class="flip-box">
                     <div class="flip-box-front">
-                        <img src="{{ activity.image.url }}" alt="{{ activity.name }}" class="flip-img">
+                        {% if activity.image %}
+                            <img src="{{ activity.image.url }}" alt="{{ activity.name }}" class="flip-img">
+                        {% else %}
+                            <img src="{% static 'website/images/img1.jpg' %}" alt="" class="flip-img">
+                        {% endif %}
                         <a href="{{ activity.url|default:'#' }}" class="flip-content d-flex align-items-end justify-content-start">
                             <h3 class="flip-title">{{ activity.name }}</h3>
                         </a><!-- end flip-content -->
                     </div>
                     <!-- end flip-box-front -->
                     <div class="flip-box-back">
-                        <img src="{{ activity.image.url }}" alt="{{ activity.name }}" class="flip-img">
+                        {% if activity.image %}
+                            <img src="{{ activity.image.url }}" alt="{{ activity.name }}" class="flip-img">
+                        {% else %}
+                            <img src="{% static 'website/images/img1.jpg' %}" alt="" class="flip-img">
+                        {% endif %}
                         <a href="{{ activity.url|default:'#' }}" class="flip-content d-flex align-items-center justify-content-center">
                             <div>
                                 <div class="icon-element mx-auto mb-3 bg-white text-color-2">
@@ -586,7 +599,11 @@ HOME
             <div class="col-lg-4 responsive-column">
                 <div class="card-item blog-card">
                     <div class="card-img">
-                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                        {% if post.featured_image %}
+                            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                        {% else %}
+                            <img src="{% static 'website/images/img5.jpg' %}" alt="blog-img">
+                        {% endif %}
                         <div class="post-format icon-element">
                             {% if post.post_format == 'VIDEO' %}
                                 <i class="la la-play"></i>
@@ -777,10 +794,18 @@ HOME
                     <div class="client-logo-item">
                         {% if logo.url %}
                             <a href="{{ logo.url }}" target="_blank">
-                                <img src="{{ logo.logo.url }}" alt="{{ logo.name }}">
+                                {% if logo.logo %}
+                                    <img src="{{ logo.logo.url }}" alt="{{ logo.name }}">
+                                {% else %}
+                                    <img src="{% static 'website/images/client-logo.png' %}" alt="brand image">
+                                {% endif %}
                             </a>
                         {% else %}
-                            <img src="{{ logo.logo.url }}" alt="{{ logo.name }}">
+                            {% if logo.logo %}
+                                <img src="{{ logo.logo.url }}" alt="{{ logo.name }}">
+                            {% else %}
+                                <img src="{% static 'website/images/client-logo.png' %}" alt="brand image">
+                            {% endif %}
                         {% endif %}
                     </div>
                     {% empty %}

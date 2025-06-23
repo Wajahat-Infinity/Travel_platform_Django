@@ -750,23 +750,14 @@
                             </div>
 
                             <div class="row">
-                                <div class="range-container col-md-4 mb-3">
-                                   
-                                    <label for="Distance" class="form-label">Distance from Islamabad (km)</label>
-                                    <input type="range" class="form-control range-container"  min='10'max='1500' step="1" value="10" id="Distance" name="Distance" required>
-                                    <span class="range-value">10</span>
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Select Location on Map</label>
+                                    <div id="map" style="height: 400px; width: 100%;"></div>
+                                    <small class="form-text text-muted">Click on the map to select your destination. The latitude, longitude, and distance from Islamabad will be filled automatically.</small>
                                 </div>
-                                <div class="range-container col-md-4 mb-3">
-                                    <label for="Latitude" class="form-label">Latitude</label>
-                                    <input type="range" min="24" max="37" step="0.0001" value="24" class="form-control" id="Latitude" name="Latitude" required>
-                                    <span class="range-value">24</span>
-
-                                </div>
-                                <div class=" range-container mb-3">
-                                    <label for="Longitude" class="form-label">Longitude</label>
-                                    <input type="range" min="60" max="78" step="0.0001" value="60" class="form-control" id="Longitude" name="Longitude" required>
-                                    <span class="range-value">60</span>
-                                </div>
+                                <input type="hidden" id="Latitude" name="Latitude" required>
+                                <input type="hidden" id="Longitude" name="Longitude" required>
+                                <input type="hidden" id="Distance" name="Distance" required>
                             </div>
 
                             <div class="text-center">
@@ -796,27 +787,61 @@
     </div>
 </section>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script>
-    // Function to update range value display
-    function updateRangeValue(input) {
-        const value = input.value;
-        const valueDisplay = input.nextElementSibling;
-        valueDisplay.textContent = value;
+    // Islamabad coordinates
+    const islamabadLat = 33.6844;
+    const islamabadLng = 73.0479;
+
+    // Initialize the map
+    var map = L.map('map').setView([30.3753, 69.3451], 5.5); // Centered on Pakistan
+
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Optional: Add a marker for Islamabad
+    var islamabadMarker = L.marker([islamabadLat, islamabadLng]).addTo(map).bindPopup('Islamabad').openPopup();
+
+    var marker;
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        // Haversine formula
+        function toRad(x) { return x * Math.PI / 180; }
+        var R = 6371; // km
+        var dLat = toRad(lat2 - lat1);
+        var dLon = toRad(lon2 - lon1);
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return Math.round(R * c); // in km
     }
 
-    // Add event listeners to all range inputs
-    document.addEventListener('DOMContentLoaded', function() {
-        const rangeInputs = document.querySelectorAll('input[type="range"]');
-        rangeInputs.forEach(input => {
-            // Set initial value
-            updateRangeValue(input);
-            
-            // Update value on change
-            input.addEventListener('input', function() {
-                updateRangeValue(this);
-            });
-        });
+    map.on('click', function(e) {
+        var lat = e.latlng.lat;
+        var lng = e.latlng.lng;
+        if (marker) {
+            marker.setLatLng(e.latlng);
+        } else {
+            marker = L.marker(e.latlng).addTo(map);
+        }
+        // Calculate distance from Islamabad
+        var distance = calculateDistance(islamabadLat, islamabadLng, lat, lng);
+        // Set hidden input values
+        document.getElementById('Latitude').value = lat;
+        document.getElementById('Longitude').value = lng;
+        document.getElementById('Distance').value = distance;
+        marker.bindPopup('Selected Location<br>Lat: ' + lat.toFixed(4) + '<br>Lng: ' + lng.toFixed(4) + '<br>Distance from Islamabad: ' + distance + ' km').openPopup();
     });
+
+    // Optionally, set default values if needed
+    document.getElementById('Latitude').value = '';
+    document.getElementById('Longitude').value = '';
+    document.getElementById('Distance').value = '';
 </script>
 
 {% endblock %}
